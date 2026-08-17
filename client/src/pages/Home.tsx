@@ -2,31 +2,44 @@
  * Design reminder — «دفاتر الرحّالة»: بداية بانورامية تفتح الدفتر، ثم مسار تحريري
  * متعرج بمقاطع غير متناظرة؛ لا بطاقات مركزية متطابقة ولا لغة دعائية عامة.
  */
-import { ArrowLeft, ArrowUpLeft, Compass, Landmark, MapPinned, Mountain, Plus, Route, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpLeft, ChevronLeft, ChevronRight, Compass, Landmark, MapPinned, Mountain, Plus, Route, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { assets, destinations } from "@/lib/content";
+import { assets, destinations, heroSlides } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 
 export default function Home() {
   const { stops, toggleStop } = useTrip();
   const featured = destinations.slice(0, 3);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const slide = heroSlides[activeSlide];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % heroSlides.length), 5600);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const previousSlide = () => setActiveSlide((current) => (current - 1 + heroSlides.length) % heroSlides.length);
+  const nextSlide = () => setActiveSlide((current) => (current + 1) % heroSlides.length);
 
   return (
     <SiteShell>
       <section className="home-hero">
-        <img src={assets.hero} alt="ساعة ميدان في المدينة القديمة بطرابلس" className="hero-image" loading="eager" fetchPriority="high" decoding="async" />
+        {heroSlides.map((item, index) => <img src={item.image} alt={index === activeSlide ? item.alt : ""} aria-hidden={index !== activeSlide} className={`hero-image ${index === activeSlide ? "is-active" : ""}`} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} decoding="async" key={item.image} />)}
         <div className="hero-ink" />
         <div className="hero-content page-frame">
-          <p className="eyebrow light hero-eyebrow"><span /> Visit Libya · دليل الاكتشاف الوطني</p>
-          <h1>ابدأ من الحكاية<br /><i>واترك المكان يقودك.</i></h1>
-          <p className="hero-copy">مدن تتجاور فيها طبقات التاريخ، وساحل يمتد إلى الصحراء، وضيافة تجعل الرحلة أقرب من مجرد زيارة.</p>
+          <p className="eyebrow light hero-eyebrow"><span /> {slide.kicker}</p>
+          <p className="hero-field-note"><span>ملاحظة الدليل</span>{slide.note}</p>
+          <h1>{slide.title}<br /><i>{slide.accent}</i></h1>
+          <p className="hero-copy">{slide.description}</p>
           <div className="hero-actions">
             <Link href="/destinations" className="button button-light">افتح دفتر الوجهات <ArrowLeft size={17} /></Link>
             <Link href="/trip" className="text-action light">رتّب مسارك <ArrowUpLeft size={17} /></Link>
           </div>
         </div>
-        <div className="hero-coordinates"><span>32°53′N</span><b>مسار الاكتشاف الوطني ← من الساحل إلى الصحراء</b><span>12°34′E</span></div>
+        <div className="hero-controls" aria-label="اختيار صورة الهيرو"><button type="button" onClick={previousSlide} aria-label="الصورة السابقة"><ChevronRight size={19} /></button><div className="hero-dots">{heroSlides.map((item, index) => <button type="button" onClick={() => setActiveSlide(index)} className={index === activeSlide ? "is-active" : ""} aria-label={`عرض ${item.note}`} key={item.image} />)}</div><button type="button" onClick={nextSlide} aria-label="الصورة التالية"><ChevronLeft size={19} /></button></div>
+        <div className="hero-coordinates"><span>{slide.kicker.split(" · ")[1]}</span><b>{slide.note}</b><span>Visit Libya</span></div>
       </section>
 
       <section className="intro-section page-frame">

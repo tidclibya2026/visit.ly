@@ -98,14 +98,23 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 
 /* Home */
 .home-hero { position: relative; min-height: 683px; display: grid; align-items: stretch; isolation: isolate; overflow: hidden; color: var(--paper); background-color: var(--ink-night); }
-.hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 49% center; filter: brightness(1.08) contrast(1.02); }
+.hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 49% center; opacity: 0; filter: brightness(1.08) contrast(1.02); transform: scale(1.025); transition: opacity 900ms var(--ease-out), transform 5600ms linear; }
+.hero-image.is-active { opacity: 1; transform: scale(1); }
 .hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(6, 41, 74, 0.03) 0%, rgba(6, 41, 74, 0.2) 43%, rgba(6, 41, 74, 0.86) 85%), linear-gradient(0deg, rgba(6, 41, 74, 0.26), transparent 52%); }
 .hero-content { position: relative; z-index: 2; align-self: center; padding-top: 22px; max-width: 1180px; }
 .hero-eyebrow { margin-bottom: 19px; }
+.hero-field-note { width: fit-content; margin: 0 0 14px; padding: 4px 8px; display: flex; align-items: center; gap: 8px; color: rgba(251, 247, 238, 0.88); background: rgba(4, 29, 54, 0.43); border-inline-start: 2px solid var(--sand); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; }
+.hero-field-note span { color: var(--sand); font-size: 9px; }
 .home-hero h1, .inner-hero h1, .culture-hero h1, .trip-hero h1 { max-width: 660px; margin-bottom: 24px; color: var(--paper); font-family: var(--serif); font-size: clamp(50px, 6.3vw, 82px); font-weight: 700; line-height: 1.04; letter-spacing: -0.035em; }
 .home-hero h1 i, .inner-hero h1 i, .culture-hero h1 i, .trip-hero h1 i { color: var(--sand); font-style: normal; }
 .hero-copy { max-width: 495px; margin-bottom: 29px; color: rgba(247, 241, 231, 0.87); font-size: 17px; line-height: 1.95; }
 .hero-actions { display: flex; align-items: center; gap: 22px; }
+.hero-controls { position: absolute; z-index: 3; right: max(32px, calc((100% - 1180px) / 2)); bottom: 65px; display: flex; align-items: center; gap: 10px; }
+.hero-controls > button { width: 34px; height: 34px; display: grid; place-items: center; color: var(--paper); background: rgba(4, 29, 54, 0.58); border: 1px solid rgba(251, 247, 238, 0.42); transition: color 180ms var(--ease-out), background 180ms var(--ease-out); }
+.hero-controls > button:hover { color: var(--ink); background: var(--sand); }
+.hero-dots { display: flex; align-items: center; gap: 6px; }
+.hero-dots button { width: 19px; height: 3px; padding: 0; background: rgba(251, 247, 238, 0.46); transition: width 180ms var(--ease-out), background 180ms var(--ease-out); }
+.hero-dots button.is-active { width: 37px; background: var(--sand); }
 .hero-coordinates { position: absolute; z-index: 2; bottom: 25px; right: max(32px, calc((100% - 1180px) / 2)); left: max(32px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; color: rgba(247, 241, 231, 0.64); font-size: 10px; letter-spacing: 0.1em; }
 .hero-coordinates b { color: var(--sand); font-size: 10px; font-weight: 600; }
 .intro-section { min-height: 360px; padding: 91px 0 73px; display: grid; grid-template-columns: 0.35fr 1.15fr 0.8fr; align-items: start; gap: 35px; }
@@ -125,6 +134,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .split-head h2 { margin-bottom: 0; }
 .destination-row { display: grid; grid-template-columns: 1.16fr 0.84fr 0.84fr; align-items: stretch; min-height: 449px; gap: 13px; }
 .destination-card { position: relative; min-height: 349px; overflow: hidden; color: var(--paper); background: var(--ink); }
+.destination-card::before { position: absolute; z-index: 3; top: 14px; right: 14px; padding: 3px 7px; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 800; letter-spacing: 0.07em; }
+.destination-card-1::before { content: "بطاقة 01 · مدينة"; }
+.destination-card-2::before { content: "بطاقة 02 · ساحل"; }
+.destination-card-3::before { content: "بطاقة 03 · واحة"; }
 .destination-card-2 { margin-top: 44px; }
 .destination-card-3 { margin-top: 92px; }
 .destination-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 580ms var(--ease-flow); }
@@ -185,11 +198,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 
 /* Destinations */
 .destinations-content { padding: 71px 0 116px; }
-.filter-bar { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: center; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+.filter-bar { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 20px; align-items: start; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+.filter-groups { display: grid; gap: 10px; }
+.filter-field-note { width: fit-content; margin: 0; padding: 3px 7px; color: var(--ink); background: var(--paper-deep); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
 .search-field { min-height: 53px; display: flex; align-items: center; gap: 10px; padding: 0 15px; color: var(--ink); background: #fffaf2; border: 1px solid var(--line); }
 .search-field input { width: 100%; min-width: 0; color: var(--text); background: transparent; border: 0; outline: 0; font-size: 14px; }
 .search-field input::placeholder { color: #788180; }
 .category-chips { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: var(--muted); }
+.filter-label { min-width: 76px; color: var(--ink); font-size: 11px; font-weight: 800; }
 .category-chips button { padding: 6px 10px; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 30px; font-size: 12px; font-weight: 600; transition: background 150ms var(--ease-out), color 150ms var(--ease-out); }
 .category-chips button:hover, .category-chips button.is-active { color: var(--paper); background: var(--ink); }
 .results-line { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 6px; color: var(--muted); font-size: 13px; }
