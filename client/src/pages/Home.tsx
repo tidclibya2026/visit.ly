@@ -122,7 +122,7 @@ export default function Home() {
           <p>المطبخ والتقاليد والفروسية والفخار والنسيج ليست تفاصيل جانبية؛ بل طرق أخرى لقراءة المكان ومقابلة ناسه.</p>
           <Link href="/culture" className="underlined-link">افتح صفحات الثقافة <ArrowLeft size={16} /></Link>
         </div>
-        <div className="culture-image"><img src={assets.craftTable} alt="معلم من العمارة التقليدية في غدامس" /></div>
+        <div className="culture-image"><img src={assets.ghadamesLanes} alt="ممرات العمارة التقليدية في المدينة القديمة بغدامس" /></div>
       </section>
 
       <section className="planner-banner page-frame">
