@@ -2,7 +2,7 @@
  * Design reminder — «دفاتر الرحّالة»: نتائج الوجهات تشبه صفحات مفهرسة في دليل سفر؛
  * تصفية خفيفة، صور صادقة، وإضافة هادئة للمسار بدلاً من واجهة حجوزات تجارية.
  */
-import { ArrowLeft, Check, MapPin, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, Images, MapPin, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
@@ -16,6 +16,8 @@ export default function Destinations() {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("الكل");
   const [landmarkType, setLandmarkType] = useState("الكل");
+  const [galleryDestinationId, setGalleryDestinationId] = useState<string | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const { stops, toggleStop } = useTrip();
   const shownDestinations = useMemo(() => destinations.filter((destination) => {
     const matchesCity = city === "الكل" || destination.city === city;
@@ -39,12 +41,20 @@ export default function Destinations() {
         {shownDestinations.length ? <div className="destination-catalogue">
           {shownDestinations.map((destination, index) => {
             const saved = stops.includes(destination.id);
-            return <article className="catalogue-entry" data-stop={destination.id} key={destination.id}>
-              <div className="catalogue-count">0{index + 1}</div>
-              <div className="catalogue-image"><img src={destination.image} alt={destination.alt} /></div>
-              <div className="catalogue-copy"><div className="card-meta ink"><span><MapPin size={13} /> {destination.city} · {destination.region}</span><span>{destination.landmarkType}</span></div><h2>{destination.title}</h2><p>{destination.description}</p><span className="travel-time">الوقت المقترح: {destination.time}</span></div>
-              <button type="button" onClick={() => toggleStop(destination.id)} className={`add-to-trip ${saved ? "is-saved" : ""}`}>{saved ? <Check size={17} /> : <Plus size={17} />}{saved ? "أُضيف" : "أضف"}</button>
-            </article>;
+            const galleryOpen = galleryDestinationId === destination.id;
+            const galleryImage = destination.gallery[galleryOpen ? galleryIndex : 0];
+            return <div className="destination-record" key={destination.id}>
+              <article className="catalogue-entry" data-stop={destination.id}>
+                <div className="catalogue-count">0{index + 1}</div>
+                <div className="catalogue-image"><img src={destination.image} alt={destination.alt} /></div>
+                <div className="catalogue-copy"><div className="card-meta ink"><span><MapPin size={13} /> {destination.city} · {destination.region}</span><span>{destination.landmarkType}</span></div><h2>{destination.title}</h2><p>{destination.description}</p><span className="travel-time">الوقت المقترح: {destination.time}</span><button type="button" className="open-gallery" onClick={() => { setGalleryDestinationId(galleryOpen ? null : destination.id); setGalleryIndex(0); }} aria-expanded={galleryOpen}><Images size={16} /> {galleryOpen ? "إخفاء المعرض" : `عرض ${destination.gallery.length} صور موثقة`}</button></div>
+                <button type="button" onClick={() => toggleStop(destination.id)} className={`add-to-trip ${saved ? "is-saved" : ""}`}>{saved ? <Check size={17} /> : <Plus size={17} />}{saved ? "أُضيف" : "أضف"}</button>
+              </article>
+              {galleryOpen && <section className="destination-gallery" aria-label={`معرض صور ${destination.title}`}>
+                <div className="gallery-stage"><img src={galleryImage.image} alt={galleryImage.alt} /><div className="gallery-stage-shade" /><div className="gallery-caption"><p className="eyebrow light">سجل الصورة · {String(galleryIndex + 1).padStart(2, "0")} / {String(destination.gallery.length).padStart(2, "0")}</p><h3>{galleryImage.caption}</h3><p><MapPin size={15} /> {galleryImage.location}</p><span>{galleryImage.coordinates}</span></div><div className="gallery-controls"><button type="button" onClick={() => setGalleryIndex((current) => (current - 1 + destination.gallery.length) % destination.gallery.length)} aria-label="الصورة السابقة"><ChevronRight size={20} /></button><button type="button" onClick={() => setGalleryIndex((current) => (current + 1) % destination.gallery.length)} aria-label="الصورة التالية"><ChevronLeft size={20} /></button></div></div>
+                <div className="gallery-thumbnails">{destination.gallery.map((item, galleryItemIndex) => <button type="button" className={galleryItemIndex === galleryIndex ? "is-active" : ""} onClick={() => setGalleryIndex(galleryItemIndex)} key={item.image}><img src={item.image} alt="" /><span>{String(galleryItemIndex + 1).padStart(2, "0")}</span></button>)}</div>
+              </section>}
+            </div>;
           })}
         </div> : <div className="empty-state"><p className="eyebrow">لا توجد نتيجة مطابقة</p><h2>جرّب مدينة أو نوع معلم آخر.</h2><button type="button" className="button button-ink" onClick={() => { setQuery(""); setCity("الكل"); setLandmarkType("الكل"); }}>عرض كل الوجهات</button></div>}
       </section>

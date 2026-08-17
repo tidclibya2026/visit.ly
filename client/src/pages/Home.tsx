@@ -28,7 +28,7 @@ export default function Home() {
       <section className="home-hero">
         {heroSlides.map((item, index) => <img src={item.image} alt={index === activeSlide ? item.alt : ""} aria-hidden={index !== activeSlide} className={`hero-image ${index === activeSlide ? "is-active" : ""}`} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} decoding="async" key={item.image} />)}
         <div className="hero-ink" />
-        <div className="hero-content page-frame">
+        <div className="hero-content page-frame" key={slide.image}>
           <p className="eyebrow light hero-eyebrow"><span /> {slide.kicker}</p>
           <p className="hero-field-note"><span>ملاحظة الدليل</span>{slide.note}</p>
           <h1>{slide.title}<br /><i>{slide.accent}</i></h1>
