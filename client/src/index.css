@@ -640,6 +640,85 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
+/* Photo-priority pass — صور المستخدم تقود الصفحة وتُقرأ كمساحات بانورامية كاملة. */
+.home-hero { min-height: clamp(640px, 78vh, 830px); }
+.hero-image { object-position: center center; filter: brightness(1.04) contrast(1.03) saturate(1.04); }
+.hero-ink { background: linear-gradient(90deg, rgba(6, 41, 74, 0.02) 0%, rgba(6, 41, 74, 0.14) 43%, rgba(6, 41, 74, 0.82) 87%), linear-gradient(0deg, rgba(6, 41, 74, 0.19), transparent 58%); }
+.inner-hero, .trip-hero { min-height: 480px; }
+.destinations-hero, .experiences-hero, .heritage-hero, .services-hero { background-position: center 48%; }
+.destinations-hero { min-height: 450px; }
+.culture-hero, .culture-hero-copy { min-height: 610px; }
+.culture-hero-copy { padding-top: 148px; }
+.culture-hero > img { object-position: center 44%; }
+.culture-hero-wash { background: linear-gradient(90deg, rgba(6, 41, 74, 0.08), rgba(6, 41, 74, 0.82) 77%); }
+.trip-hero { min-height: 455px; background-position: center 54%; }
+
+@media (max-width: 760px) {
+  .home-hero { min-height: 560px; }
+  .hero-image { object-position: center center; }
+  .hero-ink { background: linear-gradient(90deg, rgba(6, 41, 74, 0.1), rgba(6, 41, 74, 0.68)), linear-gradient(0deg, rgba(6, 41, 74, 0.28), transparent 55%); }
+  .inner-hero, .trip-hero, .destinations-hero { min-height: 365px; }
+  .culture-hero, .culture-hero-copy { min-height: 500px; }
+  .culture-hero-copy { padding-top: 112px; }
+  .trip-hero { min-height: 390px; }
+}
+
+/* Extended image layouts — تعطي المعالم مساحة بصرية كافية قبل النصوص والتفاصيل. */
+@media (min-width: 761px) {
+  .destination-row { min-height: 560px; grid-template-columns: 1.28fr 0.96fr 0.96fr; }
+  .destination-card { min-height: 440px; }
+  .destination-card-2 { margin-top: 42px; }
+  .destination-card-3 { margin-top: 84px; }
+  .feature-split { grid-template-columns: 1.34fr 0.66fr; gap: 72px; }
+  .feature-image { min-height: 640px; }
+  .culture-callout { grid-template-columns: 0.68fr 1.32fr; gap: 72px; }
+  .culture-image { min-height: 580px; }
+  .catalogue-entry { min-height: 338px; padding: 23px 68px 23px 60px; grid-template-columns: 38px minmax(300px, 0.88fr) minmax(0, 1.12fr) auto; }
+  .catalogue-image { min-height: 288px; }
+  .heritage-entry { min-height: 520px; }
+  .culture-topic { min-height: 520px; }
+  .trip-stop { min-height: 205px; grid-template-columns: 170px 1fr auto; }
+  .trip-stop img { width: 170px; height: 156px; }
+  .suggestion-grid article { grid-template-columns: 175px 1fr; min-height: 175px; }
+  .suggestion-grid img { width: 175px; height: 175px; }
+}
+
+@media (max-width: 760px) {
+  .destination-row { min-height: auto; gap: 16px; }
+  .destination-card, .destination-card-2, .destination-card-3 { min-height: 320px; margin-top: 0; }
+  .feature-image { min-height: 395px; }
+  .culture-image { min-height: 390px; }
+  .catalogue-entry { position: relative; padding: 0 0 22px; grid-template-columns: 1fr; gap: 0; }
+  .catalogue-entry .catalogue-image { grid-row: 1; grid-column: 1; height: 220px; margin: 0 0 13px; border-width: 5px; }
+  .catalogue-entry .catalogue-copy { grid-row: 2; grid-column: 1; padding: 0 16px; }
+  .catalogue-entry .catalogue-count { position: absolute; z-index: 3; top: 12px; right: 13px; width: 34px; height: 34px; display: grid; place-items: center; color: var(--ink); background: rgba(251, 247, 238, 0.94); border-inline-start: 3px solid var(--sand); font-size: 15px; }
+  .catalogue-entry .add-to-trip { grid-row: 3; grid-column: 1; margin: 10px 16px 0; justify-self: start; }
+  .heritage-entry { min-height: auto; }
+  .heritage-image { height: 335px; }
+  .culture-topic-image { height: 345px; }
+  .trip-stop { grid-template-columns: 122px 1fr; min-height: 168px; }
+  .trip-stop img { width: 122px; height: 126px; }
+  .suggestion-grid article { grid-template-columns: 135px 1fr; min-height: 145px; }
+  .suggestion-grid img { width: 135px; height: 145px; }
+}
+
+/* Chapter declarations — كل صفحة داخلية تعلن نمطها التحريري قبل بدء المحتوى. */
+@media (min-width: 761px) {
+  .site-header .brand-mark { width: 214px; height: 74px; }
+  .destinations-hero .page-frame::after, .heritage-hero .page-frame::after { display: inline-flex; width: fit-content; margin-top: 18px; padding: 4px 8px; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; }
+  .destinations-hero .page-frame::after { content: "فصل 01 · فهرس خريطة الاستكشاف"; }
+  .heritage-hero .page-frame::after { content: "ملف أرشيفي · المدن والمواقع"; }
+  .culture-hero-copy::after { display: inline-flex; width: fit-content; margin-top: 18px; padding: 4px 8px; content: "دفتر صور ميداني · حياة المكان"; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; }
+}
+
+@media (max-width: 760px) {
+  .site-header .brand-mark { width: 148px; height: 56px; }
+  .destinations-hero .page-frame::after, .heritage-hero .page-frame::after { display: inline-flex; width: fit-content; margin-top: 14px; padding: 3px 6px; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 8px; font-weight: 800; }
+  .destinations-hero .page-frame::after { content: "فهرس خريطة الاستكشاف"; }
+  .heritage-hero .page-frame::after { content: "ملف أرشيفي"; }
+  .culture-hero-copy::after { display: inline-flex; width: fit-content; margin-top: 14px; padding: 3px 6px; content: "دفتر صور ميداني"; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 8px; font-weight: 800; }
+}
+
 /* Official Visit Libya identity pass — الأزرق الملكي والذهبي فقط خارج ألوان الشعار المعتمدة. */
 .site-root { background-color: var(--paper); background-image: radial-gradient(rgba(11, 58, 103, 0.04) 0.65px, transparent 0.65px); background-size: 9px 9px; }
 .site-header { position: sticky; }
