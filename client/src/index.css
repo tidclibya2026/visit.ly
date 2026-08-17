@@ -6,20 +6,20 @@
 @import "tw-animate-css";
 
 :root {
-  --ink: #174f64;
-  --ink-deep: #103743;
-  --ink-night: #092a34;
-  --paper: #f7f1e7;
-  --paper-deep: #eee3d0;
-  --clay: #c76f46;
-  --clay-dark: #934a2c;
-  --sand: #e1c58a;
-  --sage: #b7beb0;
-  --text: #203436;
-  --muted: #647171;
-  --line: rgba(23, 79, 100, 0.18);
-  --serif: "Aref Ruqaa Ink", "Noto Naskh Arabic", serif;
-  --sans: "IBM Plex Sans Arabic", "Tahoma", sans-serif;
+  --ink: #0b3a67;
+  --ink-deep: #06294a;
+  --ink-night: #041d36;
+  --paper: #f8fafc;
+  --paper-deep: #e9f0f7;
+  --clay: #c89b3c;
+  --clay-dark: #8e6a10;
+  --sand: #e4c870;
+  --sage: #dce6f0;
+  --text: #18283a;
+  --muted: #50647a;
+  --line: rgba(11, 58, 103, 0.18);
+  --serif: "Noto Kufi Arabic", "Cairo", sans-serif;
+  --sans: "Cairo", "Noto Sans Arabic", "Tahoma", sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-flow: cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -109,6 +109,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .hero-coordinates { position: absolute; bottom: 25px; right: max(32px, calc((100% - 1180px) / 2)); left: max(32px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; color: rgba(247, 241, 231, 0.64); font-size: 10px; letter-spacing: 0.1em; }
 .hero-coordinates b { color: var(--sand); font-size: 10px; font-weight: 600; }
 .intro-section { min-height: 360px; padding: 91px 0 73px; display: grid; grid-template-columns: 0.35fr 1.15fr 0.8fr; align-items: start; gap: 35px; }
+.intro-section { position: relative; }
+.intro-section::after { position: absolute; left: 0; bottom: 24px; padding: 4px 8px; content: "VISIT LIBYA · FIELD NOTE 01"; color: var(--ink); background: var(--paper-deep); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; }
 .intro-copy h2, .section-head h2, .feature-copy h2, .culture-copy h2, .planner-banner h2, .experiences-intro h2, .heritage-intro h2, .closing-link h2, .trip-head h2 { color: var(--ink-deep); font-family: var(--serif); font-size: clamp(34px, 4.35vw, 58px); line-height: 1.16; letter-spacing: -0.025em; }
 .intro-body { padding-top: 35px; }
 .intro-body p { margin-bottom: 24px; color: var(--muted); font-size: 15px; }
@@ -362,6 +364,60 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .route-reminder p { flex: 1; margin: 0; color: rgba(247, 241, 231, 0.78); font-size: 12px; }
 .route-reminder a { display: inline-flex; align-items: center; gap: 5px; color: var(--sand); font-size: 12px; font-weight: 700; }
 
+/* Atlas gateway — official blue & gold, spatial grid, and direct links to the verified published atlas. */
+.atlas-hero { position: relative; min-height: 492px; overflow: hidden; color: var(--paper); background: linear-gradient(110deg, #06294a, #0b3a67 62%, #155590); }
+.atlas-hero::before { position: absolute; content: ""; inset: -45% -8% auto auto; width: 560px; height: 560px; border: 1px solid rgba(228, 200, 112, 0.46); border-radius: 50%; box-shadow: 0 0 0 44px rgba(228, 200, 112, 0.08), 0 0 0 96px transparent, 0 0 0 97px rgba(228, 200, 112, 0.08); }
+.atlas-grid-lines { position: absolute; inset: 0; opacity: 0.22; background-image: linear-gradient(rgba(228, 200, 112, 0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(228, 200, 112, 0.22) 1px, transparent 1px); background-size: 61px 61px; mask-image: linear-gradient(90deg, transparent 0, black 35%, black 100%); }
+.atlas-hero-content { position: relative; z-index: 1; padding-top: 112px; }
+.atlas-hero h1 { max-width: 660px; margin-bottom: 20px; color: var(--paper); font-family: var(--serif); font-size: clamp(48px, 6vw, 76px); font-weight: 800; line-height: 1.2; }
+.atlas-hero h1 i { color: var(--sand); font-style: normal; }
+.atlas-hero p:not(.eyebrow) { max-width: 550px; margin-bottom: 27px; color: rgba(248, 250, 252, 0.78); font-size: 15px; }
+.atlas-hero-actions { display: flex; align-items: center; gap: 20px; }
+.atlas-coordinates { position: absolute; z-index: 1; right: max(32px, calc((100% - 1180px) / 2)); bottom: 23px; left: max(32px, calc((100% - 1180px) / 2)); display: flex; justify-content: space-between; color: rgba(248, 250, 252, 0.48); font-size: 10px; letter-spacing: 0.09em; }
+.atlas-coordinates b { color: var(--sand); font-weight: 700; }
+.atlas-intro { padding: 83px 0 60px; display: grid; grid-template-columns: auto 1.15fr 0.75fr; gap: 37px; align-items: center; }
+.atlas-intro-stamp { width: 66px; height: 66px; display: grid; place-items: center; color: var(--ink); border: 1px solid var(--ink); border-radius: 50%; }
+.atlas-intro h2 { margin: 0; color: var(--ink); font-family: var(--serif); font-size: clamp(34px, 4vw, 54px); line-height: 1.35; }
+.atlas-intro > p { margin: 27px 0 0; color: var(--muted); font-size: 14px; }
+.atlas-service-grid { padding-bottom: 104px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.atlas-service-grid { position: relative; }
+.atlas-service-grid::before { position: absolute; top: -25px; right: 0; content: "محطات الأطلس · 01 ← 02 ← 03"; color: var(--clay-dark); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
+.atlas-service-grid article { position: relative; min-height: 326px; padding: 64px 34px 30px; color: var(--ink-deep); background: #e9f0f7; border-top: 4px solid var(--sand); }
+.atlas-service-grid article::after { position: absolute; right: 0; bottom: 0; left: 0; height: 22px; content: ""; opacity: 0.7; background: repeating-linear-gradient(90deg, var(--ink) 0 4px, transparent 4px 10px); mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent); }
+.atlas-service-grid article:nth-child(2) { color: var(--paper); background: var(--ink); }
+.atlas-service-grid article:nth-child(3) { color: var(--ink-deep); background: #f5ecd2; }
+.atlas-card-number { position: absolute; top: 21px; left: 25px; color: var(--clay-dark); font-family: var(--serif); font-size: 19px; font-weight: 800; }
+.atlas-service-grid article:nth-child(2) .atlas-card-number { color: var(--sand); }
+.atlas-service-grid article > svg { color: var(--clay-dark); }
+.atlas-service-grid h2 { margin: 16px 0 9px; font-family: var(--serif); font-size: 29px; line-height: 1.4; }
+.atlas-service-grid p { margin: 0 0 17px; color: var(--muted); font-size: 13px; }
+.atlas-service-grid article:nth-child(2) p { color: rgba(248, 250, 252, 0.72); }
+.atlas-service-grid a, .atlas-assurance a { display: inline-flex; align-items: center; gap: 5px; margin-top: auto; color: var(--ink); border-bottom: 1px solid currentColor; font-size: 12px; font-weight: 700; }
+.atlas-service-grid article:nth-child(2) a { color: var(--sand); }
+.atlas-trip-bridge { position: relative; overflow: hidden; color: var(--paper); background: var(--ink-night); }
+.atlas-trip-bridge::before { position: absolute; z-index: 1; right: 0; bottom: 17px; padding: 4px 13px; content: attr(data-route-note); color: var(--sand); border-top: 1px solid rgba(228, 200, 112, 0.45); border-bottom: 1px solid rgba(228, 200, 112, 0.45); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; }
+.atlas-trip-bridge::after { position: absolute; content: ""; width: 480px; height: 480px; top: -263px; left: -134px; border: 1px dashed rgba(228, 200, 112, 0.46); border-radius: 50%; }
+.atlas-trip-bridge-inner { position: relative; z-index: 1; min-height: 367px; padding: 72px 0; display: grid; grid-template-columns: 0.38fr 1fr auto; align-items: center; gap: 54px; }
+.atlas-trip-status { display: grid; justify-items: start; gap: 9px; color: var(--sand); }
+.atlas-trip-status span { color: rgba(248, 250, 252, 0.63); font-size: 11px; font-weight: 700; }
+.atlas-trip-status b { font-family: var(--serif); font-size: 42px; line-height: 1; }
+.atlas-trip-bridge h2 { max-width: 600px; margin: 0 0 12px; color: var(--paper); font-family: var(--serif); font-size: clamp(31px, 3.65vw, 48px); line-height: 1.35; }
+.atlas-trip-bridge p:not(.eyebrow) { max-width: 610px; margin: 0; color: rgba(248, 250, 252, 0.7); font-size: 13px; }
+.atlas-assurance { padding: 92px 0; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center; }
+.atlas-assurance > svg { color: var(--clay-dark); }
+.atlas-assurance h2 { margin: 0 0 7px; color: var(--ink); font-family: var(--serif); font-size: 37px; }
+.atlas-assurance p:not(.eyebrow) { max-width: 720px; margin: 0; color: var(--muted); font-size: 14px; }
+.atlas-sources { min-height: 68px; color: var(--ink-deep); background: var(--paper-deep); }
+.atlas-sources > div { min-height: 68px; display: flex; align-items: center; gap: 10px; }
+.atlas-sources svg { color: var(--clay-dark); }
+.atlas-sources p { margin: 0; font-size: 11px; }
+.trip-atlas-link { padding: 69px 0; background: var(--paper-deep); }
+.trip-atlas-link { position: relative; }
+.trip-atlas-link::before { position: absolute; top: 0; right: 0; left: 0; height: 3px; content: ""; background: repeating-linear-gradient(90deg, var(--sand) 0 32px, transparent 32px 44px); }
+.trip-atlas-link > div { display: flex; justify-content: space-between; align-items: center; gap: 35px; }
+.trip-atlas-link h2 { margin: 0 0 6px; color: var(--ink); font-family: var(--serif); font-size: 38px; }
+.trip-atlas-link p:not(.eyebrow) { max-width: 620px; margin: 0; color: var(--muted); font-size: 14px; }
+
 @media (max-width: 1020px) {
   .desktop-nav { gap: 13px; }
   .feature-split, .culture-callout { gap: 48px; }
@@ -407,6 +463,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .hero-coordinates { bottom: 17px; right: 20px; left: 20px; font-size: 8px; }
   .hero-coordinates b { font-size: 8px; }
   .intro-section { min-height: auto; padding: 66px 0 53px; grid-template-columns: 1fr; gap: 21px; }
+  .intro-section::after { position: static; width: fit-content; margin-top: 10px; }
   .chapter-no { font-size: 49px; }
   .intro-copy h2, .section-head h2, .feature-copy h2, .culture-copy h2, .planner-banner h2, .experiences-intro h2, .heritage-intro h2, .closing-link h2, .trip-head h2 { font-size: 39px; }
   .intro-body { padding-top: 0; }
@@ -526,6 +583,32 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .suggestion-grid { grid-template-columns: 1fr; gap: 10px; }
   .route-reminder > div { align-items: flex-start; flex-wrap: wrap; padding: 4px 0; }
   .route-reminder a { width: 100%; margin-right: 35px; }
+  .atlas-hero { min-height: 438px; }
+  .atlas-hero-content { padding-top: 83px; }
+  .atlas-hero h1 { font-size: 48px; }
+  .atlas-hero-actions { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .atlas-coordinates { right: 20px; bottom: 16px; left: 20px; font-size: 8px; }
+  .atlas-intro { padding: 62px 0 42px; grid-template-columns: auto 1fr; gap: 17px; }
+  .atlas-intro > p { grid-column: span 2; margin: 0; }
+  .atlas-intro-stamp { width: 51px; height: 51px; }
+  .atlas-intro h2 { font-size: 38px; }
+  .atlas-service-grid { padding-bottom: 66px; grid-template-columns: 1fr; gap: 10px; }
+  .atlas-service-grid::before { top: -22px; font-size: 8px; }
+  .atlas-service-grid article { min-height: 253px; padding: 51px 26px 25px; }
+  .atlas-trip-bridge-inner { min-height: auto; padding: 57px 0; grid-template-columns: 1fr; gap: 22px; }
+  .atlas-trip-bridge::before { right: 18px; bottom: 13px; font-size: 8px; }
+  .atlas-trip-status { grid-template-columns: auto auto; align-items: center; column-gap: 10px; }
+  .atlas-trip-status span { grid-column: 1; }
+  .atlas-trip-status b { grid-column: 2; grid-row: span 2; font-size: 35px; }
+  .atlas-trip-bridge h2 { font-size: 37px; }
+  .atlas-trip-bridge .button { width: fit-content; }
+  .atlas-assurance { padding: 60px 0; grid-template-columns: auto 1fr; gap: 17px; }
+  .atlas-assurance > a { grid-column: span 2; width: fit-content; }
+  .atlas-assurance h2 { font-size: 31px; }
+  .atlas-sources > div { padding: 13px 0; align-items: flex-start; }
+  .trip-atlas-link { padding: 53px 0; }
+  .trip-atlas-link > div { align-items: flex-start; flex-direction: column; gap: 19px; }
+  .trip-atlas-link h2 { font-size: 33px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -541,15 +624,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
-/* Editorial unification pass — أزرق الجبل يملك الهوية، واللون الطيني حبرٌ للملاحظات فقط. */
-.site-root { background-color: var(--paper); background-image: radial-gradient(rgba(23, 79, 100, 0.055) 0.65px, transparent 0.65px); background-size: 8px 8px; }
-.brand { gap: 11px; padding: 5px 0; }
-.brand-mark { width: 47px; height: 47px; filter: drop-shadow(0 2px 0 rgba(225, 197, 138, 0.16)); }
-.brand-copy strong { font-size: 27px; letter-spacing: -0.035em; }
-.brand-copy em { max-width: 118px; color: var(--sand); font-size: 8px; line-height: 1.35; }
-.brand-edition { padding-inline-start: 10px; color: var(--sand); border-inline-start: 1px solid rgba(225, 197, 138, 0.4); font-family: var(--serif); font-size: 10px; line-height: 1.15; text-align: center; }
-.is-scrolled .brand-edition { color: var(--clay-dark); border-color: var(--line); }
-.footer-mark { width: 71px; padding: 5px; border: 1px solid rgba(225, 197, 138, 0.34); border-radius: 50%; }
+/* Official Visit Libya identity pass — الأزرق الملكي والذهبي فقط خارج ألوان الشعار المعتمدة. */
+.site-root { background-color: var(--paper); background-image: radial-gradient(rgba(11, 58, 103, 0.04) 0.65px, transparent 0.65px); background-size: 9px 9px; }
+.site-header { position: sticky; }
+.site-header::before { position: absolute; inset: 0 0 auto; height: 3px; content: ""; background: linear-gradient(90deg, transparent, var(--sand) 16% 84%, transparent); }
+.brand { gap: 0; padding: 0; }
+.brand-mark { width: 152px; height: 64px; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 0 rgba(228, 200, 112, 0.14)); }
+.brand-copy, .brand-edition { display: none; }
+.footer-mark { width: 158px; height: 124px; margin-bottom: 15px; padding: 0; object-fit: contain; object-position: right center; border: 0; border-radius: 0; }
 .footer-coordinates { display: inline-block; margin-inline-start: 8px; color: rgba(247, 241, 231, 0.52); font-family: var(--sans); font-size: 9px; font-weight: 500; letter-spacing: 0.08em; }
 
 .intro-copy h2, .section-head h2, .feature-copy h2, .culture-copy h2, .planner-banner h2, .experiences-intro h2, .heritage-intro h2, .closing-link h2, .trip-head h2, .culture-statement h2, .catalogue-copy h2, .experience-row h2, .culture-topic-copy h2, .heritage-copy h2, .faq-section h2 { color: var(--ink) !important; }
@@ -567,7 +649,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .catalogue-entry[data-stop="benghazi"]::before { content: "32°07′N"; }
 .catalogue-entry[data-stop="ghadames"]::before { content: "30°08′N"; }
 .catalogue-entry[data-stop="acacus"]::before { content: "24°56′N"; }
-.catalogue-image, .heritage-image, .culture-topic-image, .suggestion-grid article { position: relative; border: 7px solid #fbf7ef; box-shadow: 7px 7px 0 rgba(23, 79, 100, 0.11); }
+.catalogue-image, .heritage-image, .culture-topic-image, .suggestion-grid article { position: relative; border: 7px solid #f8fafc; box-shadow: 7px 7px 0 rgba(11, 58, 103, 0.12); }
 .catalogue-image::after, .heritage-image::after, .culture-topic-image::after { position: absolute; left: 8px; bottom: 6px; padding: 1px 5px; color: var(--ink-deep); background: rgba(251, 247, 239, 0.9); font-size: 8px; font-weight: 700; letter-spacing: 0.06em; }
 .catalogue-image::after { content: "صورة ميدانية"; }
 .heritage-image::after { content: "أرشيف موقع"; }
@@ -592,9 +674,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .service-icons article:nth-child(5)::after { content: "عافية · 05"; }
 
 @media (max-width: 760px) {
-  .brand-mark { width: 40px; height: 40px; }
-  .brand-copy strong { font-size: 23px; }
-  .brand-edition { display: none; }
+  .brand-mark { width: 118px; height: 50px; }
   .footer-coordinates { display: block; margin: 5px 0 0; }
   .destinations-content::before, .culture-feature-grid::before, .heritage-list::before, .trip-content::before { right: -6px; }
   .catalogue-entry::before { display: none; }

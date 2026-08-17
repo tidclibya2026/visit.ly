@@ -18,7 +18,7 @@ export default function Home() {
         <img src={assets.hero} alt="ممر معماري مضاء في مدينة ليبية قديمة" className="hero-image" />
         <div className="hero-ink" />
         <div className="hero-content page-frame">
-          <p className="eyebrow light hero-eyebrow"><span /> ليبيا، على مهل</p>
+          <p className="eyebrow light hero-eyebrow"><span /> Visit Libya · دليل الاكتشاف الوطني</p>
           <h1>ابدأ من الحكاية<br /><i>واترك المكان يقودك.</i></h1>
           <p className="hero-copy">مدن تتجاور فيها طبقات التاريخ، وساحل يمتد إلى الصحراء، وضيافة تجعل الرحلة أقرب من مجرد زيارة.</p>
           <div className="hero-actions">
@@ -26,13 +26,13 @@ export default function Home() {
             <Link href="/trip" className="text-action light">رتّب مسارك <ArrowUpLeft size={17} /></Link>
           </div>
         </div>
-        <div className="hero-coordinates"><span>32°53′N</span><b>ساحل المتوسط ← الصحراء</b><span>12°34′E</span></div>
+        <div className="hero-coordinates"><span>32°53′N</span><b>مسار الاكتشاف الوطني ← من الساحل إلى الصحراء</b><span>12°34′E</span></div>
       </section>
 
       <section className="intro-section page-frame">
         <div className="chapter-no">01</div>
         <div className="intro-copy">
-          <p className="eyebrow">دفتر الوصول</p>
+          <p className="eyebrow">دليل الوصول · المحطة 01</p>
           <h2>ليبيا أرض الحضارات<br />وموطن السحر والجمال.</h2>
         </div>
         <div className="intro-body">

@@ -2,10 +2,10 @@
  * Design reminder — «دفاتر الرحّالة»: المخطط صفحة عملية تشبه ورقة مسار في الدفتر؛
  * لا حجوزات وهمية ولا محاكاة لوحة حجز، فقط ترتيب شفاف للمحطات التي اختارها المستخدم.
  */
-import { ArrowLeft, Check, MapPin, Plus, Route, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowUpLeft, Check, MapPin, Plus, Route, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { destinations } from "@/lib/content";
+import { assets, destinations } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 
 export default function TripPlanner() {
@@ -22,6 +22,7 @@ export default function TripPlanner() {
       </section>
       {suggestions.length > 0 && <section className="page-frame trip-suggestions"><div className="section-head split-head"><div><p className="eyebrow">أضف محطة</p><h2>ربما تود التوقف هنا أيضًا.</h2></div><Link href="/destinations" className="underlined-link">كل الوجهات <ArrowLeft size={16} /></Link></div><div className="suggestion-grid">{suggestions.slice(0, 3).map((destination) => <article key={destination.id}><img src={destination.image} alt={destination.alt} /><div><p>{destination.region}</p><h3>{destination.title}</h3><button type="button" onClick={() => toggleStop(destination.id)}><Plus size={16} /> أضف</button></div></article>)}</div></section>}
       <section className="route-reminder"><div className="page-frame"><Check size={22} /><p>عند تثبيت خط سيرك، تحقّق من إجراءات الدخول والموسم والطقس ووسيلة التنقل المناسبة لكل محطة.</p><Link href="/services">دليل السفر <ArrowLeft size={16} /></Link></div></section>
+      <section className="trip-atlas-link"><div className="page-frame"><div><p className="eyebrow">أطلس ليبيا السياحي</p><h2>حوّل القائمة إلى مسار ذكي.</h2><p>افتح الأطلس الوطني للبحث في الطبقات الموثقة واستخدام تخطيط المسار وفق المدة والاهتمامات.</p></div><a className="button button-ink" href={assets.atlasPublicUrl} target="_blank" rel="noreferrer">فتح الأطلس <ArrowUpLeft size={17} /></a></div></section>
     </SiteShell>
   );
 }

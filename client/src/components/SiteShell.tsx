@@ -14,6 +14,7 @@ const navigation = [
   { href: "/culture", label: "ثقافة" },
   { href: "/heritage", label: "تراث" },
   { href: "/services", label: "دليل السفر" },
+  { href: "/atlas", label: "الأطلس" },
 ];
 
 export function SiteShell({ children }: { children: ReactNode }) {
@@ -34,9 +35,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <div className="header-inner">
           <Link href="/" className="brand" aria-label="تراث ليبيا، الصفحة الرئيسية" onClick={() => setOpen(false)}>
-            <img src={assets.brandMark} alt="" className="brand-mark" />
-            <span className="brand-copy"><strong>تراث ليبيا</strong><em>دليل مكتوب على الطريق</em></span>
-            <span className="brand-edition" aria-hidden="true">إصدار<br />01</span>
+            <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="brand-mark" />
           </Link>
 
           <nav className="desktop-nav" aria-label="التنقل الرئيسي">
@@ -72,10 +71,10 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-grid">
         <div className="footer-intro">
-          <img src={assets.brandMark} alt="" className="footer-mark" />
-          <p className="eyebrow light">من ليبيا، إلى مسارك <span className="footer-coordinates">32°53′N · 12°34′E</span></p>
-          <h2>كل مدينة تفتح صفحة جديدة.</h2>
-          <p>منصة عربية تجمع الوجهات والتجارب والتراث وإرشادات الاستعداد للرحلة في دفتر واحد سهل التصفح.</p>
+          <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="footer-mark" />
+          <p className="eyebrow light">Visit Libya · زور ليبيا <span className="footer-coordinates">32°53′N · 12°34′E</span></p>
+          <h2>ليبيا... رحلة عبر الزمن.</h2>
+          <p>منصة عربية لاستكشاف الوجهات والتجارب والتراث وإرشادات السفر، ضمن رحلة منظمة من الفكرة إلى المسار.</p>
         </div>
         <div className="footer-links">
           <p className="footer-label">استكشف</p>
@@ -87,13 +86,14 @@ function Footer() {
         <div className="footer-links">
           <p className="footer-label">رتّب الرحلة</p>
           <Link href="/trip">مخطط الرحلة</Link>
+          <Link href="/atlas">أطلس ليبيا السياحي</Link>
           <Link href="/services">خدمات وإرشادات</Link>
           <a href="https://evisa.gov.ly/" target="_blank" rel="noreferrer">بوابة التأشيرة الرسمية</a>
           <a href="tel:+218">دليل أرقام مفيد</a>
         </div>
       </div>
       <div className="footer-base">
-        <span>© {new Date().getFullYear()} تراث ليبيا</span>
+        <span>© {new Date().getFullYear()} Visit Libya · زور ليبيا</span>
         <span>محتوى المنصة من المواد والمستندات التي زُوّدت بها للمشروع.</span>
       </div>
     </footer>

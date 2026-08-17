@@ -4,7 +4,10 @@
  */
 
 export const assets = {
-  brandMark: "/manus-storage/turath-libya-mark_0db5d89f.png",
+  brandMark: "/manus-storage/visitlibya-logo-cropped_4628ce39.png",
+  favicon: "/manus-storage/visitlibya-favicon_d185c209.png",
+  atlasPublicUrl: "https://tidclibya2026.github.io/tidcatlas.ly/",
+  visitLibyaPublicUrl: "https://tidclibya2026.github.io/visitlibya/",
   hero: "/manus-storage/libya-hero-travel-journal_2eb3d5ab.jpg",
   greenMountain: "/manus-storage/libya-green-mountain-editorial_25008626.jpg",
   craftTable: "/manus-storage/libya-culture-craft-editorial_8130ac77.jpg",

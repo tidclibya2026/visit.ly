@@ -11,6 +11,7 @@ import Culture from "./pages/Culture";
 import Heritage from "./pages/Heritage";
 import Services from "./pages/Services";
 import TripPlanner from "./pages/TripPlanner";
+import AtlasGateway from "./pages/AtlasGateway";
 import { TripProvider } from "./contexts/TripContext";
 
 
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/culture"} component={Culture} />
       <Route path={"/heritage"} component={Heritage} />
       <Route path={"/services"} component={Services} />
+      <Route path={"/atlas"} component={AtlasGateway} />
       <Route path={"/trip"} component={TripPlanner} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
