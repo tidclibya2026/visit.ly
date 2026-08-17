@@ -5,12 +5,25 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Destinations from "./pages/Destinations";
+import Experiences from "./pages/Experiences";
+import Culture from "./pages/Culture";
+import Heritage from "./pages/Heritage";
+import Services from "./pages/Services";
+import TripPlanner from "./pages/TripPlanner";
+import { TripProvider } from "./contexts/TripContext";
 
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/destinations"} component={Destinations} />
+      <Route path={"/experiences"} component={Experiences} />
+      <Route path={"/culture"} component={Culture} />
+      <Route path={"/heritage"} component={Heritage} />
+      <Route path={"/services"} component={Services} />
+      <Route path={"/trip"} component={TripPlanner} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
@@ -31,8 +44,10 @@ function App() {
         // switchable
       >
         <TooltipProvider>
-          <Toaster />
-          <Router />
+          <TripProvider>
+            <Toaster />
+            <Router />
+          </TripProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
