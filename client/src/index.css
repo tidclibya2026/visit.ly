@@ -9,8 +9,8 @@
   --ink: #0b3a67;
   --ink-deep: #06294a;
   --ink-night: #041d36;
-  --paper: #f8fafc;
-  --paper-deep: #e9f0f7;
+  --paper: #fbf7ee;
+  --paper-deep: #f2e9d8;
   --clay: #c89b3c;
   --clay-dark: #8e6a10;
   --sand: #e4c870;
@@ -97,16 +97,16 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .footer-base { width: min(1180px, calc(100% - 64px)); margin: auto; padding: 18px 0 22px; display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid rgba(247, 241, 231, 0.14); color: rgba(247, 241, 231, 0.48); font-size: 11px; }
 
 /* Home */
-.home-hero { position: relative; min-height: 683px; display: grid; align-items: stretch; isolation: isolate; color: var(--paper); background: var(--ink-night); }
-.hero-image { position: absolute; z-index: -3; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 49% center; }
-.hero-ink { position: absolute; z-index: -2; inset: 0; background: linear-gradient(90deg, rgba(7, 34, 43, 0.13) 0%, rgba(7, 34, 43, 0.45) 37%, rgba(7, 34, 43, 0.93) 85%), linear-gradient(0deg, rgba(7, 34, 43, 0.52), transparent 48%); }
-.hero-content { align-self: center; padding-top: 22px; max-width: 1180px; }
+.home-hero { position: relative; min-height: 683px; display: grid; align-items: stretch; isolation: isolate; overflow: hidden; color: var(--paper); background-color: var(--ink-night); }
+.hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 49% center; filter: brightness(1.08) contrast(1.02); }
+.hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(6, 41, 74, 0.03) 0%, rgba(6, 41, 74, 0.2) 43%, rgba(6, 41, 74, 0.86) 85%), linear-gradient(0deg, rgba(6, 41, 74, 0.26), transparent 52%); }
+.hero-content { position: relative; z-index: 2; align-self: center; padding-top: 22px; max-width: 1180px; }
 .hero-eyebrow { margin-bottom: 19px; }
 .home-hero h1, .inner-hero h1, .culture-hero h1, .trip-hero h1 { max-width: 660px; margin-bottom: 24px; color: var(--paper); font-family: var(--serif); font-size: clamp(50px, 6.3vw, 82px); font-weight: 700; line-height: 1.04; letter-spacing: -0.035em; }
 .home-hero h1 i, .inner-hero h1 i, .culture-hero h1 i, .trip-hero h1 i { color: var(--sand); font-style: normal; }
 .hero-copy { max-width: 495px; margin-bottom: 29px; color: rgba(247, 241, 231, 0.87); font-size: 17px; line-height: 1.95; }
 .hero-actions { display: flex; align-items: center; gap: 22px; }
-.hero-coordinates { position: absolute; bottom: 25px; right: max(32px, calc((100% - 1180px) / 2)); left: max(32px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; color: rgba(247, 241, 231, 0.64); font-size: 10px; letter-spacing: 0.1em; }
+.hero-coordinates { position: absolute; z-index: 2; bottom: 25px; right: max(32px, calc((100% - 1180px) / 2)); left: max(32px, calc((100% - 1180px) / 2)); display: flex; align-items: center; justify-content: space-between; color: rgba(247, 241, 231, 0.64); font-size: 10px; letter-spacing: 0.1em; }
 .hero-coordinates b { color: var(--sand); font-size: 10px; font-weight: 600; }
 .intro-section { min-height: 360px; padding: 91px 0 73px; display: grid; grid-template-columns: 0.35fr 1.15fr 0.8fr; align-items: start; gap: 35px; }
 .intro-section { position: relative; }
@@ -177,10 +177,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .inner-hero .page-frame, .trip-hero .page-frame { position: relative; z-index: 1; padding-top: 25px; }
 .inner-hero h1, .trip-hero h1 { max-width: 760px; margin-bottom: 18px; font-size: clamp(43px, 5.2vw, 69px); }
 .inner-hero p:not(.eyebrow), .trip-hero p:not(.eyebrow) { max-width: 570px; margin-bottom: 0; color: rgba(247, 241, 231, 0.72); font-size: 15px; }
-.destinations-hero { min-height: 379px; background: linear-gradient(100deg, rgba(12, 47, 59, 0.96), rgba(23, 79, 100, 0.9)), url("/manus-storage/mediterranean-coast_489967c3.jpg") center/cover; }
-.experiences-hero { background: linear-gradient(100deg, rgba(8, 43, 51, 0.93), rgba(8, 43, 51, 0.68)), url("/manus-storage/acacus_020865e5.jpg") center/cover; }
-.heritage-hero { background: linear-gradient(100deg, rgba(9, 35, 43, 0.94), rgba(9, 35, 43, 0.63)), url("/manus-storage/leptis-magna_4bf38121.jpeg") center 52%/cover; }
-.services-hero { background: linear-gradient(100deg, rgba(10, 47, 59, 0.96), rgba(10, 47, 59, 0.64)), url("/manus-storage/old-tripoli_5f4193ba.jpg") center/cover; }
+.destinations-hero { min-height: 379px; background: linear-gradient(100deg, rgba(6, 41, 74, 0.9), rgba(11, 58, 103, 0.37)), url("/manus-storage/hero-green-coast_25dc4d32.jpg") center/cover; }
+.experiences-hero { background: linear-gradient(100deg, rgba(6, 41, 74, 0.94), rgba(6, 41, 74, 0.3)), url("/manus-storage/hero-desert-caravan_b6273f64.jpg") center/cover; }
+.heritage-hero { background: linear-gradient(100deg, rgba(6, 41, 74, 0.93), rgba(6, 41, 74, 0.53)), url("/manus-storage/hero-leptis-aerial_3ae7244f.jpg") center 52%/cover; }
+.services-hero { background: linear-gradient(100deg, rgba(6, 41, 74, 0.94), rgba(6, 41, 74, 0.57)), url("/manus-storage/hero-leptis-arch_c1826808.jpeg") center/cover; }
 .hero-topography { position: absolute; inset: 0; opacity: 0.23; background-image: repeating-radial-gradient(ellipse at 82% 44%, transparent 0, transparent 18px, #e1c58a 19px, transparent 20px); background-size: 170px 142px; mix-blend-mode: screen; }
 
 /* Destinations */
@@ -330,7 +330,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .faq-section details p { max-width: 700px; margin: -2px 0 23px; color: var(--muted); font-size: 14px; }
 
 /* Trip */
-.trip-hero { min-height: 392px; background: linear-gradient(100deg, rgba(9, 42, 52, 0.96), rgba(9, 42, 52, 0.72)), url("/manus-storage/ghadames_873c8511.jpg") center/cover; }
+.trip-hero { min-height: 392px; background: linear-gradient(100deg, rgba(6, 41, 74, 0.94), rgba(6, 41, 74, 0.52)), url("/manus-storage/hero-desert-sky_4e436a47.webp") center/cover; }
 .trip-content { padding: 82px 0 88px; }
 .trip-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
 .trip-head h2 { margin: 0; }
@@ -629,7 +629,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .site-header { position: sticky; }
 .site-header::before { position: absolute; inset: 0 0 auto; height: 3px; content: ""; background: linear-gradient(90deg, transparent, var(--sand) 16% 84%, transparent); }
 .brand { gap: 0; padding: 0; }
-.brand-mark { width: 152px; height: 64px; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 0 rgba(228, 200, 112, 0.14)); }
+.brand-mark { width: 178px; height: 70px; object-fit: contain; object-position: center; filter: drop-shadow(0 2px 0 rgba(228, 200, 112, 0.16)); }
 .brand-copy, .brand-edition { display: none; }
 .footer-mark { width: 158px; height: 124px; margin-bottom: 15px; padding: 0; object-fit: contain; object-position: right center; border: 0; border-radius: 0; }
 .footer-coordinates { display: inline-block; margin-inline-start: 8px; color: rgba(247, 241, 231, 0.52); font-family: var(--sans); font-size: 9px; font-weight: 500; letter-spacing: 0.08em; }
@@ -653,7 +653,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .catalogue-image::after, .heritage-image::after, .culture-topic-image::after { position: absolute; left: 8px; bottom: 6px; padding: 1px 5px; color: var(--ink-deep); background: rgba(251, 247, 239, 0.9); font-size: 8px; font-weight: 700; letter-spacing: 0.06em; }
 .catalogue-image::after { content: "صورة ميدانية"; }
 .heritage-image::after { content: "أرشيف موقع"; }
-.culture-topic-image::after { content: "دفتر الثقافة"; }
+.culture-topic-image::after { content: attr(data-field-note); }
 .culture-topic { position: relative; }
 .culture-topic::before { position: absolute; z-index: 2; top: 13px; left: 16px; padding: 3px 8px; content: attr(data-field-note); color: var(--ink); background: rgba(247, 241, 231, 0.92); border: 1px solid rgba(23, 79, 100, 0.17); font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
 .heritage-list::after { position: absolute; top: 11px; left: 0; content: "مسار الأثر · غرب ← شرق ← جنوب"; color: var(--clay-dark); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
@@ -672,6 +672,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .service-icons article:nth-child(3)::after { content: "عملة · 03"; }
 .service-icons article:nth-child(4)::after { content: "موسم · 04"; }
 .service-icons article:nth-child(5)::after { content: "عافية · 05"; }
+
+/* Archive material pass — كل صورة أصلية من المستخدم تقرأ كبطاقة ميدانية داخل الدليل. */
+.feature-image::before { position: absolute; z-index: 2; right: 18px; bottom: 17px; padding: 5px 9px; content: "ملاحظة ميدانية · شمال ليبيا"; color: var(--ink); background: rgba(251, 247, 238, 0.93); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
+.culture-image { position: relative; }
+.culture-image::after { position: absolute; right: 18px; bottom: 17px; padding: 5px 9px; content: "عمارة الواحة · غدامس"; color: var(--ink); background: rgba(251, 247, 238, 0.93); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
+.trip-content { position: relative; background-image: linear-gradient(90deg, transparent 0 74%, rgba(11, 58, 103, 0.055) 74% 74.1%, transparent 74.1%); }
+.trip-content::after { position: absolute; top: 11px; left: 0; padding: 4px 8px; content: "دفتر المسار · محطة البداية"; color: var(--ink); background: var(--paper-deep); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 700; letter-spacing: 0.06em; }
 
 @media (max-width: 760px) {
   .brand-mark { width: 118px; height: 50px; }

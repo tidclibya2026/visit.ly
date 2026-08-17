@@ -8,9 +8,14 @@ export const assets = {
   favicon: "/manus-storage/visitlibya-favicon_d185c209.png",
   atlasPublicUrl: "https://tidclibya2026.github.io/tidcatlas.ly/",
   visitLibyaPublicUrl: "https://tidclibya2026.github.io/visitlibya/",
-  hero: "/manus-storage/libya-hero-travel-journal_2eb3d5ab.jpg",
-  greenMountain: "/manus-storage/libya-green-mountain-editorial_25008626.jpg",
-  craftTable: "/manus-storage/libya-culture-craft-editorial_8130ac77.jpg",
+  hero: "/manus-storage/hero-old-tripoli_a6480491.jpg",
+  greenMountain: "/manus-storage/hero-green-coast_25dc4d32.jpg",
+  craftTable: "/manus-storage/hero-ghadames-mosque_22defd16.jpg",
+  desertCaravan: "/manus-storage/hero-desert-caravan_b6273f64.jpg",
+  desertSky: "/manus-storage/hero-desert-sky_4e436a47.webp",
+  leptisAerial: "/manus-storage/hero-leptis-aerial_3ae7244f.jpg",
+  leptisArch: "/manus-storage/hero-leptis-arch_c1826808.jpeg",
+  ghadamesPalm: "/manus-storage/hero-ghadames-palm_7c470fb3.jpg",
   leptis: "/manus-storage/leptis-magna_4bf38121.jpeg",
   leptisRoute: "/manus-storage/leptis-magna-route_c5a55a9d.jpg",
   ghadames: "/manus-storage/ghadames_873c8511.jpg",
@@ -26,7 +31,7 @@ export const assets = {
   couscous: "/manus-storage/libyan-couscous_d0b0155c.jpg",
   horseRiding: "/manus-storage/horse-riding-group_660e4f2a.jpg",
   traditionalDress: "/manus-storage/traditional-dress_15d6feff.jpg",
-  pottery: "/manus-storage/traditional-pottery_9e613b56.jpg",
+  pottery: "/manus-storage/traditional-jewellery_af0c9ac4.jpeg",
 } as const;
 
 export type Destination = {
@@ -148,9 +153,9 @@ export const cultureTopics = [
   {
     title: "أثر اليد في كل تفصيل",
     kicker: "الصناعات التقليدية",
-    description: "النحاسيات والفخار والنسيج والسعف والجلود تمنح الزائر فرصة للتعرف إلى حرف ما زالت حاضرة في الأسواق والمجتمعات.",
+    description: "الحُلي الفضية والنحاسيات والنسيج والسعف والجلود تمنح الزائر فرصة للتعرف إلى حرف ما زالت حاضرة في الأسواق والمجتمعات.",
     image: assets.pottery,
-    alt: "قطع فخار تقليدية",
+    alt: "حُلي تقليدية ليبية فضية",
   },
 ];
 

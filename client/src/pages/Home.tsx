@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <SiteShell>
       <section className="home-hero">
-        <img src={assets.hero} alt="ممر معماري مضاء في مدينة ليبية قديمة" className="hero-image" />
+        <img src={assets.hero} alt="ساعة ميدان في المدينة القديمة بطرابلس" className="hero-image" loading="eager" fetchPriority="high" decoding="async" />
         <div className="hero-ink" />
         <div className="hero-content page-frame">
           <p className="eyebrow light hero-eyebrow"><span /> Visit Libya · دليل الاكتشاف الوطني</p>
@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       <section className="feature-split page-frame">
-        <div className="feature-image green-feature"><img src={assets.greenMountain} alt="مسار طبيعي في الجبل الأخضر" /></div>
+        <div className="feature-image green-feature"><img src={assets.greenMountain} alt="الساحل والجبل في شمال ليبيا" /></div>
         <div className="feature-copy">
           <p className="eyebrow">خارج المدينة</p>
           <span className="feature-icon"><Mountain size={23} /></span>
@@ -109,7 +109,7 @@ export default function Home() {
           <p>المطبخ والتقاليد والفروسية والفخار والنسيج ليست تفاصيل جانبية؛ بل طرق أخرى لقراءة المكان ومقابلة ناسه.</p>
           <Link href="/culture" className="underlined-link">افتح صفحات الثقافة <ArrowLeft size={16} /></Link>
         </div>
-        <div className="culture-image"><img src={assets.craftTable} alt="طاولة حرفية بلمسات من الثقافة الليبية" /></div>
+        <div className="culture-image"><img src={assets.craftTable} alt="معلم من العمارة التقليدية في غدامس" /></div>
       </section>
 
       <section className="planner-banner page-frame">
