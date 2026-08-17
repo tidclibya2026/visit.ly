@@ -12,14 +12,16 @@ import Heritage from "./pages/Heritage";
 import Services from "./pages/Services";
 import TripPlanner from "./pages/TripPlanner";
 import AtlasGateway from "./pages/AtlasGateway";
+import DestinationDetail from "./pages/DestinationDetail";
 import { TripProvider } from "./contexts/TripContext";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/destinations"} component={Destinations} />
+      <Route path={"/destinations/:id"} component={DestinationDetail} />
       <Route path={"/experiences"} component={Experiences} />
       <Route path={"/culture"} component={Culture} />
       <Route path={"/heritage"} component={Heritage} />
