@@ -6,6 +6,8 @@ import { ArrowUpLeft, Compass, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ReactNode, useEffect, useState } from "react";
 import { assets } from "@/lib/content";
+import { ImageInspector } from "@/components/ImageInspector";
+import { KnowledgeAssistant } from "@/components/KnowledgeAssistant";
 
 const navigation = [
   { href: "/", label: "الرئيسية" },
@@ -36,6 +38,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
         <div className="header-inner">
           <Link href="/" className="brand" aria-label="تراث ليبيا، الصفحة الرئيسية" onClick={() => setOpen(false)}>
             <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="brand-mark" />
+            <span className="brand-stamp"><b>Visit Libya</b><span>دليل رسمي</span></span>
           </Link>
 
           <nav className="desktop-nav" aria-label="التنقل الرئيسي">
@@ -62,6 +65,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
       </header>
       <main id="main-content">{children}</main>
       <Footer />
+      <ImageInspector />
+      <KnowledgeAssistant />
     </div>
   );
 }
