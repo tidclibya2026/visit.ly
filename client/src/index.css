@@ -1314,6 +1314,36 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .experience-card[data-experience="crafts-ghadames"] .experience-card-photo img { object-position: center 32%; }
 .experience-card[data-experience="coast-green-mountain"] .experience-card-photo img { object-position: center 55%; }
 
+/* Shared full-bleed field photography for every remaining platform section. */
+.landmark-hero { min-height: clamp(535px, 51vw, 650px); isolation: isolate; background: var(--ink-deep) !important; }
+.landmark-hero::before, .landmark-hero::after, .landmark-hero .hero-topography, .landmark-hero .atlas-grid-lines { display: none; }
+.landmark-hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 52%; filter: brightness(1.1) contrast(1.05) saturate(1.06); }
+.landmark-hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(3, 30, 53, 0.02) 0%, rgba(3, 30, 53, 0.06) 45%, rgba(3, 30, 53, 0.79) 100%), linear-gradient(0deg, rgba(3, 30, 53, 0.2), transparent 56%); }
+.landmark-hero .page-frame, .landmark-hero .atlas-hero-content, .landmark-hero .atlas-coordinates { position: relative; z-index: 2; }
+.landmark-hero h1, .landmark-hero p:not(.eyebrow) { text-shadow: 0 2px 20px rgba(3, 30, 53, 0.48); }
+.heritage-hero .landmark-hero-image { object-position: center 56%; }
+.services-hero .landmark-hero-image { object-position: center 48%; }
+.trip-hero .landmark-hero-image { object-position: center 58%; }
+.events-hero .landmark-hero-image { object-position: center 42%; }
+.atlas-hero.landmark-hero { display: block; min-height: clamp(535px, 51vw, 650px); }
+.atlas-hero.landmark-hero .atlas-hero-content { min-height: clamp(535px, 51vw, 650px); }
+
+.language-picker { min-height: 34px; display: inline-flex; align-items: center; gap: 5px; padding: 0 7px; color: var(--paper); border: 1px solid rgba(251, 247, 238, 0.35); }
+.language-picker select { max-width: 82px; color: inherit; background: transparent; border: 0; outline: 0; font: inherit; font-size: 11px; cursor: pointer; }
+.language-picker option { color: var(--ink); }
+.site-root[dir="ltr"] .brand, .site-root[dir="ltr"] .desktop-nav, .site-root[dir="ltr"] .header-actions, .site-root[dir="ltr"] .footer-grid, .site-root[dir="ltr"] .footer-base { direction: ltr; }
+.site-root[dir="ltr"] .inner-hero .page-frame, .site-root[dir="ltr"] .trip-hero .page-frame, .site-root[dir="ltr"] .culture-hero-copy, .site-root[dir="ltr"] .atlas-hero-content { text-align: left; }
+
+@media (max-width: 760px) {
+  .landmark-hero, .atlas-hero.landmark-hero, .atlas-hero.landmark-hero .atlas-hero-content { min-height: 510px; }
+  .landmark-hero-image { object-position: 54% 52%; }
+  .landmark-hero-ink { background: linear-gradient(0deg, rgba(3, 30, 53, 0.77), rgba(3, 30, 53, 0.04) 74%); }
+  .services-hero .landmark-hero-image { object-position: 52% 48%; }
+  .events-hero .landmark-hero-image { object-position: 56% 44%; }
+  .language-picker { padding: 0 4px; }
+  .language-picker select { max-width: 70px; }
+}
+
 @media (max-width: 760px) {
   .experience-hero-image { object-position: 48% center; }
   .experience-hero-ink { background: linear-gradient(0deg, rgba(3, 30, 53, 0.66), rgba(3, 30, 53, 0.08) 72%); }

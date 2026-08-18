@@ -8,9 +8,11 @@ import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
 import { assets, destinations, heroSlides } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   const { stops, toggleStop } = useTrip();
+  const { language, t } = useLanguage();
   const featured = destinations.slice(0, 3);
   const [activeSlide, setActiveSlide] = useState(0);
   const slide = heroSlides[activeSlide];
@@ -29,13 +31,13 @@ export default function Home() {
         {heroSlides.map((item, index) => <img src={item.image} alt={index === activeSlide ? item.alt : ""} aria-hidden={index !== activeSlide} className={`hero-image ${index === activeSlide ? "is-active" : ""}`} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} decoding="async" key={item.image} />)}
         <div className="hero-ink" />
         <div className="hero-content page-frame" key={slide.image}>
-          <p className="eyebrow light hero-eyebrow"><span /> {slide.kicker}</p>
-          <p className="hero-field-note"><span>ملاحظة الدليل</span>{slide.note}</p>
-          <h1>{slide.title}<br /><i>{slide.accent}</i></h1>
-          <p className="hero-copy">{slide.description}</p>
+          <p className="eyebrow light hero-eyebrow"><span /> {language === "ar" ? slide.kicker : t("hero.home.kicker")}</p>
+          <p className="hero-field-note"><span>{language === "ar" ? "ملاحظة الدليل" : "Visit Libya"}</span>{language === "ar" ? slide.note : t("hero.home.kicker")}</p>
+          <h1>{language === "ar" ? slide.title : t("hero.home.title")}<br /><i>{language === "ar" ? slide.accent : t("hero.home.accent")}</i></h1>
+          <p className="hero-copy">{language === "ar" ? slide.description : t("hero.home.copy")}</p>
           <div className="hero-actions">
-            <Link href="/destinations" className="button button-light">افتح دفتر الوجهات <ArrowLeft size={17} /></Link>
-            <Link href="/trip" className="text-action light">رتّب مسارك <ArrowUpLeft size={17} /></Link>
+            <Link href="/destinations" className="button button-light">{t("nav.destinations")} <ArrowLeft size={17} /></Link>
+            <Link href="/trip" className="text-action light">{t("nav.plan")} <ArrowUpLeft size={17} /></Link>
           </div>
         </div>
         <div className="hero-controls" aria-label="اختيار صورة الهيرو"><button type="button" onClick={previousSlide} aria-label="الصورة السابقة"><ChevronRight size={19} /></button><div className="hero-dots">{heroSlides.map((item, index) => <button type="button" onClick={() => setActiveSlide(index)} className={index === activeSlide ? "is-active" : ""} aria-label={`عرض ${item.note}`} key={item.image} />)}</div><button type="button" onClick={nextSlide} aria-label="الصورة التالية"><ChevronLeft size={19} /></button></div>

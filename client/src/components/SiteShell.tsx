@@ -2,28 +2,23 @@
  * Design reminder — «دفاتر الرحّالة»: رأس تحريري نظيف، مسارات واضحة، وأختام/إشارات
  * دقيقة بدل عناصر تنقل صاخبة. يجب أن يبقى الإيقاع هادئًا وسهل القراءة بالعربية.
  */
-import { ArrowUpLeft, Compass, Menu, X } from "lucide-react";
+import { ArrowUpLeft, Compass, Globe2, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ReactNode, useEffect, useState } from "react";
 import { assets } from "@/lib/content";
 import { ImageInspector } from "@/components/ImageInspector";
 import { KnowledgeAssistant } from "@/components/KnowledgeAssistant";
+import { languageOptions, useLanguage } from "@/contexts/LanguageContext";
 
 const navigation = [
-  { href: "/", label: "الرئيسية" },
-  { href: "/destinations", label: "وجهات" },
-  { href: "/experiences", label: "تجارب" },
-  { href: "/culture", label: "ثقافة" },
-  { href: "/heritage", label: "تراث" },
-  { href: "/events", label: "فعاليات" },
-  { href: "/services", label: "دليل السفر" },
-  { href: "/atlas", label: "الأطلس" },
+  { href: "/", labelKey: "nav.home" }, { href: "/destinations", labelKey: "nav.destinations" }, { href: "/experiences", labelKey: "nav.experiences" }, { href: "/culture", labelKey: "nav.culture" }, { href: "/heritage", labelKey: "nav.heritage" }, { href: "/events", labelKey: "nav.events" }, { href: "/services", labelKey: "nav.services" }, { href: "/atlas", labelKey: "nav.atlas" },
 ];
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { language, setLanguage, t, isRtl } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -33,34 +28,35 @@ export function SiteShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="site-root" dir="rtl">
-      <a className="skip-link" href="#main-content">انتقل إلى المحتوى</a>
+    <div className={`site-root language-${language}`} dir={isRtl ? "rtl" : "ltr"}>
+      <a className="skip-link" href="#main-content">{t("nav.skip")}</a>
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <div className="header-inner">
-          <Link href="/" className="brand" aria-label="تراث ليبيا، الصفحة الرئيسية" onClick={() => setOpen(false)}>
+          <Link href="/" className="brand" aria-label={t("nav.home")} onClick={() => setOpen(false)}>
             <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="brand-mark" />
-            <span className="brand-stamp"><b>Visit Libya</b><span>دليل رسمي</span></span>
+            <span className="brand-stamp"><b>Visit Libya</b><span>{t("brand.official")}</span></span>
           </Link>
 
-          <nav className="desktop-nav" aria-label="التنقل الرئيسي">
+          <nav className="desktop-nav" aria-label={t("nav.main")}>
             {navigation.map((item) => (
-              <Link key={item.href} href={item.href} className={location === item.href ? "is-active" : ""}>{item.label}</Link>
+              <Link key={item.href} href={item.href} className={location === item.href ? "is-active" : ""}>{t(item.labelKey)}</Link>
             ))}
           </nav>
 
           <div className="header-actions">
-            <Link href="/trip" className="nav-plan"><Compass size={15} strokeWidth={1.9} /> خطط مسارك</Link>
-            <button className="menu-button" type="button" aria-label={open ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
+            <label className="language-picker"><Globe2 size={14} /><span className="sr-only">{t("nav.language")}</span><select value={language} onChange={(event) => setLanguage(event.target.value as typeof language)} aria-label={t("nav.language")}>{languageOptions.map((item) => <option value={item.code} key={item.code}>{item.label}</option>)}</select></label>
+            <Link href="/trip" className="nav-plan"><Compass size={15} strokeWidth={1.9} /> {t("nav.plan")}</Link>
+            <button className="menu-button" type="button" aria-label={open ? t("nav.menuClose") : t("nav.menuOpen")} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
               {open ? <X size={21} /> : <Menu size={23} />}
             </button>
           </div>
         </div>
         <div className={`mobile-nav ${open ? "is-open" : ""}`}>
-          <nav aria-label="التنقل على الهاتف">
+          <nav aria-label={t("nav.mobile")}>
             {navigation.map((item, index) => (
-              <Link key={item.href} href={item.href} onClick={() => setOpen(false)}><span>0{index + 1}</span>{item.label}</Link>
+              <Link key={item.href} href={item.href} onClick={() => setOpen(false)}><span>0{index + 1}</span>{t(item.labelKey)}</Link>
             ))}
-            <Link href="/trip" onClick={() => setOpen(false)} className="mobile-plan">افتح مخطط الرحلة <ArrowUpLeft size={17} /></Link>
+            <Link href="/trip" onClick={() => setOpen(false)} className="mobile-plan">{t("nav.openPlan")} <ArrowUpLeft size={17} /></Link>
           </nav>
         </div>
       </header>
@@ -73,34 +69,27 @@ export function SiteShell({ children }: { children: ReactNode }) {
 }
 
 function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="site-footer">
       <div className="footer-grid">
         <div className="footer-intro">
           <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="footer-mark" />
           <p className="eyebrow light">Visit Libya · زور ليبيا <span className="footer-coordinates">32°53′N · 12°34′E</span></p>
-          <h2>دليل ليبيا الميداني.</h2>
-          <p>وجهات وتجارب وتراث ومعلومات عملية من مواد مركز المعلومات والتوثيق السياحي.</p>
+          <h2>{t("footer.title")}</h2>
+          <p>{t("footer.copy")}</p>
         </div>
         <div className="footer-links">
-          <p className="footer-label">استكشف</p>
-          <Link href="/destinations">الوجهات</Link>
-          <Link href="/experiences">ما الذي يمكن فعله</Link>
-          <Link href="/culture">الثقافة والمذاقات</Link>
-          <Link href="/heritage">التراث</Link>
-          <Link href="/events">رزنامة الفعاليات</Link>
+          <p className="footer-label">{t("footer.explore")}</p>
+          <Link href="/destinations">{t("footer.destinations")}</Link><Link href="/experiences">{t("footer.experiences")}</Link><Link href="/culture">{t("footer.culture")}</Link><Link href="/heritage">{t("footer.heritage")}</Link><Link href="/events">{t("footer.events")}</Link>
         </div>
         <div className="footer-links">
-          <p className="footer-label">رتّب الرحلة</p>
-          <Link href="/trip">مخطط الرحلة</Link>
-          <Link href="/atlas">أطلس ليبيا السياحي</Link>
-          <Link href="/services">خدمات وإرشادات</Link>
-          <a href="https://evisa.gov.ly/" target="_blank" rel="noreferrer">بوابة التأشيرة الرسمية</a>
-          <a href="tel:+218">دليل أرقام مفيد</a>
+          <p className="footer-label">{t("footer.plan")}</p>
+          <Link href="/trip">{t("footer.trip")}</Link><Link href="/atlas">{t("footer.atlas")}</Link><Link href="/services">{t("footer.services")}</Link><a href="https://evisa.gov.ly/" target="_blank" rel="noreferrer">{t("footer.visa")}</a><a href="tel:+218">{t("footer.help")}</a>
         </div>
       </div>
       <div className="footer-base">
-        <span>تصميم وتنفيذ مركز المعلومات والتوثيق السياحي © 2026</span>
+        <span>{t("footer.credit")}</span>
         <span>Visit Libya · زور ليبيا</span>
       </div>
     </footer>

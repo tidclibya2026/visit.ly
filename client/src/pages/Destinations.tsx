@@ -6,7 +6,8 @@ import { ArrowLeft, Check, ChevronLeft, ChevronRight, Grid2X2, Images, List, Map
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { destinations, type Destination, type GalleryItem } from "@/lib/content";
+import { assets, destinations, type Destination, type GalleryItem } from "@/lib/content";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrip } from "@/contexts/TripContext";
 import { filterAndSortDestinations, type DestinationSort } from "@/lib/destinationFilters";
 import { destinationViewStorageKey, parseDestinationView, type DestinationView } from "@/lib/destinationView";
@@ -27,6 +28,7 @@ export default function Destinations() {
   const [galleryDestinationId, setGalleryDestinationId] = useState<string | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const { stops, toggleStop } = useTrip();
+  const { t } = useLanguage();
   const changeViewMode = (nextView: DestinationView) => {
     setViewMode(nextView);
     window.sessionStorage.setItem(destinationViewStorageKey, nextView);
@@ -35,9 +37,9 @@ export default function Destinations() {
 
   return (
     <SiteShell>
-      <section className="inner-hero destinations-hero">
-        <div className="page-frame"><p className="eyebrow light">المتوسط ← الصحراء</p><h1>ابحث عن المكان<br /><i>الذي يشبه مزاج رحلتك.</i></h1><p>مدن عريقة وواحات ومواقع أثرية ومسارات طبيعة؛ ابدأ من الاسم أو من نوع التجربة.</p></div>
-        <span className="hero-topography" aria-hidden="true" />
+      <section className="inner-hero destinations-hero landmark-hero">
+        <img className="landmark-hero-image" src={assets.greenMountain} alt="ساحل الجبل الأخضر من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" />
+        <div className="page-frame"><p className="eyebrow light">{t("hero.destinations.kicker")}</p><h1>{t("hero.destinations.title")}<br /><i>{t("hero.destinations.accent")}</i></h1><p>{t("hero.destinations.copy")}</p></div>
       </section>
       <section className="page-frame destinations-content">
         <div className="filter-bar">

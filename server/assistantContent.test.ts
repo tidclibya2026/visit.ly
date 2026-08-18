@@ -18,4 +18,9 @@ describe("expanded assistant knowledge", () => {
       expect(localized?.frCards.length).toBeGreaterThan(0);
     });
   });
+
+  it("exposes all seven language options through the shared language context", async () => {
+    const languageContext = await import("../client/src/contexts/LanguageContext");
+    expect(languageContext.languageOptions.map((item) => item.code)).toEqual(["ar", "en", "fr", "it", "de", "es", "zh"]);
+  });
 });

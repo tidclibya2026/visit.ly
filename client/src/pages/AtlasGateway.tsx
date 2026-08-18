@@ -7,18 +7,20 @@ import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
 import { assets } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AtlasGateway() {
   const { stops } = useTrip();
+  const { t } = useLanguage();
 
   return (
     <SiteShell>
-      <section className="atlas-hero">
-        <div className="atlas-grid-lines" aria-hidden="true" />
+      <section className="atlas-hero landmark-hero">
+        <img className="landmark-hero-image" src={assets.tolmeitha} alt="طلميثة من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" />
         <div className="page-frame atlas-hero-content">
-          <p className="eyebrow light">أطلس ليبيا السياحي</p>
-          <h1>من المعلومة<br /><i>إلى القرار.</i></h1>
-          <p>بوابة الاستكشاف المكاني التي تجمع طبقات المواقع والبيانات الموثقة والبحث الذكي وتخطيط المسارات في تجربة وطنية واحدة.</p>
+          <p className="eyebrow light">{t("hero.atlas.kicker")}</p>
+          <h1>{t("hero.atlas.title")}<br /><i>{t("hero.atlas.accent")}</i></h1>
+          <p>{t("hero.atlas.copy")}</p>
           <div className="atlas-hero-actions">
             <a className="button button-sand" href={assets.atlasPublicUrl} target="_blank" rel="noreferrer">افتح الأطلس الوطني <ArrowUpLeft size={17} /></a>
             <Link href="/trip" className="text-action light">راجع محطات رحلتك <Route size={17} /></Link>

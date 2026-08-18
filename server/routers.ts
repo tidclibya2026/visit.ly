@@ -37,9 +37,9 @@ export const appRouter = router({
     translate: publicProcedure.input(z.object({
       question: z.string().min(2).max(800),
       answer: z.string().min(2).max(10000),
-    targetLanguage: z.enum(["en", "fr"]),
+    targetLanguage: z.enum(["en", "fr", "it", "de", "es", "zh"]),
   })).mutation(async ({ input }) => {
-      const languageLabel = input.targetLanguage === "en" ? "English" : "French";
+      const languageLabel = ({ en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const)[input.targetLanguage];
       const sourceAnswer = input.answer.length > 3_800
         ? `${input.answer.slice(0, 3_800)}\n\n[The source continues with additional details. Give visitors a concise overview of the material provided.]`
         : input.answer;
@@ -68,7 +68,7 @@ export const appRouter = router({
     transcribe: publicProcedure.input(z.object({
       audioBase64: z.string().min(1),
       mimeType: z.enum(audioMimeTypes),
-      language: z.enum(["ar", "en", "fr"]),
+      language: z.enum(["ar", "en", "fr", "it", "de", "es", "zh"]),
     })).mutation(async ({ input }) => {
       let audio: Buffer;
       try {

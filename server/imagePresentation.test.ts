@@ -23,4 +23,13 @@ describe("image presentation", () => {
     expect(culture).toContain("culture-hero-image");
     expect(culture).toContain("assets.cultureFolklore");
   });
+
+  it("يعتمد هيروات الأقسام على صور ميدانية صريحة بدل الخلفيات الزخرفية", () => {
+    const pages = ["Destinations.tsx", "Heritage.tsx", "Services.tsx", "TripPlanner.tsx", "Events.tsx", "AtlasGateway.tsx"];
+    pages.forEach((page) => {
+      const source = readFileSync(resolve(projectRoot, `client/src/pages/${page}`), "utf8");
+      expect(source).toContain("landmark-hero");
+      expect(source).toContain("landmark-hero-image");
+    });
+  });
 });
