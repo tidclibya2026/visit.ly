@@ -64,7 +64,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
-      <main id="main-content">{children}</main>
+      <main id="main-content" key={location} className="page-content-transition">{children}</main>
       <Footer />
       <ImageInspector />
       <KnowledgeAssistant />

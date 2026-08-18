@@ -88,6 +88,18 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="verified-reviews page-frame" aria-labelledby="verified-reviews-title">
+        <div className="verified-reviews-copy">
+          <p className="eyebrow">صوت الزائر</p>
+          <h2 id="verified-reviews-title">مراجعات موثقة<br />تبدأ من المصدر.</h2>
+          <p>يحفظ المركز قيمة تجربة الزائر، لكنه لا ينشر تقييمًا أو شهادةً قبل مراجعة المصدر والحصول على موافقة واضحة للنشر.</p>
+        </div>
+        <div className="review-ledger" role="status" aria-live="polite">
+          <span className="review-ledger-count">0</span>
+          <div><strong>لا توجد مراجعات زوار موثقة منشورة حاليًا.</strong><p>عند اعتماد شهادات حقيقية مرتبطة بوجهات محددة، ستظهر هنا مع مصدرها وتاريخ نشرها.</p></div>
+        </div>
+      </section>
+
       <section className="feature-split page-frame">
         <div className="feature-image green-feature"><img src={assets.greenMountain} alt="الساحل والجبل في شمال ليبيا" /></div>
         <div className="feature-copy">

@@ -30,4 +30,11 @@ describe("GitHub Pages deployment", () => {
     expect(source).toContain('"404.html"');
     expect(source).toContain('"/manus-storage/"');
   });
+
+  it("يمرر قاعدة Vite إلى Wouter كي يعمل جذر المستودع على Pages", () => {
+    const app = readFileSync(resolve(root, "client/src/App.tsx"), "utf8");
+
+    expect(app).toContain("import.meta.env.BASE_URL");
+    expect(app).toContain("<WouterRouter base={routerBase}>");
+  });
 });
