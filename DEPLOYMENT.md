@@ -18,6 +18,10 @@
 
 ## GitHub Pages وحدود النشر
 
-GitHub Pages يستضيف ملفات ثابتة فقط. يمكنه عرض `dist/public/index.html` كمعاينة للواجهة، لكنه لا يشغّل خادم Express أو tRPC أو قاعدة البيانات أو الترجمة والصوت. لذلك يبقى النشر الرسمي المناسب للمنصة الكاملة عبر استضافة Manus، مع استخدام GitHub كمستودع مصدر، ومراجعة، وتكامل مستمر.
+ينشر الملف [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) نسخة ثابتة تلقائيًا إلى GitHub Pages عند كل تحديث للفرع `main`. يستخدم الأمر `pnpm build:pages` قاعدة مسار `/visit.ly/`، وينشئ `404.html` لاستيعاب مسارات React، ويستبدل روابط صور الأرشيف النسبية بعنوان استضافة Manus العام حتى لا تختفي الصور من معاينة GitHub Pages.
+
+من **Settings → Pages** في GitHub، اختر **Source: GitHub Actions**. لا تختَر النشر من الفرع `main` أو الجذر؛ فعند اختيار ذلك ستظهر صفحة README بدل واجهة الموقع. بعد رفع هذا التحديث، راقب سير عمل **Deploy Visit Libya static preview to GitHub Pages** في تبويب Actions، ثم افتح `https://tidclibya2026.github.io/visit.ly/`.
+
+GitHub Pages يستضيف ملفات ثابتة فقط. لا يشغّل خادم Express أو tRPC أو قاعدة البيانات أو الترجمة والصوت. لذلك يبقى النشر الرسمي المناسب للمنصة الكاملة عبر استضافة Manus، مع استخدام GitHub Pages كمعاينة للواجهة وGitHub كمستودع مصدر ومراجعة وتكامل مستمر.
 
 > لا تعتمد GitHub Pages للنطاق الرسمي إذا كانت ميزات المساعد أو الخرائط أو المصادقة أو قاعدة البيانات مطلوبة؛ استخدم نطاق المشروع المنشور من Manus ثم اربطه بـ `visit.ly` من إعدادات النطاقات.
