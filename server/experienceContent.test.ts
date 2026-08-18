@@ -15,4 +15,11 @@ describe("experience destination mapping", () => {
       expect(experience.image).toMatch(/^\/manus-storage\//);
     });
   });
+
+  it("يعرض بطاقة المذاقات بصورة حلويات موثقة من أرشيف المركز", () => {
+    const flavours = experiences.find((experience) => experience.id === "flavours-tripoli");
+
+    expect(flavours?.image).toContain("center-maqroud");
+    expect(flavours?.alt).toContain("مقروض");
+  });
 });

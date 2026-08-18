@@ -105,8 +105,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 
 /* Home */
 .home-hero { position: relative; min-height: 683px; display: grid; align-items: stretch; isolation: isolate; overflow: hidden; color: var(--paper); background-color: var(--ink-night); }
-.hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 49% center; opacity: 0; filter: brightness(1.08) contrast(1.02) blur(2px); transform: scale(1.07); will-change: opacity, transform, filter; transition: opacity 1100ms var(--ease-out), transform 6200ms cubic-bezier(0.16, 1, 0.3, 1), filter 1100ms var(--ease-out); }
-.hero-image.is-active { opacity: 1; filter: brightness(1.04) contrast(1.03) saturate(1.04) blur(0); transform: scale(1); }
+.hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: center center; opacity: 0; filter: brightness(1.08) contrast(1.02) blur(2px); transform: scale(1.035); will-change: opacity, transform, filter; transition: opacity 1100ms var(--ease-out), transform 6200ms cubic-bezier(0.16, 1, 0.3, 1), filter 1100ms var(--ease-out); }
+.hero-image.is-active { opacity: 1; filter: brightness(1.04) contrast(1.03) saturate(1.04) blur(0); transform: scale(1.01); }
 .hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(6, 41, 74, 0.03) 0%, rgba(6, 41, 74, 0.2) 43%, rgba(6, 41, 74, 0.86) 85%), linear-gradient(0deg, rgba(6, 41, 74, 0.26), transparent 52%); }
 .hero-content { position: relative; z-index: 2; align-self: center; padding-top: 22px; max-width: 1180px; animation: hero-copy-enter 720ms var(--ease-out) both; }
 .hero-eyebrow { margin-bottom: 19px; }
@@ -140,14 +140,13 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .section { padding: 112px 0; }
 .split-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 38px; }
 .split-head h2 { margin-bottom: 0; }
-.destination-row { display: grid; grid-template-columns: 1.16fr 0.84fr 0.84fr; align-items: stretch; min-height: 449px; gap: 13px; }
-.destination-card { position: relative; min-height: 349px; overflow: hidden; color: var(--paper); background: var(--ink); }
+.destination-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; min-height: 470px; gap: 13px; }
+.destination-card { position: relative; min-height: 470px; height: 100%; overflow: hidden; color: var(--paper); background: var(--ink); }
 .destination-card::before { position: absolute; z-index: 3; top: 14px; right: 14px; padding: 3px 7px; color: var(--ink); background: rgba(251, 247, 238, 0.92); border-inline-start: 3px solid var(--sand); font-size: 9px; font-weight: 800; letter-spacing: 0.07em; }
 .destination-card-1::before { content: "بطاقة 01 · مدينة"; }
 .destination-card-2::before { content: "بطاقة 02 · ساحل"; }
 .destination-card-3::before { content: "بطاقة 03 · واحة"; }
-.destination-card-2 { margin-top: 44px; }
-.destination-card-3 { margin-top: 92px; }
+.destination-card-2, .destination-card-3 { margin-top: 0; }
 .destination-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 580ms var(--ease-flow); }
 .destination-card:hover img { transform: scale(1.045); }
 .destination-shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7, 28, 35, 0.92) 0%, rgba(7, 28, 35, 0.33) 55%, rgba(7, 28, 35, 0.05) 100%); }
