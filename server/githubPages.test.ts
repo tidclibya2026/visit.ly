@@ -14,6 +14,12 @@ describe("GitHub Pages deployment", () => {
     expect(workflow).toContain("path: dist/public");
   });
 
+  it("يعدّ pnpm قبل إعداد Node.js ذي ذاكرة pnpm المؤقتة", () => {
+    const workflow = readFileSync(resolve(root, ".github/workflows/deploy-pages.yml"), "utf8");
+
+    expect(workflow.indexOf("name: Set up pnpm")).toBeLessThan(workflow.indexOf("name: Set up Node.js"));
+  });
+
   it("يوفر أداة بناء لصفحة البداية ومسار 404 والملفات الثابتة", () => {
     const script = resolve(root, "scripts/build-pages.mjs");
     expect(existsSync(script)).toBe(true);

@@ -151,3 +151,5 @@
 - [x] مراجعة إعداد GitHub Pages الحالي ومسار مخرجات البناء للواجهة الثابتة.
 - [x] إنشاء GitHub Actions لنشر محتويات `dist/public` إلى GitHub Pages عند تحديث main.
 - [x] التحقق من إعداد النشر وتحديث دليل GitHub Pages بالخطوات المطلوبة في المستودع.
+- [x] تصحيح ترتيب إعداد pnpm وNode.js في سيرَي GitHub Actions لمعالجة خطأ `Unable to locate executable file: pnpm`.
+- [x] اختبار سير العمل محليًا ومزامنة الإصلاح إلى GitHub للتحقق من تشغيل النشر من جديد.

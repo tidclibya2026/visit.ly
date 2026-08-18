@@ -13,4 +13,10 @@ describe("GitHub Actions workflow", () => {
     expect(workflow).toContain("pnpm test");
     expect(workflow).toContain("pnpm build");
   });
+
+  it("يعدّ pnpm قبل طلب ذاكرة pnpm المؤقتة من Node.js", () => {
+    const workflow = readFileSync(workflowPath, "utf8");
+
+    expect(workflow.indexOf("name: Set up pnpm")).toBeLessThan(workflow.indexOf("name: Set up Node.js"));
+  });
 });
