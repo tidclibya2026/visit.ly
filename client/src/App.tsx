@@ -15,6 +15,7 @@ import AtlasGateway from "./pages/AtlasGateway";
 import DestinationDetail from "./pages/DestinationDetail";
 import Events from "./pages/Events";
 import { TripProvider } from "./contexts/TripContext";
+import { PageNavigationLoader } from "./components/PageNavigationLoader";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -52,6 +53,7 @@ function App() {
         <TooltipProvider>
           <TripProvider>
             <Toaster />
+            <PageNavigationLoader />
             <Router />
           </TripProvider>
         </TooltipProvider>
