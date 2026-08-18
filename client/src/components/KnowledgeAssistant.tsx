@@ -2,8 +2,10 @@
  * Design reminder — «دفاتر الرحّالة»: المساعد محطة قراءة ميدانية، يقدّم بطاقات قصيرة
  * من بنك المعرفة المرفق مع مرشحات واضحة، ولا يدّعي معرفة أو خدمة خارجية.
  */
-import { BookOpen, ChevronDown, Globe2, Loader2, MessageCircle, Mic, Search, Send, Sparkles, Square, X } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronDown, Globe2, Loader2, MapPin, MessageCircle, Mic, Search, Send, Sparkles, Square, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "wouter";
+import { destinations } from "@/lib/content";
 import { faqEntries, type FaqEntry } from "@/lib/faqData";
 import { trpc } from "@/lib/trpc";
 
@@ -71,6 +73,14 @@ export function KnowledgeAssistant() {
   const results = useMemo(() => rankEntries(query, scopedEntries), [query, scopedEntries]);
   const cards = selected ? (translation?.cards ?? answerCards(selected.answer)) : [];
   const question = selected ? (translation?.question ?? selected.question) : "";
+  const relatedDestinations = useMemo(() => {
+    if (!selected) return [];
+    const hasDestination = (source: string, destination: typeof destinations[number]) => [destination.title, destination.city].some((term) => source.includes(normalize(term)));
+    const questionMatches = destinations.filter((destination) => hasDestination(normalize(selected.question), destination));
+    if (questionMatches.length) return questionMatches.slice(0, 2);
+    return destinations.filter((destination) => hasDestination(normalize(selected.answer), destination)).slice(0, 2);
+  }, [selected]);
+  const languageStatus = locale === "ar" ? "إجابة المصدر بالعربية" : locale === "en" ? "ترجمة موجزة إلى الإنجليزية" : "ترجمة موجزة إلى الفرنسية";
 
   useEffect(() => () => streamRef.current?.getTracks().forEach((track) => track.stop()), []);
 
@@ -125,11 +135,12 @@ export function KnowledgeAssistant() {
 
   return <aside className={`knowledge-assistant ${open ? "is-open" : ""}`} aria-label="المساعد المعرفي">
     {open && <div className="assistant-panel">
-      <div className="assistant-head"><div><p className="eyebrow light"><Sparkles size={13} /> مساعد Visit Libya</p><h2>اسأل دليل الرحلة.</h2><p>بطاقات من بنك المركز، مع ترجمة للإجابات عند اختيار اللغة.</p></div><button type="button" onClick={() => setOpen(false)} aria-label="إغلاق المساعد"><X size={19} /></button></div>
+      <div className="assistant-head"><div><p className="eyebrow light"><Sparkles size={13} /> مساعد Visit Libya</p><h2>اسأل دليل الرحلة.</h2><p>بحث داخل بنك المعرفة المرفق، مع روابط للوجهات المرتبطة حين تتوفر.</p></div><button type="button" onClick={() => setOpen(false)} aria-label="إغلاق المساعد"><X size={19} /></button></div>
       <div className="assistant-language-bar" aria-label="لغة الإجابة"><Globe2 size={14} />{(["ar", "en", "fr"] as AssistantLocale[]).map((item) => <button type="button" className={locale === item ? "is-active" : ""} onClick={() => chooseLocale(item)} key={item}>{item === "ar" ? "العربية" : item === "en" ? "English" : "Français"}</button>)}</div>
+      <p className="assistant-language-status">{languageStatus}</p>
       <div className="assistant-topic-bar" aria-label="تصفية موضوع المساعد">{topics.map((item) => <button type="button" className={topic === item ? "is-active" : ""} onClick={() => chooseTopic(item)} key={item}>{item}</button>)}</div>
       <div className="assistant-query-row"><label className="assistant-search"><Search size={17} /><span className="sr-only">اكتب سؤالك</span><input value={query} onChange={(event) => { setQuery(event.target.value); setSelected(null); setTranslation(null); }} onKeyDown={(event) => { if (event.key === "Enter" && results[0]) choose(results[0]); }} placeholder={locale === "ar" ? "مثال: ما أبرز معالم بنغازي؟" : locale === "en" ? "Ask about Libya…" : "Posez une question sur la Libye…"} /><button type="button" onClick={() => results[0] && choose(results[0])} aria-label="ابحث"><Send size={16} /></button></label><button type="button" className={`assistant-mic ${recording ? "is-recording" : ""}`} onClick={recording ? stopRecording : startRecording} disabled={transcribeMutation.isPending} aria-label={recording ? "إيقاف التسجيل" : "سجّل سؤالًا صوتيًا"}>{transcribeMutation.isPending ? <Loader2 size={17} className="spin" /> : recording ? <Square size={15} /> : <Mic size={17} />}</button></div>{voiceError && <p className="assistant-voice-error">{voiceError}</p>}
-      {selected ? <div className="assistant-answer"><div className="assistant-answer-meta"><BookOpen size={15} /><span>{topicFor(selected)}</span><button type="button" onClick={() => { setSelected(null); setTranslation(null); setTranslationError(""); }}>كل الإجابات</button></div><h3>{question}</h3>{translateMutation.isPending ? <p className="assistant-translating"><Loader2 size={15} className="spin" /> جارٍ تجهيز الترجمة…</p> : <><div className="assistant-card-stack">{cards.map((card, index) => <article key={`${selected.question}-${index}`}><span>بطاقة {index + 1}</span><p>{card}</p></article>)}</div>{translationError && <p className="assistant-translation-note" role="status">{translationError}</p>}</>}{selected.answer.length > cards.join(" ").length && locale === "ar" && <span className="assistant-truncated">اختُصرت الإجابة الطويلة إلى بطاقات قراءة؛ استخدم صياغة أكثر تحديدًا لتضييق البحث.</span>}</div> : <div className="assistant-results"><p className="assistant-label">{query ? "إجابات مقترحة" : `أسئلة ${topic === "الكل" ? "للبدء" : topic}`}</p>{results.length ? results.map((entry) => <button type="button" key={entry.question} onClick={() => choose(entry)}><small>{topicFor(entry)}</small><span>{entry.question}</span><ChevronDown size={16} /></button>) : <p className="assistant-empty">لم أجد تطابقًا مباشرًا ضمن هذا الموضوع. جرّب اسم مدينة أو معلم أو فئة أخرى.</p>}</div>}
+      {selected ? <div className="assistant-answer"><div className="assistant-answer-meta"><BookOpen size={15} /><span>{topicFor(selected)}</span><button type="button" onClick={() => { setSelected(null); setTranslation(null); setTranslationError(""); }}>كل الإجابات</button></div><h3>{question}</h3>{translateMutation.isPending ? <p className="assistant-translating"><Loader2 size={15} className="spin" /> جارٍ تجهيز الترجمة…</p> : <><div className="assistant-card-stack">{cards.map((card, index) => <article key={`${selected.question}-${index}`}><span>بطاقة {index + 1}</span><p>{card}</p></article>)}</div>{translationError && <p className="assistant-translation-note" role="status">{translationError}</p>}</>}{relatedDestinations.length > 0 && <nav className="assistant-place-links" aria-label="وجهات مرتبطة بالإجابة"><span><MapPin size={13} /> وجهات مرتبطة</span>{relatedDestinations.map((destination) => <Link href={`/destinations/${destination.id}`} key={destination.id}>{destination.title}<ArrowLeft size={13} /></Link>)}</nav>}{selected.answer.length > cards.join(" ").length && locale === "ar" && <span className="assistant-truncated">اختُصرت الإجابة الطويلة إلى بطاقات قراءة؛ استخدم صياغة أكثر تحديدًا لتضييق البحث.</span>}</div> : <div className="assistant-results"><p className="assistant-label">{query ? "إجابات مقترحة" : `أسئلة ${topic === "الكل" ? "للبدء" : topic}`}</p>{results.length ? results.map((entry) => <button type="button" key={entry.question} onClick={() => choose(entry)}><small>{topicFor(entry)}</small><span>{entry.question}</span><ChevronDown size={16} /></button>) : <p className="assistant-empty">لم أجد تطابقًا مباشرًا ضمن هذا الموضوع. جرّب اسم مدينة أو معلم أو فئة أخرى.</p>}</div>}
       <div className="assistant-foot"><span>مصدر المعرفة: ملف الأسئلة والأجوبة المرفق.</span><span>راجِع الجهات الرسمية للتحديثات.</span></div>
     </div>}
     <button type="button" className="assistant-toggle" onClick={() => setOpen((current) => !current)} aria-expanded={open}><MessageCircle size={21} /><span>{open ? "إخفاء المساعد" : "اسأل الدليل"}</span></button>

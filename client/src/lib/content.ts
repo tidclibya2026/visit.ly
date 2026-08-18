@@ -263,13 +263,27 @@ export const heritageSites = [
   },
 ];
 
-export const experiences = [
-  { icon: "Landmark", title: "مدن وحضارات", text: "اتبع خطوط الإغريق والرومان والعصور الإسلامية عبر المواقع والأسواق والمدن القديمة." },
-  { icon: "Mountain", title: "مسارات الطبيعة", text: "من الجبل الأخضر إلى الواحات وتكوينات الصحراء، اختر الطبيعة التي تود مشاهدتها." },
-  { icon: "Utensils", title: "مذاقات محلية", text: "تعرّف إلى البازين والكسكسي والعصيدة والشاي وبهارات المطبخ الليبي في سياقها المحلي." },
-  { icon: "Palette", title: "حرف وتقاليد", text: "اكتشف النحاسيات والنسيج والفخار والجلود ومهارات صاغتها أيدي الحرفيين عبر أجيال." },
-  { icon: "TentTree", title: "الصحراء والواحات", text: "نظّم تجربتك الصحراوية مع مختصين محليين، واختر الموسم والمسار الأنسبين." },
-  { icon: "CalendarDays", title: "مواسم وفعاليات", text: "تتغير التظاهرات بين الساحل والجبل والصحراء مع تغير الفصول ومواسم الربيع والحصاد." },
+export type Experience = {
+  id: string;
+  icon: "Landmark" | "Mountain" | "Utensils" | "Palette" | "TentTree" | "CalendarDays";
+  title: string;
+  text: string;
+  image: string;
+  alt: string;
+  targetDestinationId: Destination["id"];
+  targetRoute: string;
+  targetPlace: string;
+  season: string;
+  seasonNote: string;
+};
+
+export const experiences: Experience[] = [
+  { id: "heritage-leptis", icon: "Landmark", title: "مدن وحضارات", text: "اقرأ طبقات المدينة المتوسطية عبر الأقواس والساحات والأعمدة في واحد من أبرز المواقع الأثرية على الساحل.", image: assets.leptisVerified, alt: "قوس روماني في موقع لبدة الكبرى الأثري", targetDestinationId: "leptis", targetRoute: "/destinations/leptis", targetPlace: "لبدة الكبرى · الخمس", season: "الخريف والربيع", seasonNote: "طقس ألطف للمشي بين المعالم المفتوحة." },
+  { id: "nature-shahat", icon: "Mountain", title: "مسارات الطبيعة", text: "اجمع بين آثار قورينا وامتداد الجبل الأخضر في محطة تقرأ الطبيعة والتاريخ معًا.", image: assets.greenMountain, alt: "ساحل الجبل الأخضر كما ورد في صور المنصة", targetDestinationId: "shahat", targetRoute: "/destinations/shahat", targetPlace: "شحات / قورينا · الجبل الأخضر", season: "الربيع والخريف", seasonNote: "مناسب للمسارات الخارجية والغطاء النباتي." },
+  { id: "flavours-tripoli", icon: "Utensils", title: "مذاقات محلية", text: "تعرف إلى المائدة الليبية من خلال الكسكسي والبازين والشاي ضمن سياق الأسواق والضيافة في المدينة.", image: assets.couscous, alt: "طبق كسكسي ليبي من صور المنصة", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس القديمة · الأسواق", season: "على مدار العام", seasonNote: "تجربة مرنة ضمن برنامج المدينة." },
+  { id: "crafts-ghadames", icon: "Palette", title: "حرف وتقاليد", text: "اقرأ قصة الصنعة عبر الحُلي والمنسوجات ومهارات الحرفيين، مع محطة مرتبطة بعمارة الواحة وأسواقها.", image: assets.pottery, alt: "حُلي تقليدية ليبية فضية من صور المنصة", targetDestinationId: "ghadames", targetRoute: "/destinations/ghadames", targetPlace: "غدامس القديمة · الحِرف المحلية", season: "الخريف والربيع", seasonNote: "أكثر راحة لزيارة الواحة والأسواق." },
+  { id: "desert-acacus", icon: "TentTree", title: "الصحراء والواحات", text: "خطط لمسار منظّم بين الأقواس والتكوينات والفن الصخري، مع مختصين محليين وتجهيز مناسب للصحراء.", image: assets.acacusRoute, alt: "تكوينات صخرية في تادرارت أكاكوس من صور المنصة", targetDestinationId: "acacus", targetRoute: "/destinations/acacus", targetPlace: "تادرارت أكاكوس · الجنوب الغربي", season: "أكتوبر إلى أبريل", seasonNote: "الفترة الأنسب عمومًا للمسارات الصحراوية." },
+  { id: "season-benghazi", icon: "CalendarDays", title: "مواسم وفعاليات", text: "رتب التوقفات الساحلية والأنشطة الاجتماعية وفق الموسم، ثم راجع الجهة المنظمة قبل تثبيت أي موعد.", image: assets.horseRiding, alt: "مجموعة فرسان في فعالية تقليدية من صور المنصة", targetDestinationId: "benghazi", targetRoute: "/destinations/benghazi", targetPlace: "بنغازي · الواجهة والمدينة", season: "الربيع والصيف", seasonNote: "تابع البرنامج المحلي والطقس قبل الزيارة." },
 ];
 
 export const cultureTopics = [
