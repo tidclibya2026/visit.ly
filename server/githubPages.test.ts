@@ -18,6 +18,7 @@ describe("GitHub Pages deployment", () => {
     const workflow = readFileSync(resolve(root, ".github/workflows/deploy-pages.yml"), "utf8");
 
     expect(workflow.indexOf("name: Set up pnpm")).toBeLessThan(workflow.indexOf("name: Set up Node.js"));
+    expect(workflow).not.toContain("version: 10.15.1");
   });
 
   it("يوفر أداة بناء لصفحة البداية ومسار 404 والملفات الثابتة", () => {

@@ -153,3 +153,5 @@
 - [x] التحقق من إعداد النشر وتحديث دليل GitHub Pages بالخطوات المطلوبة في المستودع.
 - [x] تصحيح ترتيب إعداد pnpm وNode.js في سيرَي GitHub Actions لمعالجة خطأ `Unable to locate executable file: pnpm`.
 - [x] اختبار سير العمل محليًا ومزامنة الإصلاح إلى GitHub للتحقق من تشغيل النشر من جديد.
+- [x] إزالة تعارض إصدار pnpm بين packageManager وسيرَي GitHub Actions.
+- [x] اختبار إعداد pnpm الموحد ومزامنة الإصلاح للتحقق من تقدم GitHub Pages بعد هذه المرحلة.

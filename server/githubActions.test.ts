@@ -18,5 +18,6 @@ describe("GitHub Actions workflow", () => {
     const workflow = readFileSync(workflowPath, "utf8");
 
     expect(workflow.indexOf("name: Set up pnpm")).toBeLessThan(workflow.indexOf("name: Set up Node.js"));
+    expect(workflow).not.toContain("version: 10.15.1");
   });
 });
