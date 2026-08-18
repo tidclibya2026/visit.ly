@@ -1253,3 +1253,71 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 @keyframes assistant-spin { to { transform: rotate(360deg); } }
 @keyframes assistant-pulse { from { transform: scale(0.96); } to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .assistant-mic.is-recording, .spin { animation: none; } }
+
+/* Destination display switcher */
+.destination-display-controls { display: flex; align-items: center; gap: 12px; }
+.destination-view-toggle { display: inline-flex; overflow: hidden; border: 1px solid rgba(11, 58, 103, 0.22); }
+.destination-view-toggle button { min-height: 33px; padding: 0 9px; display: inline-flex; align-items: center; gap: 5px; color: var(--ink); background: transparent; border-inline-start: 1px solid rgba(11, 58, 103, 0.18); font-size: 10px; font-weight: 800; transition: color 160ms var(--ease-out), background 160ms var(--ease-out); }
+.destination-view-toggle button:first-child { border-inline-start: 0; }
+.destination-view-toggle button.is-active { color: var(--paper); background: var(--ink); }
+.destination-catalogue.is-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 0; }
+.destination-catalogue.is-grid .destination-record { min-width: 0; }
+.destination-catalogue.is-grid .catalogue-entry { position: relative; min-height: 0; height: 100%; padding: 0 0 18px; display: flex; flex-direction: column; align-items: stretch; gap: 0; overflow: hidden; border: 1px solid var(--line); }
+.destination-catalogue.is-grid .catalogue-count { position: absolute; z-index: 4; top: 12px; right: 12px; width: 31px; height: 31px; display: grid; place-items: center; color: var(--ink); background: rgba(251, 247, 238, 0.92); font-size: 12px; }
+.destination-catalogue.is-grid .catalogue-image { width: 100%; height: 230px; }
+.destination-catalogue.is-grid .catalogue-image img { width: 100%; height: 100%; object-fit: cover; }
+.destination-catalogue.is-grid .catalogue-copy { padding: 19px 18px 0; }
+.destination-catalogue.is-grid .catalogue-copy h2 { font-size: 1.7rem; }
+.destination-catalogue.is-grid .catalogue-entry::before { display: none; }
+.destination-catalogue.is-grid .add-to-trip { position: relative; right: auto; top: auto; align-self: flex-start; margin: 16px 18px 0; }
+
+/* Food, sweets, and craft visual archive */
+.food-craft-album { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: clamp(1.5rem, 4vw, 4rem); align-items: start; padding-top: 76px; padding-bottom: 76px; border-top: 1px solid var(--line); }
+.food-craft-album-heading h2 { margin: 8px 0 14px; color: var(--ink); font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 4rem); line-height: 1.05; }
+.food-craft-album-heading > p:last-child { margin: 0; color: var(--ink-muted); line-height: 1.85; }
+.food-craft-album-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.food-craft-album-grid figure { position: relative; min-height: 210px; margin: 0; overflow: hidden; background: var(--ink); }
+.food-craft-album-grid img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 480ms var(--ease-flow); }
+.food-craft-album-grid figure:hover img { transform: scale(1.045); }
+.food-craft-album-grid figcaption { position: absolute; inset: auto 0 0; padding: 25px 15px 13px; display: grid; gap: 3px; color: var(--paper); background: linear-gradient(0deg, rgba(4, 29, 54, 0.92), transparent); }
+.food-craft-album-grid figcaption span { color: var(--sand); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; }
+.food-craft-album-grid figcaption strong { font-family: var(--serif); font-size: 1.35rem; }
+
+@media (max-width: 760px) {
+  .results-line, .destination-display-controls { align-items: flex-start; flex-wrap: wrap; }
+  .destination-display-controls { width: 100%; justify-content: space-between; }
+  .destination-catalogue.is-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .destination-catalogue.is-grid .catalogue-image { height: 160px; }
+  .destination-catalogue.is-grid .catalogue-copy { padding: 14px 13px 0; }
+  .destination-catalogue.is-grid .catalogue-copy h2 { font-size: 1.35rem; }
+  .destination-catalogue.is-grid .destination-field-note, .destination-catalogue.is-grid .travel-time, .destination-catalogue.is-grid .catalogue-actions { display: none; }
+  .destination-catalogue.is-grid .add-to-trip { margin: 12px 13px 0; }
+  .food-craft-album { grid-template-columns: 1fr; padding-top: 55px; padding-bottom: 55px; }
+  .food-craft-album-grid figure { min-height: 170px; }
+}
+
+/* Landmark-first image presentation */
+.hero-ink { background: linear-gradient(90deg, rgba(6, 41, 74, 0.02) 0%, rgba(6, 41, 74, 0.16) 42%, rgba(6, 41, 74, 0.72) 86%), linear-gradient(0deg, rgba(6, 41, 74, 0.2), transparent 56%); }
+.destination-card img { object-position: center center; }
+.destination-card[data-destination="tripoli"] img { object-position: 51% 48%; }
+.destination-card[data-destination="benghazi"] img { object-position: 50% 60%; }
+.destination-card[data-destination="ghadames"] img { object-position: 50% 43%; }
+.destination-shade { background: linear-gradient(0deg, rgba(7, 28, 35, 0.8) 0%, rgba(7, 28, 35, 0.22) 56%, rgba(7, 28, 35, 0.02) 100%); }
+.experiences-hero { isolation: isolate; background: var(--ink-deep); }
+.experience-hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 57%; filter: brightness(1.08) contrast(1.04) saturate(1.04); }
+.experience-hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(3, 30, 53, 0.08) 0%, rgba(3, 30, 53, 0.17) 40%, rgba(3, 30, 53, 0.75) 84%), linear-gradient(0deg, rgba(3, 30, 53, 0.24), transparent 58%); }
+.experiences-hero::before { z-index: 2; opacity: 0.32; }
+.experiences-hero .hero-topography { z-index: 2; width: 34%; opacity: 0.1; }
+.experiences-hero .page-frame { z-index: 3; }
+.experience-card-photo img { object-fit: cover; object-position: center; background: var(--ink); }
+.experience-card[data-experience="flavours-tripoli"] .experience-card-photo img { object-position: center 48%; }
+.experience-card[data-experience="crafts-ghadames"] .experience-card-photo img { object-position: center 32%; }
+.experience-card[data-experience="coast-green-mountain"] .experience-card-photo img { object-position: center 55%; }
+
+@media (max-width: 760px) {
+  .experience-hero-image { object-position: 48% center; }
+  .experience-hero-ink { background: linear-gradient(0deg, rgba(3, 30, 53, 0.66), rgba(3, 30, 53, 0.08) 72%); }
+  .experiences-hero .hero-topography { width: 56%; opacity: 0.07; }
+  .experience-card-photo { height: 245px; }
+  .experience-card-photo img { height: 100% !important; object-fit: cover !important; }
+}

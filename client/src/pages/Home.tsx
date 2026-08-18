@@ -71,7 +71,7 @@ export default function Home() {
           {featured.map((destination, index) => {
             const saved = stops.includes(destination.id);
             return (
-              <article className={`destination-card destination-card-${index + 1}`} key={destination.id}>
+              <article className={`destination-card destination-card-${index + 1}`} data-destination={destination.id} key={destination.id}>
                 <img src={destination.image} alt={destination.alt} />
                 <div className="destination-shade" />
                 <div className="destination-card-content">

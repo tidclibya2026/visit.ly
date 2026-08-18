@@ -463,6 +463,13 @@ export const cultureVisualArchive = [
   { image: assets.cultureCrafts, alt: "تفاصيل زي ومنسوجات من صور المركز", label: "نسيج وحِرف" },
 ];
 
+export const foodCraftVisualArchive = [
+  { image: assets.centerAsida, alt: "عصيدة ليبية من صور المركز", label: "عصيدة وضيافة", note: "مذاق محلي" },
+  { image: assets.centerMaqroud, alt: "حلوى مقروض ليبية من صور المركز", label: "مقروض وحلويات", note: "حلوى تقليدية" },
+  { image: assets.centerCrafts, alt: "صناعات تقليدية ليبية من صور المركز", label: "صناعات تقليدية", note: "حِرف محلية" },
+  { image: assets.centerPottery, alt: "فخار ليبي من صور المركز", label: "فخار يدوي", note: "صنعة متوارثة" },
+];
+
 export type SeasonalEvent = {
   id: string;
   title: string;
