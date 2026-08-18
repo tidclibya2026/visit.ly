@@ -1037,6 +1037,61 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .assistant-place-links a { display: flex; align-items: center; justify-content: space-between; color: var(--ink); font-size: 11px; font-weight: 800; }
 .assistant-place-links a svg { color: var(--sand-dark); }
 
+/* مرشحات التجارب وصورها الكاملة. */
+.experience-filter-bar { margin-bottom: 17px; padding: 20px 22px; display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 28px; align-items: center; background: rgba(242, 233, 216, 0.68); border-top: 3px solid var(--sand); }
+.experience-filter-bar .eyebrow { margin-bottom: 5px; }
+.experience-filter-bar p:not(.eyebrow) { margin: 0; color: var(--ink-muted); font-size: 12px; line-height: 1.65; }
+.experience-filter-controls { display: grid; gap: 9px; }
+.experience-filter-controls .category-chips { align-items: flex-start; }
+.experience-results-line { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--ink-muted); font-size: 12px; }
+.experience-results-line strong { color: var(--ink); }
+.experience-results-line button { color: var(--ink); background: transparent; border-bottom: 1px solid var(--ink); font-size: 11px; font-weight: 800; }
+.experience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 19px; }
+.experience-card { display: block; min-height: 0; }
+.experience-card-photo { width: 100%; background: var(--ink); }
+.experience-card-photo img { width: 100%; height: auto; min-height: 0; display: block; object-fit: contain; }
+.experience-card-copy { min-height: 254px; }
+.experience-empty { min-height: 285px; margin-bottom: 70px; padding: 45px 24px; display: grid; place-items: center; align-content: center; justify-items: center; text-align: center; background: rgba(242, 233, 216, 0.68); }
+.experience-empty h2 { margin: 3px 0 18px; color: var(--ink); font-size: 35px; }
+
+/* ترتيب دفتر الرحلة: السحب للكمبيوتر، وأزرار الترتيب كبديل واضح للهاتف ولوحة المفاتيح. */
+.trip-sort-hint { margin: 0 0 15px; display: flex; align-items: center; gap: 7px; color: var(--ink-muted); font-size: 11px; }
+.trip-sortable-list { display: grid; gap: 10px; }
+.trip-sortable-item { position: relative; min-height: 154px; display: grid; grid-template-columns: 36px 116px minmax(0, 1fr) auto; gap: 14px; overflow: hidden; background: rgba(242, 233, 216, 0.62); border: 1px solid rgba(11, 58, 103, 0.16); transition: border-color 150ms var(--ease-out), transform 150ms var(--ease-out), opacity 150ms var(--ease-out); }
+.trip-sortable-item.is-dragging { opacity: 0.56; transform: scale(0.99); }
+.trip-sortable-item.is-drag-over { border-color: var(--sand-dark); box-shadow: 0 -3px 0 var(--sand); }
+.trip-drag-handle { align-self: stretch; display: grid; place-items: center; color: var(--sand-dark); background: rgba(251, 247, 238, 0.6); cursor: grab; }
+.trip-drag-handle:active { cursor: grabbing; }
+.trip-sortable-item img { width: 116px; height: 154px; object-fit: cover; }
+.trip-sortable-copy { padding: 18px 0; }
+.trip-sortable-copy .eyebrow { margin-bottom: 4px; }
+.trip-sortable-copy h3 { margin: 0 0 5px; color: var(--ink); font-size: 25px; }
+.trip-sortable-copy > p { margin: 0 0 7px; color: var(--ink-muted); font-size: 11px; line-height: 1.6; }
+.trip-sortable-copy > span { display: flex; align-items: center; gap: 4px; color: var(--sand-dark); font-size: 10px; font-weight: 800; }
+.trip-sortable-actions { min-width: 79px; padding: 12px 12px 12px 0; display: grid; align-content: center; gap: 6px; }
+.trip-sortable-actions a, .trip-sortable-actions button { min-height: 28px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; color: var(--ink); background: transparent; border: 1px solid rgba(11, 58, 103, 0.18); font-size: 9px; font-weight: 800; }
+.trip-sortable-actions .remove-stop { color: var(--clay-dark); }
+.trip-sortable-actions button:disabled { cursor: not-allowed; opacity: 0.35; }
+
+@media (max-width: 760px) {
+  .experience-filter-bar { padding: 17px 14px; grid-template-columns: 1fr; gap: 13px; }
+  .experience-filter-controls .category-chips { gap: 4px; }
+  .experience-filter-controls .filter-label { min-width: 45px; }
+  .experience-filter-controls .category-chips button { padding: 5px 7px; font-size: 10px; }
+  .experience-results-line { margin-bottom: 9px; font-size: 10px; }
+  .experience-card-photo img { max-height: none; }
+  .experience-card-copy { min-height: 0; }
+  .trip-sort-hint { font-size: 10px; }
+  .trip-sortable-item { min-height: 126px; grid-template-columns: 25px 82px minmax(0, 1fr) 61px; gap: 8px; }
+  .trip-sortable-item img { width: 82px; height: 126px; }
+  .trip-sortable-copy { padding: 13px 0; }
+  .trip-sortable-copy h3 { font-size: 18px; }
+  .trip-sortable-copy > p { display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 9px; }
+  .trip-sortable-copy > span { font-size: 8px; }
+  .trip-sortable-actions { min-width: 0; padding: 8px 8px 8px 0; gap: 4px; }
+  .trip-sortable-actions a, .trip-sortable-actions button { min-height: 22px; font-size: 7px; }
+}
+
 @media (max-width: 760px) {
   .experiences-hero { min-height: 371px; }
   .experiences-hero .page-frame { padding-top: 45px; }

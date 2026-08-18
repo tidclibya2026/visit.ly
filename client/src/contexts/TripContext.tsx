@@ -3,10 +3,12 @@
  * دون إغراق المستخدم في نماذج أو لوحات تحكم ثقيلة.
  */
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { reorderStops } from "./tripUtils";
 
 type TripContextValue = {
   stops: string[];
   toggleStop: (stopId: string) => void;
+  moveStop: (stopId: string, targetStopId: string) => void;
   clearStops: () => void;
   favorites: string[];
   toggleFavorite: (destinationId: string) => void;
@@ -53,6 +55,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
     () => ({
       stops,
       toggleStop: (stopId: string) => setStops((current) => current.includes(stopId) ? current.filter((id) => id !== stopId) : [...current, stopId]),
+      moveStop: (stopId: string, targetStopId: string) => setStops((current) => reorderStops(current, stopId, targetStopId)),
       clearStops: () => setStops([]),
       favorites,
       toggleFavorite: (destinationId: string) => setFavorites((current) => current.includes(destinationId) ? current.filter((id) => id !== destinationId) : [...current, destinationId]),

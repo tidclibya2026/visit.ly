@@ -9,6 +9,7 @@ describe("experience destination mapping", () => {
     experiences.forEach((experience) => {
       expect(destinationIds.has(experience.targetDestinationId)).toBe(true);
       expect(experience.targetRoute).toBe(`/destinations/${experience.targetDestinationId}`);
+      expect(experience.region.trim().length).toBeGreaterThan(0);
       expect(experience.season.trim().length).toBeGreaterThan(0);
       expect(experience.seasonNote.trim().length).toBeGreaterThan(0);
       expect(experience.image).toMatch(/^\/manus-storage\//);
