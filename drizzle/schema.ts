@@ -22,7 +22,22 @@ export const users = mysqlTable("users", {
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
 });
 
+export const translationReviews = mysqlTable("translation_reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  destinationId: varchar("destinationId", { length: 64 }).notNull(),
+  language: mysqlEnum("language", ["en", "fr", "it", "de", "es", "zh"]).notNull(),
+  sourceJson: text("sourceJson").notNull(),
+  machineJson: text("machineJson").notNull(),
+  editedJson: text("editedJson"),
+  status: mysqlEnum("status", ["pending", "approved", "needs_revision"]).default("pending").notNull(),
+  reviewerOpenId: varchar("reviewerOpenId", { length: 64 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewedAt"),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+export type TranslationReview = typeof translationReviews.$inferSelect;
+export type InsertTranslationReview = typeof translationReviews.$inferInsert;
 
 // TODO: Add your tables here

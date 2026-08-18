@@ -1,4 +1,4 @@
-import { cpSync, existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -39,3 +39,27 @@ if (!existsSync(indexPath)) {
 
 rewriteArchiveUrls(outputDirectory);
 cpSync(indexPath, resolve(outputDirectory, "404.html"));
+
+const siteOrigin = (process.env.PAGES_SITE_ORIGIN ?? "https://tidclibya2026.github.io/visit.ly").replace(/\/+$/, "");
+const locales = ["ar", "en", "fr", "it", "de", "es", "zh"];
+const routes = ["", "destinations", "experiences", "culture", "heritage", "services", "atlas", "events", "trip", ...["tripoli", "benghazi", "ghadames", "acacus", "leptis", "shahat", "sabratha", "tolmeitha", "qasr-libya", "awjila"].map((id) => `destinations/${id}`)];
+const indexDocument = readFileSync(indexPath, "utf8");
+const localeName = { ar: "العربية", en: "English", fr: "Français", it: "Italiano", de: "Deutsch", es: "Español", zh: "中文" };
+
+function localizedDocument(locale, route) {
+  const href = `${siteOrigin}/${locale}${route ? `/${route}` : ""}/`;
+  const alternates = locales.map((item) => `<link rel="alternate" hreflang="${item}" href="${siteOrigin}/${item}${route ? `/${route}` : ""}/" />`).join("");
+  const seo = `<link rel="canonical" href="${href}" />${alternates}<meta name="description" content="Visit Libya — ${localeName[locale]} tourism guide for destinations, culture, heritage and travel planning." />`;
+  return indexDocument.replace("<html", `<html lang="${locale}"`).replace("</head>", `${seo}</head>`);
+}
+
+for (const locale of locales) {
+  for (const route of routes) {
+    const dir = resolve(outputDirectory, locale, route);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(resolve(dir, "index.html"), localizedDocument(locale, route), "utf8");
+  }
+}
+
+const sitemapUrls = locales.flatMap((locale) => routes.map((route) => `${siteOrigin}/${locale}${route ? `/${route}` : ""}/`));
+writeFileSync(resolve(outputDirectory, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls.map((url) => `  <url><loc>${url}</loc></url>`).join("\n")}\n</urlset>\n`, "utf8");

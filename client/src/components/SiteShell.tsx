@@ -16,9 +16,15 @@ const navigation = [
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const [, navigate] = useLocation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { language, setLanguage, t, isRtl } = useLanguage();
+  const changeLanguage = (nextLanguage: typeof language) => {
+    setLanguage(nextLanguage);
+    const routeWithoutLocale = location.replace(/^\/(ar|en|fr|it|de|es|zh)(?=\/|$)/, "") || "/";
+    navigate(nextLanguage === "ar" ? routeWithoutLocale : `/${nextLanguage}${routeWithoutLocale}`);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -44,7 +50,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="header-actions">
-            <label className="language-picker"><Globe2 size={14} /><span className="sr-only">{t("nav.language")}</span><select value={language} onChange={(event) => setLanguage(event.target.value as typeof language)} aria-label={t("nav.language")}>{languageOptions.map((item) => <option value={item.code} key={item.code}>{item.label}</option>)}</select></label>
+            <label className="language-picker"><Globe2 size={14} /><span className="sr-only">{t("nav.language")}</span><select value={language} onChange={(event) => changeLanguage(event.target.value as typeof language)} aria-label={t("nav.language")}>{languageOptions.map((item) => <option value={item.code} key={item.code}>{item.flag} {item.label}</option>)}</select></label>
             <Link href="/trip" className="nav-plan"><Compass size={15} strokeWidth={1.9} /> {t("nav.plan")}</Link>
             <button className="menu-button" type="button" aria-label={open ? t("nav.menuClose") : t("nav.menuOpen")} aria-expanded={open} onClick={() => setOpen((current) => !current)}>
               {open ? <X size={21} /> : <Menu size={23} />}

@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { desc } from "drizzle-orm";
+import { InsertUser, translationReviews, type InsertTranslationReview, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -87,6 +88,24 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createTranslationReview(review: InsertTranslationReview) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(translationReviews).values(review);
+}
+
+export async function listTranslationReviews() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(translationReviews).orderBy(desc(translationReviews.createdAt));
+}
+
+export async function reviewTranslation(id: number, editedJson: string, status: "approved" | "needs_revision", reviewerOpenId: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(translationReviews).set({ editedJson, status, reviewerOpenId, reviewedAt: new Date() }).where(eq(translationReviews.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.

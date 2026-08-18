@@ -133,7 +133,12 @@ export function KnowledgeAssistant() {
     translateEntry(entry, locale);
   };
   const chooseTopic = (next: Topic) => { setTopic(next); setQuery(""); setSelected(null); setTranslation(null); };
-  const chooseLocale = (nextLocale: AssistantLocale) => { setLocale(nextLocale); if (selected) translateEntry(selected, nextLocale); };
+  const chooseLocale = (nextLocale: AssistantLocale) => { setLocale(nextLocale); };
+  useEffect(() => {
+    setTranslation(null);
+    setTranslationError("");
+    if (selected) translateEntry(selected, locale);
+  }, [locale]);
   const stopRecording = () => recorderRef.current?.state === "recording" && recorderRef.current.stop();
   const startRecording = async () => {
     setVoiceError("");
@@ -167,7 +172,7 @@ export function KnowledgeAssistant() {
   return <aside className={`knowledge-assistant ${open ? "is-open" : ""}`} aria-label="المساعد المعرفي">
     {open && <div className="assistant-panel">
       <div className="assistant-head"><div><p className="eyebrow light"><Sparkles size={13} /> مساعد Visit Libya</p><h2>كيف أساعد رحلتك؟</h2><p>دليل محادثة مبني على مواد المركز، يقدّم لك خلاصة عملية وروابط للوجهات المرتبطة عندما تتوفر.</p></div><button type="button" onClick={() => setOpen(false)} aria-label="إغلاق المساعد"><X size={19} /></button></div>
-      <div className="assistant-language-bar" aria-label="لغة الإجابة"><Globe2 size={14} />{languageOptions.map((item) => <button type="button" className={locale === item.code ? "is-active" : ""} onClick={() => chooseLocale(item.code)} key={item.code}>{item.label}</button>)}</div>
+      <div className="assistant-language-bar" aria-label="لغة الإجابة"><Globe2 size={14} />{languageOptions.map((item) => <button type="button" className={locale === item.code ? "is-active" : ""} onClick={() => chooseLocale(item.code)} key={item.code}><span aria-hidden="true">{item.flag}</span> {item.label}</button>)}</div>
       <p className="assistant-language-status">{languageStatus}{locale !== "ar" ? " · أسئلة مختارة بإجابات محررة مباشرة" : ""}</p>
       <div className="assistant-topic-bar" aria-label="تصفية موضوع المساعد">{topics.map((item) => <button type="button" className={topic === item ? "is-active" : ""} onClick={() => chooseTopic(item)} key={item}>{item}</button>)}</div>
       <div className="assistant-query-row"><label className="assistant-search"><Search size={17} /><span className="sr-only">اكتب سؤالك</span><input value={query} onChange={(event) => { setQuery(event.target.value); setSelected(null); setTranslation(null); }} onKeyDown={(event) => { if (event.key === "Enter" && results[0]) choose(results[0]); }} placeholder={locale === "ar" ? "مثال: ما أبرز معالم بنغازي؟" : locale === "en" ? "Ask about Libya…" : locale === "fr" ? "Posez une question sur la Libye…" : "Choose a verified question, then read it in your language."} /><button type="button" onClick={() => results[0] && choose(results[0])} aria-label="ابحث"><Send size={16} /></button></label><button type="button" className={`assistant-mic ${recording ? "is-recording" : ""}`} onClick={recording ? stopRecording : startRecording} disabled={transcribeMutation.isPending} aria-label={recording ? "إيقاف التسجيل" : "سجّل سؤالًا صوتيًا"}>{transcribeMutation.isPending ? <Loader2 size={17} className="spin" /> : recording ? <Square size={15} /> : <Mic size={17} />}</button></div>{voiceError && <p className="assistant-voice-error">{voiceError}</p>}

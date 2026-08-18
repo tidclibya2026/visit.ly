@@ -2,14 +2,14 @@ import { createContext, type ReactNode, useContext, useEffect, useMemo, useState
 
 export type SupportedLanguage = "ar" | "en" | "fr" | "it" | "de" | "es" | "zh";
 
-export const languageOptions: Array<{ code: SupportedLanguage; label: string }> = [
-  { code: "ar", label: "العربية" },
-  { code: "en", label: "English" },
-  { code: "fr", label: "Français" },
-  { code: "it", label: "Italiano" },
-  { code: "de", label: "Deutsch" },
-  { code: "es", label: "Español" },
-  { code: "zh", label: "中文" },
+export const languageOptions: Array<{ code: SupportedLanguage; label: string; flag: string }> = [
+  { code: "ar", label: "العربية", flag: "🇱🇾" },
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "it", label: "Italiano", flag: "🇮🇹" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
 ];
 
 type TranslationTable = Record<string, string>;

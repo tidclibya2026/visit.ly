@@ -4,11 +4,12 @@ import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
+import { createTranslationReview, listTranslationReviews, reviewTranslation } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -74,10 +75,19 @@ export const appRouter = router({
         const translated = JSON.parse(content);
         const response = { ...translated, translated: true, language: input.language };
         destinationTranslationCache.set(cacheKey, response);
+        void createTranslationReview({ destinationId: destination.id, language: input.language, sourceJson: JSON.stringify(source), machineJson: JSON.stringify(response) });
         return response;
       } catch {
         return { ...source, translated: false, language: input.language };
       }
+    }),
+  }),
+
+  translationReview: router({
+    list: adminProcedure.query(async () => listTranslationReviews()),
+    update: adminProcedure.input(z.object({ id: z.number().int().positive(), editedJson: z.string().min(2).max(20000), status: z.enum(["approved", "needs_revision"]) })).mutation(async ({ ctx, input }) => {
+      await reviewTranslation(input.id, input.editedJson, input.status, ctx.user.openId);
+      return { ok: true };
     }),
   }),
 
