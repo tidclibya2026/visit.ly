@@ -56,6 +56,22 @@ export const assets = {
   acacusRocks: "/manus-storage/acacus-rocks_649bff79.jpg",
   acacusArch: "/manus-storage/acacus-arch_1236df4f.jpeg",
   acacusSandstone: "/manus-storage/acacus-sandstone_e2dc33bf.jpeg",
+  centerAsida: "/manus-storage/Eating_Asida_916ed906.jpg",
+  centerAsban: "/manus-storage/center-asban_7fa2311c.png",
+  centerMbakbaka: "/manus-storage/center-mbakbaka_1e575414.png",
+  centerMaqroud: "/manus-storage/center-maqroud_48aa446e.jpg",
+  centerFolklore: "/manus-storage/popular practices_318e8700.jpg",
+  centerCrafts: "/manus-storage/traditional industries_bf2301f0.jpg",
+  centerDress: "/manus-storage/traditional clothing_3fb46d2c.jpg",
+  centerPottery: "/manus-storage/pottery2_7bee0a0c.jpg",
+  ubariLakes: "/manus-storage/natural lakes_2bf6d930.jpg",
+  awjila: "/manus-storage/awajla_06f0da52.jpg",
+  qasrAlhajj: "/manus-storage/center-qasr-alhajj_0e3cef8b.jpg",
+  rasHilal: "/manus-storage/photo_5765038270055563281_y_3e2ad3aa.jpg",
+  tolmeitha: "/manus-storage/DJI_0044_7d839df8.JPG",
+  sabrathaCenter: "/manus-storage/Sabratha1_62c274ee.jpg",
+  villaSelene: "/manus-storage/11671060_5b1d3a15.jpg",
+  qasrLibyaMosaic: "/manus-storage/center-qasr-libya-mosaic_695c80b6.jpg",
 } as const;
 
 export type GalleryItem = {
@@ -261,6 +277,48 @@ export const heritageSites = [
     image: assets.ghadamesVerified,
     alt: "واجهة من المدينة القديمة في غدامس",
   },
+  {
+    title: "طلميثة",
+    kicker: "طبقات مدينة أثرية قرب الساحل",
+    description: "تظهر صور المركز امتداد الموقع الأثري من منظور واسع، في محطة تصل تاريخ برقة بمشهد الساحل والسهول المجاورة.",
+    image: assets.tolmeitha,
+    alt: "منظر جوي موثق لموقع طلميثة الأثري من أرشيف المركز",
+  },
+  {
+    title: "فيلا سيلين",
+    kicker: "فسيفساء من الذاكرة الكلاسيكية",
+    description: "تسجل مادة المركز تفاصيل فسيفسائية من الموقع، وتفتح نافذة على فنون الزخرفة والحياة في المواقع الأثرية الساحلية.",
+    image: assets.villaSelene,
+    alt: "فسيفساء موثقة من فيلا سيلين ضمن أرشيف المركز",
+  },
+  {
+    title: "متحف قصر ليبيا",
+    kicker: "ذاكرة الفسيفساء",
+    description: "تُظهر مجموعة المركز نماذج من الفسيفساء المعروضة في قصر ليبيا، بوصفها مدخلًا بصريًا لقراءة طبقات الفن والتراث.",
+    image: assets.qasrLibyaMosaic,
+    alt: "فسيفساء من متحف قصر ليبيا ضمن أرشيف المركز",
+  },
+  {
+    title: "قصر الحاج",
+    kicker: "عمارة محلية على طريق الجبل",
+    description: "تقود صورة المركز إلى قصر الحاج بوصفه محطة معمارية ضمن مسارات الجبل الغربي، حيث تحضر البنية المحلية والحكاية المكانية.",
+    image: assets.qasrAlhajj,
+    alt: "قصر الحاج من صور المركز الموثقة",
+  },
+  {
+    title: "أوجلة",
+    kicker: "واحة ومسارات من الطين والنخيل",
+    description: "صورة موثقة من أرشيف المركز لواحة أوجلة، تفتح مجالًا لقراءة عمارة الواحة وصلتها بالزراعة والطرق الداخلية.",
+    image: assets.awjila,
+    alt: "عمارة واحة أوجلة من أرشيف المركز",
+  },
+  {
+    title: "بحيرات أوباري الطبيعية",
+    kicker: "ماء وصحراء في مشهد واحد",
+    description: "تسجل صور المركز بحيرات أوباري الطبيعية ضمن نطاق الصحراء، وهي محطة بصرية تحتاج إلى تخطيط ميداني مناسب ومختصين محليين.",
+    image: assets.ubariLakes,
+    alt: "بحيرات أوباري الطبيعية من أرشيف المركز",
+  },
 ];
 
 export type Experience = {
@@ -281,33 +339,41 @@ export type Experience = {
 export const experiences: Experience[] = [
   { id: "heritage-leptis", icon: "Landmark", title: "مدن وحضارات", text: "اقرأ طبقات المدينة المتوسطية عبر الأقواس والساحات والأعمدة في واحد من أبرز المواقع الأثرية على الساحل.", image: assets.leptisVerified, alt: "قوس روماني في موقع لبدة الكبرى الأثري", region: "الساحل الغربي", targetDestinationId: "leptis", targetRoute: "/destinations/leptis", targetPlace: "لبدة الكبرى · الخمس", season: "الخريف والربيع", seasonNote: "طقس ألطف للمشي بين المعالم المفتوحة." },
   { id: "nature-shahat", icon: "Mountain", title: "مسارات الطبيعة", text: "اجمع بين آثار قورينا وامتداد الجبل الأخضر في محطة تقرأ الطبيعة والتاريخ معًا.", image: assets.greenMountain, alt: "ساحل الجبل الأخضر كما ورد في صور المنصة", region: "الجبل الأخضر", targetDestinationId: "shahat", targetRoute: "/destinations/shahat", targetPlace: "شحات / قورينا · الجبل الأخضر", season: "الربيع والخريف", seasonNote: "مناسب للمسارات الخارجية والغطاء النباتي." },
-  { id: "flavours-tripoli", icon: "Utensils", title: "مذاقات محلية", text: "تعرف إلى المائدة الليبية من خلال الكسكسي والبازين والشاي ضمن سياق الأسواق والضيافة في المدينة.", image: assets.couscous, alt: "طبق كسكسي ليبي من صور المنصة", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس القديمة · الأسواق", season: "على مدار العام", seasonNote: "تجربة مرنة ضمن برنامج المدينة." },
-  { id: "crafts-ghadames", icon: "Palette", title: "حرف وتقاليد", text: "اقرأ قصة الصنعة عبر الحُلي والمنسوجات ومهارات الحرفيين، مع محطة مرتبطة بعمارة الواحة وأسواقها.", image: assets.pottery, alt: "حُلي تقليدية ليبية فضية من صور المنصة", region: "الجنوب الغربي", targetDestinationId: "ghadames", targetRoute: "/destinations/ghadames", targetPlace: "غدامس القديمة · الحِرف المحلية", season: "الخريف والربيع", seasonNote: "أكثر راحة لزيارة الواحة والأسواق." },
+  { id: "flavours-tripoli", icon: "Utensils", title: "مذاقات محلية", text: "تعرف إلى المائدة الليبية عبر أطباق مثل المبكبكة والعصبان والعصيدة والحلويات، ضمن سياق الأسواق والضيافة في المدينة.", image: assets.centerMbakbaka, alt: "طبق مبكبكة ليبي من صور المركز", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس القديمة · الأسواق", season: "على مدار العام", seasonNote: "تجربة مرنة ضمن برنامج المدينة." },
+  { id: "crafts-ghadames", icon: "Palette", title: "حرف وتقاليد", text: "اقرأ قصة الصنعة عبر الفخار والمنسوجات والزخارف ومهارات الحرفيين، مع محطة مرتبطة بعمارة الواحة وأسواقها.", image: assets.centerCrafts, alt: "صناعات تقليدية ليبية من صور المركز", region: "الجنوب الغربي", targetDestinationId: "ghadames", targetRoute: "/destinations/ghadames", targetPlace: "غدامس القديمة · الحِرف المحلية", season: "الخريف والربيع", seasonNote: "أكثر راحة لزيارة الواحة والأسواق." },
   { id: "desert-acacus", icon: "TentTree", title: "الصحراء والواحات", text: "خطط لمسار منظّم بين الأقواس والتكوينات والفن الصخري، مع مختصين محليين وتجهيز مناسب للصحراء.", image: assets.acacusRoute, alt: "تكوينات صخرية في تادرارت أكاكوس من صور المنصة", region: "الجنوب الغربي", targetDestinationId: "acacus", targetRoute: "/destinations/acacus", targetPlace: "تادرارت أكاكوس · الجنوب الغربي", season: "أكتوبر إلى أبريل", seasonNote: "الفترة الأنسب عمومًا للمسارات الصحراوية." },
-  { id: "season-benghazi", icon: "CalendarDays", title: "مواسم وفعاليات", text: "رتب التوقفات الساحلية والأنشطة الاجتماعية وفق الموسم، ثم راجع الجهة المنظمة قبل تثبيت أي موعد.", image: assets.horseRiding, alt: "مجموعة فرسان في فعالية تقليدية من صور المنصة", region: "برقة", targetDestinationId: "benghazi", targetRoute: "/destinations/benghazi", targetPlace: "بنغازي · الواجهة والمدينة", season: "الربيع والصيف", seasonNote: "تابع البرنامج المحلي والطقس قبل الزيارة." },
+  { id: "season-benghazi", icon: "CalendarDays", title: "مواسم وفعاليات", text: "رتب التوقفات الساحلية والأنشطة الاجتماعية وفق الموسم، ثم راجع الجهة المنظمة قبل تثبيت أي موعد.", image: assets.centerFolklore, alt: "ممارسات شعبية وفروسية من صور المركز", region: "برقة", targetDestinationId: "benghazi", targetRoute: "/destinations/benghazi", targetPlace: "بنغازي · الواجهة والمدينة", season: "الربيع والصيف", seasonNote: "تابع البرنامج المحلي والطقس قبل الزيارة." },
+  { id: "celebrations-tripoli", icon: "CalendarDays", title: "أفراح ومناسبات", text: "تعرّف إلى حضور الزي التقليدي والممارسات الاجتماعية في مناسبات الفرح، مع احترام خصوصية المناسبة وسؤال الجهة المضيفة قبل التصوير.", image: assets.centerDress, alt: "زي تقليدي من صور المركز", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس · فضاءات الثقافة والمجتمع", season: "على مدار العام", seasonNote: "تتحدد فرص المشاهدة والمشاركة بدعوة وترتيب محلي." },
 ];
 
 export const cultureTopics = [
   {
-    title: "مائدة من روح المكان",
+    title: "المطبخ والضيافة",
     kicker: "المطبخ الليبي",
-    description: "مطبخ تتداخل فيه التأثيرات المتوسطية والعربية والصحراوية، وتظهر فيه الحبوب والصلصات والبهارات والشاي كجزء من الضيافة.",
-    image: assets.couscous,
-    alt: "كسكسي ليبي تقليدي",
+    description: "تظهر صور المركز العصيدة والعصبان والمبكبكة والمقروض ضمن مائدة تتبدل من منطقة إلى أخرى، وتبقى الضيافة خيطها المشترك.",
+    image: assets.centerAsida,
+    alt: "عصيدة ليبية من صور المركز",
   },
   {
-    title: "ذاكرة تُروى وتُؤدّى",
-    kicker: "التقاليد والفروسية",
-    description: "موسيقى وأهازيج ومناسبات وفروسية شعبية تستحضر الذاكرة المشتركة وتعبّر عن الفرح والانتماء.",
-    image: assets.horseRiding,
-    alt: "مجموعة فرسان في فعالية تقليدية",
+    title: "فلكلور وممارسات شعبية",
+    kicker: "المناسبات والذاكرة الحية",
+    description: "تسجل المادة المصورة ممارسات شعبية وفروسية وملابس احتفالية، لتقرب الزائر من حكاية المجتمع دون فصلها عن احترام خصوصية المناسبة.",
+    image: assets.centerFolklore,
+    alt: "ممارسات شعبية وفروسية من صور المركز",
   },
   {
-    title: "أثر اليد في كل تفصيل",
+    title: "صناعة وفخار ومنسوجات",
     kicker: "الصناعات التقليدية",
-    description: "الحُلي الفضية والنحاسيات والنسيج والسعف والجلود تمنح الزائر فرصة للتعرف إلى حرف ما زالت حاضرة في الأسواق والمجتمعات.",
-    image: assets.pottery,
-    alt: "حُلي تقليدية ليبية فضية",
+    description: "الفخار والمنسوجات والزخارف اليدوية تمنح الزائر مدخلًا ملموسًا إلى مهارات تتوارثها المجتمعات والأسواق المحلية.",
+    image: assets.centerCrafts,
+    alt: "صناعات تقليدية ليبية من صور المركز",
+  },
+  {
+    title: "الزي والأفراح",
+    kicker: "تفاصيل الفرح المحلي",
+    description: "يحضر الزي التقليدي في الأفراح والمناسبات بوصفه ذاكرة بصرية واجتماعية؛ استمتع بالمشاهدة واطلب الإذن قبل التصوير أو المشاركة.",
+    image: assets.centerDress,
+    alt: "زي تقليدي ليبي من صور المركز",
   },
 ];
 
@@ -327,9 +393,9 @@ export const practicalGuides = [
 ];
 
 export const culturalGuides = [
-  { section: "مذاقات", title: "مائدة ليبية متعددة المناطق", text: "يتداخل المطبخ المتوسطي مع مذاقات البحر والصحراء والحبوب والبهارات، وتتغير بعض الأطباق بحسب المنطقة والموسم.", items: ["البازين: عجين الشعير مع المرق", "الكسكسي: سميد مطهو على البخار", "الرشتة والفتات وأرز الخضار", "المبطن والبوريك والحرايمي والشربة الليبية"] },
-  { section: "حِرف", title: "ما تحكيه اليد والصنعة", text: "تظهر الحرفة الليبية في منتجات تستجيب للبيئة والحياة اليومية وتحتفظ بالزخارف والمهارات المتوارثة.", items: ["النحاسيات وأباريق الشاي والمباخر", "الحُلي الفضية والذهبية", "الفخار والمنسوجات الصوفية", "الجلود والسعفيات والآلات الموسيقية"] },
-  { section: "فلكلور", title: "مواسم وفرح محلي", text: "تتجلى الأهازيج والرقصات والملابس التقليدية في الفعاليات الاجتماعية والثقافية ومواسم الربيع والحصاد.", items: ["الفروسية الشعبية وقفز الحواجز", "فعاليات بحرية صيفية على الساحل", "مهرجانات الخريف في هون وغات", "مهرجانات سوكنة وأوجلة وجرمة وتساوة"] },
+  { section: "مذاقات", title: "مائدة ليبية متعددة المناطق", text: "يتداخل المطبخ المتوسطي مع مذاقات البحر والصحراء والحبوب والبهارات، وتتغير بعض الأطباق بحسب المنطقة والموسم.", items: ["العصيدة والبازين ضمن أطباق الحبوب والمرق", "العصبان والمبكبكة كأطباق حاضرة في الذاكرة الشعبية", "المقروض والحلويات في ضيافة المناسبات", "اسأل عن المكوّنات والحساسية قبل التذوق"] },
+  { section: "حِرف", title: "ما تحكيه اليد والصنعة", text: "تظهر الحرفة الليبية في منتجات تستجيب للبيئة والحياة اليومية وتحتفظ بالزخارف والمهارات المتوارثة.", items: ["الفخار وأواني الاستخدام اليومي", "المنسوجات والزخارف اليدوية", "الحُلي والنحاسيات في الأسواق", "دعم الحرفيين والسؤال عن قصة القطعة"] },
+  { section: "فلكلور", title: "مواسم وفرح محلي", text: "تتجلى الأهازيج والممارسات والملابس التقليدية في الفعاليات الاجتماعية والثقافية ومواسم الفرح.", items: ["الفروسية والممارسات الشعبية", "الأفراح والملابس التقليدية", "فعاليات بحرية وصحراوية وفق الموسم", "احترام خصوصية المناسبة وطلب الإذن قبل التصوير"] },
   { section: "تسوّق", title: "اختيار قطعة تحمل قصتها", text: "تنتشر أسواق ومعارض الحرف في مدن متعددة؛ يمنح السؤال عن المادة والصانع والوظيفة الثقافية للقطعة تجربة أعمق.", items: ["اختيار القطع المصنوعة يدويًا", "التعرّف إلى نوع المادة والزخرفة", "دعم الحرفيين والأسواق المحلية", "مراعاة ضوابط نقل المقتنيات الأثرية"] },
 ];
 

@@ -4,6 +4,7 @@
  */
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { reorderStops } from "./tripUtils";
+import { parseSharedStops } from "./tripSharing";
 
 type TripContextValue = {
   stops: string[];
@@ -22,6 +23,11 @@ export function TripProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
+    const sharedStops = parseSharedStops(new URLSearchParams(window.location.search).get("route"));
+    if (sharedStops.length) {
+      setStops(sharedStops);
+      return;
+    }
     const saved = window.localStorage.getItem("turath-libya-trip-stops");
     if (!saved) return;
     try {

@@ -5,7 +5,7 @@ describe("experience destination mapping", () => {
   it("maps every experience to a real destination page with season and trip metadata", () => {
     const destinationIds = new Set(destinations.map((destination) => destination.id));
 
-    expect(experiences).toHaveLength(6);
+    expect(experiences).toHaveLength(7);
     experiences.forEach((experience) => {
       expect(destinationIds.has(experience.targetDestinationId)).toBe(true);
       expect(experience.targetRoute).toBe(`/destinations/${experience.targetDestinationId}`);

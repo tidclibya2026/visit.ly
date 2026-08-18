@@ -78,8 +78,8 @@ function Footer() {
         <div className="footer-intro">
           <img src={assets.brandMark} alt="Visit Libya | زور ليبيا" className="footer-mark" />
           <p className="eyebrow light">Visit Libya · زور ليبيا <span className="footer-coordinates">32°53′N · 12°34′E</span></p>
-          <h2>ليبيا... رحلة عبر الزمن.</h2>
-          <p>منصة عربية لاستكشاف الوجهات والتجارب والتراث وإرشادات السفر، ضمن رحلة منظمة من الفكرة إلى المسار.</p>
+          <h2>دليل ليبيا الميداني.</h2>
+          <p>وجهات وتجارب وتراث ومعلومات عملية من مواد مركز المعلومات والتوثيق السياحي.</p>
         </div>
         <div className="footer-links">
           <p className="footer-label">استكشف</p>
@@ -98,8 +98,8 @@ function Footer() {
         </div>
       </div>
       <div className="footer-base">
-        <span>© {new Date().getFullYear()} Visit Libya · زور ليبيا</span>
-        <span>محتوى المنصة من المواد والمستندات التي زُوّدت بها للمشروع.</span>
+        <span>تصميم وتنفيذ مركز المعلومات والتوثيق السياحي © 2026</span>
+        <span>Visit Libya · زور ليبيا</span>
       </div>
     </footer>
   );
