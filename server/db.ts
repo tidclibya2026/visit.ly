@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { desc } from "drizzle-orm";
-import { InsertUser, translationReviews, type InsertTranslationReview, users } from "../drizzle/schema";
+import { InsertUser, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -93,7 +93,10 @@ export async function getUserByOpenId(openId: string) {
 export async function createTranslationReview(review: InsertTranslationReview) {
   const db = await getDb();
   if (!db) return;
-  await db.insert(translationReviews).values(review);
+  const result = await db.insert(translationReviews).values(review);
+  const raw = result as unknown as { insertId?: number } | Array<{ insertId?: number }>;
+  const reviewId = Array.isArray(raw) ? raw[0]?.insertId : raw.insertId;
+  await db.insert(translationAuditLogs).values({ reviewId, destinationId: review.destinationId, language: review.language, action: "generated", detail: "تم إنشاء ترجمة آلية جديدة للمراجعة." });
 }
 
 export async function listTranslationReviews() {
@@ -105,7 +108,37 @@ export async function listTranslationReviews() {
 export async function reviewTranslation(id: number, editedJson: string, status: "approved" | "needs_revision", reviewerOpenId: string) {
   const db = await getDb();
   if (!db) return;
+  const records = await db.select().from(translationReviews).where(eq(translationReviews.id, id)).limit(1);
+  const review = records[0];
+  if (!review) return;
   await db.update(translationReviews).set({ editedJson, status, reviewerOpenId, reviewedAt: new Date() }).where(eq(translationReviews.id, id));
+  await db.insert(translationAuditLogs).values({ reviewId: id, destinationId: review.destinationId, language: review.language, action: status, actorOpenId: reviewerOpenId, detail: status === "approved" ? "اعتمد المشرف النسخة المحررة." : "أعاد المشرف الترجمة للمراجعة." });
+}
+
+export async function listTranslationAuditLogs(reviewId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = db.select().from(translationAuditLogs).orderBy(desc(translationAuditLogs.createdAt));
+  return reviewId ? query.where(eq(translationAuditLogs.reviewId, reviewId)) : query;
+}
+
+export async function submitTranslationSuggestion(input: { destinationId: string; language: "ar" | "en" | "fr" | "it" | "de" | "es" | "zh"; originalText: string; suggestedText: string; contextUrl: string }) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(translationSuggestions).values(input);
+  await db.insert(translationAuditLogs).values({ destinationId: input.destinationId, language: input.language, action: "suggestion_received", detail: "استلمت المنصة اقتراح تحسين من زائر." });
+}
+
+export async function listTranslationSuggestions() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(translationSuggestions).orderBy(desc(translationSuggestions.createdAt));
+}
+
+export async function updateTranslationSuggestion(id: number, status: "reviewed" | "closed", reviewerOpenId: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(translationSuggestions).set({ status, reviewedByOpenId: reviewerOpenId, reviewedAt: new Date() }).where(eq(translationSuggestions.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.

@@ -35,9 +35,35 @@ export const translationReviews = mysqlTable("translation_reviews", {
   reviewedAt: timestamp("reviewedAt"),
 });
 
+export const translationAuditLogs = mysqlTable("translation_audit_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  reviewId: int("reviewId"),
+  destinationId: varchar("destinationId", { length: 64 }).notNull(),
+  language: mysqlEnum("language", ["ar", "en", "fr", "it", "de", "es", "zh"]).notNull(),
+  action: mysqlEnum("action", ["generated", "edited", "approved", "needs_revision", "suggestion_received"]).notNull(),
+  actorOpenId: varchar("actorOpenId", { length: 64 }),
+  detail: text("detail"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const translationSuggestions = mysqlTable("translation_suggestions", {
+  id: int("id").autoincrement().primaryKey(),
+  destinationId: varchar("destinationId", { length: 64 }).notNull(),
+  language: mysqlEnum("language", ["ar", "en", "fr", "it", "de", "es", "zh"]).notNull(),
+  originalText: text("originalText").notNull(),
+  suggestedText: text("suggestedText").notNull(),
+  contextUrl: varchar("contextUrl", { length: 512 }).notNull(),
+  status: mysqlEnum("status", ["pending", "reviewed", "closed"]).default("pending").notNull(),
+  reviewedByOpenId: varchar("reviewedByOpenId", { length: 64 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewedAt"),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type TranslationReview = typeof translationReviews.$inferSelect;
 export type InsertTranslationReview = typeof translationReviews.$inferInsert;
+export type TranslationAuditLog = typeof translationAuditLogs.$inferSelect;
+export type TranslationSuggestion = typeof translationSuggestions.$inferSelect;
 
 // TODO: Add your tables here

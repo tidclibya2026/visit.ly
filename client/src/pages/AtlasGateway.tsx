@@ -9,6 +9,7 @@ import { assets } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
+import { AtlasImageLayer } from "@/components/AtlasImageLayer";
 
 export default function AtlasGateway() {
   const { stops } = useTrip();
@@ -48,6 +49,8 @@ export default function AtlasGateway() {
           <span className="atlas-card-number">03</span><Route size={28} /><h2>تخطيط مسار الرحلة</h2><p>أدخل مدة الرحلة واهتماماتك في الأطلس للحصول على مقترح مسار مبني على البيانات المتاحة.</p><a href={assets.atlasPublicUrl} target="_blank" rel="noreferrer">خطط مسارًا <ArrowUpLeft size={15} /></a>
         </article>
       </section>
+
+      <AtlasImageLayer />
 
       <section className="atlas-trip-bridge" data-route-note="Visit Libya → أطلس ليبيا السياحي">
         <div className="page-frame atlas-trip-bridge-inner">

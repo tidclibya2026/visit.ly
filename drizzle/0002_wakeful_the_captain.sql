@@ -1,0 +1,1 @@
+ALTER TABLE `translation_audit_logs` MODIFY COLUMN `language` enum('ar','en','fr','it','de','es','zh') NOT NULL;
