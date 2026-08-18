@@ -9,6 +9,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { assets, destinations, experiences, seasonalEvents } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 import { buildSharedRouteUrl } from "@/contexts/tripSharing";
 
 type RouteItem = {
@@ -68,7 +69,7 @@ export default function TripPlanner() {
   };
   return (
     <SiteShell>
-      <section className="trip-hero landmark-hero"><img className="landmark-hero-image" src={assets.desertCaravan} alt="قافلة في الصحراء الليبية من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.trip.kicker")}</p><h1>{t("hero.trip.title")}<br /><i>{t("hero.trip.accent")}</i></h1><p>{t("hero.trip.copy")}</p></div></section>
+      <section className="trip-hero landmark-hero"><img className="landmark-hero-image" src={assets.desertCaravan} alt="قافلة في الصحراء الليبية من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.trip.kicker")}</p><h1>{t("hero.trip.title")}<br /><i>{t("hero.trip.accent")}</i></h1><p>{t("hero.trip.copy")}</p></div><HeroPhotoCredit landmark="قافلة الصحراء الليبية" /></section>
       <section className="page-frame trip-content">
         <p className="trip-field-note"><Route size={14} /> ملاحظة ميدانية: رتّب المحطات بحسب الموسم والوجهة، ثم راجع تفاصيل الطريق مع الجهة المحلية.</p>
         <div className="trip-head"><div><p className="eyebrow">المحطات المحفوظة</p><h2>{savedCount ? `${savedCount} محطات في الدفتر` : "دفترك ينتظر محطته الأولى"}</h2></div>{savedCount > 0 && <div className="trip-export-actions"><button type="button" onClick={shareRoute}><Share2 size={15} /> مشاركة الرابط</button><button type="button" onClick={exportRoutePdf}><Printer size={15} /> حفظ PDF</button><button className="clear-trip" type="button" onClick={clearStops}><Trash2 size={16} /> إفراغ المسار</button></div>}</div>

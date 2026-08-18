@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
 import { assets, destinations, type Destination, type GalleryItem } from "@/lib/content";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 import { useTrip } from "@/contexts/TripContext";
 import { filterAndSortDestinations, type DestinationSort } from "@/lib/destinationFilters";
 import { destinationViewStorageKey, parseDestinationView, type DestinationView } from "@/lib/destinationView";
@@ -40,6 +41,7 @@ export default function Destinations() {
       <section className="inner-hero destinations-hero landmark-hero">
         <img className="landmark-hero-image" src={assets.greenMountain} alt="ساحل الجبل الأخضر من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" />
         <div className="page-frame"><p className="eyebrow light">{t("hero.destinations.kicker")}</p><h1>{t("hero.destinations.title")}<br /><i>{t("hero.destinations.accent")}</i></h1><p>{t("hero.destinations.copy")}</p></div>
+        <HeroPhotoCredit landmark="ساحل الجبل الأخضر" />
       </section>
       <section className="page-frame destinations-content">
         <div className="filter-bar">

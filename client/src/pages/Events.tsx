@@ -6,6 +6,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { assets, seasonalEvents } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 const regions = ["الكل", ...Array.from(new Set(seasonalEvents.map((event) => event.region)))];
 const months = ["الكل", ...Array.from(new Set(seasonalEvents.flatMap((event) => event.months)))];
@@ -17,7 +18,7 @@ export default function Events() {
   const [month, setMonth] = useState("الكل");
   const events = useMemo(() => seasonalEvents.filter((event) => (region === "الكل" || event.region === region) && (month === "الكل" || event.months.includes(month))), [region, month]);
   return <SiteShell>
-    <section className="inner-hero events-hero landmark-hero"><img className="landmark-hero-image" src={assets.horseRiding} alt="فروسية شعبية من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.events.kicker")}</p><h1>{t("hero.events.title")}<br /><i>{t("hero.events.accent")}</i></h1><p>{t("hero.events.copy")}</p></div></section>
+    <section className="inner-hero events-hero landmark-hero"><img className="landmark-hero-image" src={assets.horseRiding} alt="فروسية شعبية من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.events.kicker")}</p><h1>{t("hero.events.title")}<br /><i>{t("hero.events.accent")}</i></h1><p>{t("hero.events.copy")}</p></div><HeroPhotoCredit landmark="الفروسية الشعبية الليبية" /></section>
     <section className="page-frame events-intro"><div><p className="eyebrow">تقويم إرشادي</p><h2>الفعالية تبدأ<br />بالموسم والمكان.</h2></div><p>صفِّ الفعاليات بحسب الشهر أو المنطقة، ثم أضف ما يناسب خط رحلتك. لا تعني الإضافة حجزًا أو تأكيد حضور.</p></section>
     <section className="page-frame event-filter-bar" aria-label="تصفية الفعاليات"><div><p className="eyebrow"><SlidersHorizontal size={14} /> تصفية الرزنامة</p><p>تظهر الأشهر كنوافذ موسمية إرشادية، لا كمواعيد نهائية.</p></div><div className="event-filter-controls"><div className="category-chips"><span className="filter-label">الشهر</span>{months.map((item) => <button type="button" className={month === item ? "is-active" : ""} onClick={() => setMonth(item)} key={item}>{item}</button>)}</div><div className="category-chips"><span className="filter-label">المنطقة</span>{regions.map((item) => <button type="button" className={region === item ? "is-active" : ""} onClick={() => setRegion(item)} key={item}>{item}</button>)}</div></div></section>
     <section className="page-frame events-results"><p>تظهر الآن <strong>{events.length}</strong> فعاليات موسمية.</p>{(region !== "الكل" || month !== "الكل") && <button type="button" onClick={() => { setRegion("الكل"); setMonth("الكل"); }}>إعادة ضبط التصفية</button>}</section>

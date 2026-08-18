@@ -7,12 +7,13 @@ import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
 import { assets, culturalGuides, cultureTopics, cultureVisualArchive, foodCraftVisualArchive } from "@/lib/content";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 export default function Culture() {
   const { t } = useLanguage();
   return (
     <SiteShell>
-      <section className="culture-hero"><img className="culture-hero-image" src={assets.cultureFolklore} alt="فلكلور ليبي من أرشيف مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="culture-hero-wash" /><div className="page-frame culture-hero-copy"><p className="eyebrow light">{t("hero.culture.kicker")}</p><h1>{t("hero.culture.title")}<br /><i>{t("hero.culture.accent")}</i></h1><p>{t("hero.culture.copy")}</p></div></section>
+      <section className="culture-hero"><img className="culture-hero-image" src={assets.cultureFolklore} alt="فلكلور ليبي من أرشيف مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="culture-hero-wash" /><div className="page-frame culture-hero-copy"><p className="eyebrow light">{t("hero.culture.kicker")}</p><h1>{t("hero.culture.title")}<br /><i>{t("hero.culture.accent")}</i></h1><p>{t("hero.culture.copy")}</p></div><HeroPhotoCredit landmark="الفلكلور الليبي" /></section>
       <section className="culture-statement page-frame"><div className="chapter-no">02</div><div><p className="eyebrow">روح مشتركة</p><h2>المكان لا يكتمل دون أن تتعرّف إلى أهله وتفاصيلهم.</h2></div><p>تنقل المواد المرفقة صورة لثقافة تتوارث الضيافة والمهارات والأغنية والعادة، بين المدينة والريف والساحل والواحات.</p></section>
       <section className="culture-feature-grid page-frame">
         {cultureTopics.map((topic, index) => <article className={`culture-topic topic-${index + 1}`} data-field-note={index === 0 ? "حاشية 32°53′N" : index === 1 ? "مسار المجتمع" : "حرفة على الطريق"} key={topic.title}><div className="culture-topic-image" data-field-note={`دفتر الثقافة · 0${index + 1}`}><img src={topic.image} alt={topic.alt} /></div><div className="culture-topic-copy"><p className="eyebrow">{topic.kicker}</p><h2>{topic.title}</h2><p>{topic.description}</p><span className="story-index">{String(index + 1).padStart(2, "0")} / {String(cultureTopics.length).padStart(2, "0")}</span></div></article>)}

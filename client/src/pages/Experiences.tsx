@@ -9,6 +9,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { assets, experienceFieldNotes, experiences } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 const iconMap = { Landmark, Mountain, Utensils, Palette, TentTree, CalendarDays };
 const regions = ["الكل", ...Array.from(new Set(experiences.map((experience) => experience.region)))];
@@ -28,7 +29,7 @@ export default function Experiences() {
   }, [region, season, search]);
   return (
     <SiteShell>
-      <section className="inner-hero experiences-hero"><img className="experience-hero-image" src={assets.acacusRocks} alt="تكوينات أكاكوس الصخرية من صور المركز" fetchPriority="high" /><div className="experience-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.experiences.kicker")} · {String(experiences.length).padStart(2, "0")}</p><h1>{t("hero.experiences.title")}<br /><i>{t("hero.experiences.accent")}</i></h1><p>{t("hero.experiences.copy")}</p></div></section>
+      <section className="inner-hero experiences-hero"><img className="experience-hero-image" src={assets.acacusRocks} alt="تكوينات أكاكوس الصخرية من صور المركز" fetchPriority="high" /><div className="experience-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.experiences.kicker")} · {String(experiences.length).padStart(2, "0")}</p><h1>{t("hero.experiences.title")}<br /><i>{t("hero.experiences.accent")}</i></h1><p>{t("hero.experiences.copy")}</p></div><HeroPhotoCredit landmark="تادرارت أكاكوس" /></section>
       <section className="page-frame experiences-intro experiences-intro-simple"><p className="eyebrow">دليل عملي للاستكشاف</p><div><h2>تجارب متصلة<br />بأماكنها الحقيقية.</h2><p>استخدم البطاقات لاختيار ما يهمك، ثم انتقل مباشرة إلى صفحة الموقع لمشاهدة صوره ومعلوماته وخريطته وتفاصيله الميدانية.</p></div></section>
       <section className="page-frame experience-filter-bar" aria-label="تصفية التجارب"><div><p className="eyebrow">اعثر على التجربة المناسبة</p><p>ابحث باسم نشاط أو مكان، ثم استخدم المنطقة والموسم لتضييق النتائج.</p></div><div className="experience-filter-controls"><label className="experience-search"><Search size={16} /><span className="sr-only">ابحث داخل التجارب</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="ابحث: طعام، حرف، صحراء، آثار…" /></label><div className="category-chips"><span className="filter-label">المنطقة</span>{regions.map((item) => <button type="button" className={region === item ? "is-active" : ""} onClick={() => setRegion(item)} key={item}>{item}</button>)}</div><div className="category-chips"><span className="filter-label">الموسم</span>{seasons.map((item) => <button type="button" className={season === item ? "is-active" : ""} onClick={() => setSeason(item)} key={item}>{item}</button>)}</div></div></section>
       <div className="page-frame experience-results-line"><span>تظهر الآن <strong>{shownExperiences.length}</strong> تجارب موثقة.</span>{(region !== "الكل" || season !== "الكل" || search) && <button type="button" onClick={() => { setRegion("الكل"); setSeason("الكل"); setSearch(""); }}>إعادة ضبط البحث والتصفية</button>}</div>

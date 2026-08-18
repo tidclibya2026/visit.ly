@@ -9,6 +9,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { assets, destinations, heroSlides } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 export default function Home() {
   const { stops, toggleStop } = useTrip();
@@ -42,6 +43,7 @@ export default function Home() {
         </div>
         <div className="hero-controls" aria-label="اختيار صورة الهيرو"><button type="button" onClick={previousSlide} aria-label="الصورة السابقة"><ChevronRight size={19} /></button><div className="hero-dots">{heroSlides.map((item, index) => <button type="button" onClick={() => setActiveSlide(index)} className={index === activeSlide ? "is-active" : ""} aria-label={`عرض ${item.note}`} key={item.image} />)}</div><button type="button" onClick={nextSlide} aria-label="الصورة التالية"><ChevronLeft size={19} /></button></div>
         <div className="hero-coordinates"><span>{slide.kicker.split(" · ")[1]}</span><b>{slide.note}</b><span>Visit Libya</span></div>
+        <HeroPhotoCredit landmark={slide.title} />
       </section>
 
       <section className="intro-section page-frame">

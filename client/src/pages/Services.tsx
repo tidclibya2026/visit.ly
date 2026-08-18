@@ -6,12 +6,13 @@ import { ArrowUpLeft, Banknote, BusFront, CircleAlert, CloudSun, Plane, ShieldCh
 import { SiteShell } from "@/components/SiteShell";
 import { assets, practicalDetails, practicalGuides } from "@/lib/content";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 export default function Services() {
   const { t } = useLanguage();
   return (
     <SiteShell>
-      <section className="inner-hero services-hero landmark-hero"><img className="landmark-hero-image" src={assets.shahatTemple} alt="معبد شحات الأثري من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.services.kicker")}</p><h1>{t("hero.services.title")}<br /><i>{t("hero.services.accent")}</i></h1><p>{t("hero.services.copy")}</p></div></section>
+      <section className="inner-hero services-hero landmark-hero"><img className="landmark-hero-image" src={assets.shahatTemple} alt="معبد شحات الأثري من صور مركز المعلومات والتوثيق السياحي" fetchPriority="high" /><div className="landmark-hero-ink" aria-hidden="true" /><div className="page-frame"><p className="eyebrow light">{t("hero.services.kicker")}</p><h1>{t("hero.services.title")}<br /><i>{t("hero.services.accent")}</i></h1><p>{t("hero.services.copy")}</p></div><HeroPhotoCredit landmark="معالم شحات الأثرية" /></section>
       <section className="notice-strip"><div className="page-frame"><CircleAlert size={19} /><p><strong>تنبيه مهم:</strong> راجع دائمًا الجهات الرسمية والسفارة أو القنصلية ومشغل الرحلات قبل الحجز أو السفر؛ المتطلبات والرسوم والمسارات قد تتغير.</p></div></section>
       <section className="page-frame practical-cards">
         {practicalGuides.map((guide, index) => <article key={guide.title}><span>0{index + 1}</span><h2>{guide.title}</h2><ul>{guide.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}

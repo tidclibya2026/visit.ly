@@ -8,6 +8,7 @@ import { SiteShell } from "@/components/SiteShell";
 import { assets } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 
 export default function AtlasGateway() {
   const { stops } = useTrip();
@@ -27,6 +28,7 @@ export default function AtlasGateway() {
           </div>
         </div>
         <div className="atlas-coordinates" aria-hidden="true"><span>19°00′E</span><b>GIS · Libya Tourism Atlas</b><span>26°20′N</span></div>
+        <HeroPhotoCredit landmark="طلميثة الأثرية" />
       </section>
 
       <section className="page-frame atlas-intro">
