@@ -9,12 +9,18 @@ describe("image presentation", () => {
     const experiences = readFileSync(resolve(projectRoot, "client/src/pages/Experiences.tsx"), "utf8");
 
     expect(experiences).toContain("experience-hero-image");
-    expect(experiences).toContain("assets.desertCaravan");
+    expect(experiences).toContain("assets.acacusRocks");
     expect(experiences).toContain('data-experience={experience.id}');
   });
 
   it("يحدد بطاقات الوجهات لعرض مواضع صورها الميدانية", () => {
     const home = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
     expect(home).toContain('data-destination={destination.id}');
+  });
+
+  it("يعرض هيرو الثقافة لقطة شعبية ميدانية من أرشيف المركز", () => {
+    const culture = readFileSync(resolve(projectRoot, "client/src/pages/Culture.tsx"), "utf8");
+    expect(culture).toContain("culture-hero-image");
+    expect(culture).toContain("assets.cultureFolklore");
   });
 });

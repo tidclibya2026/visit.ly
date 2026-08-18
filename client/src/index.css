@@ -1321,3 +1321,27 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .experience-card-photo { height: 245px; }
   .experience-card-photo img { height: 100% !important; object-fit: cover !important; }
 }
+
+/* Full-bleed landmark heroes: the image leads, while the copy uses only the quiet edge. */
+.experiences-hero { min-height: clamp(540px, 52vw, 640px); }
+.experiences-hero::before, .experiences-hero::after { display: none; }
+.experience-hero-image { object-position: 50% 54%; filter: brightness(1.08) contrast(1.06) saturate(1.08); }
+.experience-hero-ink { background: linear-gradient(90deg, rgba(3, 30, 53, 0.01) 0%, rgba(3, 30, 53, 0.04) 48%, rgba(3, 30, 53, 0.76) 100%), linear-gradient(0deg, rgba(3, 30, 53, 0.2), transparent 54%); }
+.experiences-hero .page-frame { width: min(1180px, calc(100% - 64px)); margin: auto; }
+.experiences-hero .page-frame > p:not(.eyebrow), .experiences-hero h1 { text-shadow: 0 2px 18px rgba(3, 30, 53, 0.44); }
+
+.culture-hero { min-height: clamp(560px, 54vw, 680px); isolation: isolate; }
+.culture-hero-image { object-position: 50% 47%; filter: brightness(1.1) contrast(1.04) saturate(1.06); }
+.culture-hero-wash { z-index: 1; background: linear-gradient(90deg, rgba(6, 41, 74, 0.01) 0%, rgba(6, 41, 74, 0.06) 48%, rgba(6, 41, 74, 0.76) 100%), linear-gradient(0deg, rgba(6, 41, 74, 0.2), transparent 55%); }
+.culture-hero-copy { z-index: 2; min-height: clamp(560px, 54vw, 680px); }
+.culture-hero-copy h1, .culture-hero-copy > p:not(.eyebrow) { text-shadow: 0 2px 18px rgba(3, 30, 53, 0.48); }
+
+@media (max-width: 760px) {
+  .experiences-hero { min-height: 500px; }
+  .experience-hero-image { object-position: 52% 54%; }
+  .experience-hero-ink { background: linear-gradient(0deg, rgba(3, 30, 53, 0.74), rgba(3, 30, 53, 0.02) 72%); }
+  .experiences-hero .page-frame { width: min(100% - 40px, 1180px); }
+  .culture-hero, .culture-hero-copy { min-height: 530px; }
+  .culture-hero-image { object-position: 52% 44%; }
+  .culture-hero-wash { background: linear-gradient(0deg, rgba(6, 41, 74, 0.76), rgba(6, 41, 74, 0.03) 72%); }
+}
