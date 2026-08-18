@@ -72,6 +72,22 @@ export const assets = {
   sabrathaCenter: "/manus-storage/Sabratha1_62c274ee.jpg",
   villaSelene: "/manus-storage/11671060_5b1d3a15.jpg",
   qasrLibyaMosaic: "/manus-storage/center-qasr-libya-mosaic_695c80b6.jpg",
+  awjila01: "/manus-storage/awjila-01_9f51ff3d.jpg",
+  awjila02: "/manus-storage/awjila-02_f83da0e4.jpg",
+  awjila03: "/manus-storage/awjila-03_4b4b818e.jpg",
+  awjila04: "/manus-storage/awjila-04_2abadee4.jpg",
+  qasrLibya01: "/manus-storage/qasr-libya-01_007178e0.jpg",
+  qasrLibya02: "/manus-storage/qasr-libya-02_e3e6cb4.jpg",
+  qasrLibya03: "/manus-storage/qasr-libya-03_fd0d724e.jpg",
+  qasrLibya04: "/manus-storage/qasr-libya-04_360af943.jpg",
+  qasrLibya05: "/manus-storage/qasr-libya-05_85186150.jpg",
+  tolmeitha01: "/manus-storage/tolmeitha-01_2163b3d3.jpg",
+  tolmeitha02: "/manus-storage/tolmeitha-02_e0201158.jpg",
+  tolmeitha03: "/manus-storage/tolmeitha-03_4d3dcc3a.jpg",
+  tolmeitha04: "/manus-storage/tolmeitha-04_540c40cc.jpg",
+  cultureFolklore: "/manus-storage/culture-folklore_d22dea2e.jpg",
+  cultureCrafts: "/manus-storage/culture-crafts_51cdbb89.jpg",
+  cultureDress: "/manus-storage/culture-dress_a4f988f5.jpg",
 } as const;
 
 export type GalleryItem = {
@@ -231,6 +247,67 @@ export const destinations: Destination[] = [
       { image: assets.sabrathaCoast, alt: "ساحل وآثار صبراتة", caption: "بقايا المدينة تتجاور مع خط المتوسط المفتوح.", location: "صبراتة · الواجهة الأثرية", coordinates: "32.799°N · 12.483°E" },
     ],
   },
+  {
+    id: "tolmeitha",
+    title: "طلميثة / بطليموس",
+    city: "طلميثة",
+    landmarkType: "مدينة أثرية كلاسيكية",
+    region: "برقة · الساحل الشرقي",
+    category: "تراث",
+    time: "نصف يوم إلى يوم",
+    description: "مدينة أثرية ممتدة بين البحر وسفوح الجبل الأخضر، تقرأ فيها بقايا الشوارع والمباني والفضاءات الحضرية من منظور ميداني واسع.",
+    image: assets.tolmeitha01,
+    alt: "لقطة جوية موثقة لموقع طلميثة الأثري من أرشيف المركز",
+    fieldNote: "تقع طلميثة على الساحل بين البحر وسفوح الجبل الأخضر؛ تتبع مسارًا هادئًا يربط التخطيط الحضري بالبيئة المحيطة.",
+    highlights: ["امتداد المدينة الأثرية من منظور جوي", "الشوارع والفضاءات الكلاسيكية", "صلة الساحل بالجبل الأخضر"],
+    gallery: [
+      { image: assets.tolmeitha01, alt: "نظرة جوية إلى بقايا طلميثة", caption: "خطوط الموقع الأثري تظهر بين الغطاء النباتي ومسار الساحل.", location: "طلميثة / بطليموس · المنطقة الأثرية", coordinates: "32.708°N · 20.951°E" },
+      { image: assets.tolmeitha02, alt: "امتداد أثري في طلميثة", caption: "امتداد الموقع يوضح قرب المدينة القديمة من المشهد الطبيعي المحيط.", location: "طلميثة / بطليموس · الامتداد الداخلي", coordinates: "32.706°N · 20.949°E" },
+      { image: assets.tolmeitha03, alt: "ساحل وموقع طلميثة من الأعلى", caption: "لقطة ميدانية تضع المدينة الأثرية في سياق الساحل والسهل.", location: "طلميثة / بطليموس · المسار الساحلي", coordinates: "32.709°N · 20.953°E" },
+      { image: assets.tolmeitha04, alt: "بقايا مدرجية في طلميثة", caption: "تفاصيل بنائية داخل الموقع تفتح قراءة هادئة لطبقات المكان.", location: "طلميثة / بطليموس · النطاق الأثري", coordinates: "32.707°N · 20.952°E" },
+    ],
+  },
+  {
+    id: "qasr-libya",
+    title: "قصر ليبيا",
+    city: "قصر ليبيا",
+    landmarkType: "متحف وفسيفساء بيزنطية",
+    region: "الجبل الأخضر",
+    category: "تراث",
+    time: "ساعة إلى نصف يوم",
+    description: "محطة ثقافية تقود إلى عالم الفسيفساء المرتبط بذاكرة ثيودورياس والكنائس التاريخية، وتناسب التوقف الهادئ ضمن مسار الجبل الأخضر.",
+    image: assets.qasrLibya01,
+    alt: "فسيفساء موثقة من متحف قصر ليبيا",
+    fieldNote: "اقرأ حكاية المكان من لوحات الفسيفساء وتفاصيلها، ثم اربطها بسياق الجبل الأخضر ومساراته القريبة.",
+    highlights: ["فسيفساء بيزنطية من مواد المركز", "متحف قصر ليبيا", "محطة ثقافية ضمن الجبل الأخضر"],
+    gallery: [
+      { image: assets.qasrLibya01, alt: "لوحة فسيفساء من قصر ليبيا", caption: "تفصيل فسيفسائي يفتح نافذة على رموز المكان وتكويناته.", location: "متحف قصر ليبيا · قاعة الفسيفساء", coordinates: "32.631°N · 21.396°E" },
+      { image: assets.qasrLibya02, alt: "طائر في فسيفساء قصر ليبيا", caption: "حضور الطبيعة في لوحة فسيفساء موثقة من المتحف.", location: "متحف قصر ليبيا · قاعة الفسيفساء", coordinates: "32.631°N · 21.396°E" },
+      { image: assets.qasrLibya03, alt: "سفينة في فسيفساء قصر ليبيا", caption: "مشهد بحري يحفظه أرشيف الفسيفساء في قصر ليبيا.", location: "متحف قصر ليبيا · قاعة الفسيفساء", coordinates: "32.631°N · 21.396°E" },
+      { image: assets.qasrLibya04, alt: "واجهة معمارية في فسيفساء قصر ليبيا", caption: "تفاصيل معمارية مرسومة بحس زخرفي دقيق.", location: "متحف قصر ليبيا · قاعة الفسيفساء", coordinates: "32.631°N · 21.396°E" },
+      { image: assets.qasrLibya05, alt: "فارس في فسيفساء قصر ليبيا", caption: "لوحة موثقة تبرز الحركة واللون في فسيفساء المتحف.", location: "متحف قصر ليبيا · قاعة الفسيفساء", coordinates: "32.631°N · 21.396°E" },
+    ],
+  },
+  {
+    id: "awjila",
+    title: "أوجلة",
+    city: "أوجلة",
+    landmarkType: "واحة وعمارة صحراوية",
+    region: "الواحات الشرقية",
+    category: "تراث",
+    time: "نصف يوم إلى يوم",
+    description: "واحة تاريخية تبرز فيها عمارة الطين والنخيل والتفاصيل المكانية الهادئة، مع حضور المسجد القديم في قلب النسيج التاريخي.",
+    image: assets.awjila01,
+    alt: "عمارة أوجلة الطينية والنخيل من صور المركز",
+    fieldNote: "تجمع أوجلة بين واحة نخيل وعمارة صحراوية ومسارات داخلية؛ زُرها بترتيب محلي واحترام لخصوصية المكان.",
+    highlights: ["المسجد القديم والقباب المخروطية", "عمارة الطين والنخيل", "مسارات الواحة والذاكرة المحلية"],
+    gallery: [
+      { image: assets.awjila01, alt: "عمارة طينية في أوجلة", caption: "قبة طينية ونخيل يرسمان ملامح الواحة التاريخية.", location: "أوجلة · النسيج التاريخي", coordinates: "29.108°N · 21.287°E" },
+      { image: assets.awjila02, alt: "قباب مخروطية في أوجلة", caption: "تفاصيل القباب المخروطية ضمن عمارة صحراوية محلية.", location: "أوجلة · المسجد القديم والمحيط", coordinates: "29.108°N · 21.287°E" },
+      { image: assets.awjila03, alt: "مدخل تقليدي في أوجلة", caption: "مدخل محلي يفتح على ساحة نخيل ومسار داخلي.", location: "أوجلة · الممرات الداخلية", coordinates: "29.109°N · 21.288°E" },
+      { image: assets.awjila04, alt: "ممر مقبب في أوجلة", caption: "ممر داخلي يكشف منطق الظل والتهوية في العمارة الطينية.", location: "أوجلة · النسيج التاريخي", coordinates: "29.108°N · 21.286°E" },
+    ],
+  },
 ];
 
 export const heroSlides = [
@@ -283,6 +360,7 @@ export const heritageSites = [
     description: "تظهر صور المركز امتداد الموقع الأثري من منظور واسع، في محطة تصل تاريخ برقة بمشهد الساحل والسهول المجاورة.",
     image: assets.tolmeitha,
     alt: "منظر جوي موثق لموقع طلميثة الأثري من أرشيف المركز",
+    destinationId: "tolmeitha",
   },
   {
     title: "فيلا سيلين",
@@ -297,6 +375,7 @@ export const heritageSites = [
     description: "تُظهر مجموعة المركز نماذج من الفسيفساء المعروضة في قصر ليبيا، بوصفها مدخلًا بصريًا لقراءة طبقات الفن والتراث.",
     image: assets.qasrLibyaMosaic,
     alt: "فسيفساء من متحف قصر ليبيا ضمن أرشيف المركز",
+    destinationId: "qasr-libya",
   },
   {
     title: "قصر الحاج",
@@ -311,6 +390,7 @@ export const heritageSites = [
     description: "صورة موثقة من أرشيف المركز لواحة أوجلة، تفتح مجالًا لقراءة عمارة الواحة وصلتها بالزراعة والطرق الداخلية.",
     image: assets.awjila,
     alt: "عمارة واحة أوجلة من أرشيف المركز",
+    destinationId: "awjila",
   },
   {
     title: "بحيرات أوباري الطبيعية",
@@ -340,10 +420,10 @@ export const experiences: Experience[] = [
   { id: "heritage-leptis", icon: "Landmark", title: "مدن وحضارات", text: "اقرأ طبقات المدينة المتوسطية عبر الأقواس والساحات والأعمدة في واحد من أبرز المواقع الأثرية على الساحل.", image: assets.leptisVerified, alt: "قوس روماني في موقع لبدة الكبرى الأثري", region: "الساحل الغربي", targetDestinationId: "leptis", targetRoute: "/destinations/leptis", targetPlace: "لبدة الكبرى · الخمس", season: "الخريف والربيع", seasonNote: "طقس ألطف للمشي بين المعالم المفتوحة." },
   { id: "nature-shahat", icon: "Mountain", title: "مسارات الطبيعة", text: "اجمع بين آثار قورينا وامتداد الجبل الأخضر في محطة تقرأ الطبيعة والتاريخ معًا.", image: assets.greenMountain, alt: "ساحل الجبل الأخضر كما ورد في صور المنصة", region: "الجبل الأخضر", targetDestinationId: "shahat", targetRoute: "/destinations/shahat", targetPlace: "شحات / قورينا · الجبل الأخضر", season: "الربيع والخريف", seasonNote: "مناسب للمسارات الخارجية والغطاء النباتي." },
   { id: "flavours-tripoli", icon: "Utensils", title: "مذاقات محلية", text: "تعرف إلى المائدة الليبية عبر أطباق مثل المبكبكة والعصبان والعصيدة والحلويات، ضمن سياق الأسواق والضيافة في المدينة.", image: assets.centerMbakbaka, alt: "طبق مبكبكة ليبي من صور المركز", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس القديمة · الأسواق", season: "على مدار العام", seasonNote: "تجربة مرنة ضمن برنامج المدينة." },
-  { id: "crafts-ghadames", icon: "Palette", title: "حرف وتقاليد", text: "اقرأ قصة الصنعة عبر الفخار والمنسوجات والزخارف ومهارات الحرفيين، مع محطة مرتبطة بعمارة الواحة وأسواقها.", image: assets.centerCrafts, alt: "صناعات تقليدية ليبية من صور المركز", region: "الجنوب الغربي", targetDestinationId: "ghadames", targetRoute: "/destinations/ghadames", targetPlace: "غدامس القديمة · الحِرف المحلية", season: "الخريف والربيع", seasonNote: "أكثر راحة لزيارة الواحة والأسواق." },
+  { id: "crafts-ghadames", icon: "Palette", title: "حرف وتقاليد", text: "اقرأ قصة الصنعة عبر الفخار والمنسوجات والزخارف ومهارات الحرفيين، مع محطة مرتبطة بعمارة الواحة وأسواقها.", image: assets.cultureCrafts, alt: "تفاصيل زي ومنسوجات من صور المركز", region: "الجنوب الغربي", targetDestinationId: "ghadames", targetRoute: "/destinations/ghadames", targetPlace: "غدامس القديمة · الحِرف المحلية", season: "الخريف والربيع", seasonNote: "أكثر راحة لزيارة الواحة والأسواق." },
   { id: "desert-acacus", icon: "TentTree", title: "الصحراء والواحات", text: "خطط لمسار منظّم بين الأقواس والتكوينات والفن الصخري، مع مختصين محليين وتجهيز مناسب للصحراء.", image: assets.acacusRoute, alt: "تكوينات صخرية في تادرارت أكاكوس من صور المنصة", region: "الجنوب الغربي", targetDestinationId: "acacus", targetRoute: "/destinations/acacus", targetPlace: "تادرارت أكاكوس · الجنوب الغربي", season: "أكتوبر إلى أبريل", seasonNote: "الفترة الأنسب عمومًا للمسارات الصحراوية." },
-  { id: "season-benghazi", icon: "CalendarDays", title: "مواسم وفعاليات", text: "رتب التوقفات الساحلية والأنشطة الاجتماعية وفق الموسم، ثم راجع الجهة المنظمة قبل تثبيت أي موعد.", image: assets.centerFolklore, alt: "ممارسات شعبية وفروسية من صور المركز", region: "برقة", targetDestinationId: "benghazi", targetRoute: "/destinations/benghazi", targetPlace: "بنغازي · الواجهة والمدينة", season: "الربيع والصيف", seasonNote: "تابع البرنامج المحلي والطقس قبل الزيارة." },
-  { id: "celebrations-tripoli", icon: "CalendarDays", title: "أفراح ومناسبات", text: "تعرّف إلى حضور الزي التقليدي والممارسات الاجتماعية في مناسبات الفرح، مع احترام خصوصية المناسبة وسؤال الجهة المضيفة قبل التصوير.", image: assets.centerDress, alt: "زي تقليدي من صور المركز", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس · فضاءات الثقافة والمجتمع", season: "على مدار العام", seasonNote: "تتحدد فرص المشاهدة والمشاركة بدعوة وترتيب محلي." },
+  { id: "season-benghazi", icon: "CalendarDays", title: "مواسم وفعاليات", text: "رتب التوقفات الساحلية والأنشطة الاجتماعية وفق الموسم، ثم راجع الجهة المنظمة قبل تثبيت أي موعد.", image: assets.cultureFolklore, alt: "ممارسات شعبية وفروسية من صور المركز", region: "برقة", targetDestinationId: "benghazi", targetRoute: "/destinations/benghazi", targetPlace: "بنغازي · الواجهة والمدينة", season: "الربيع والصيف", seasonNote: "تابع البرنامج المحلي والطقس قبل الزيارة." },
+  { id: "celebrations-tripoli", icon: "CalendarDays", title: "أفراح ومناسبات", text: "تعرّف إلى حضور الزي التقليدي والممارسات الاجتماعية في مناسبات الفرح، مع احترام خصوصية المناسبة وسؤال الجهة المضيفة قبل التصوير.", image: assets.cultureDress, alt: "زي تقليدي من صور المركز", region: "الغرب الليبي", targetDestinationId: "tripoli", targetRoute: "/destinations/tripoli", targetPlace: "طرابلس · فضاءات الثقافة والمجتمع", season: "على مدار العام", seasonNote: "تتحدد فرص المشاهدة والمشاركة بدعوة وترتيب محلي." },
 ];
 
 export const cultureTopics = [
@@ -358,23 +438,51 @@ export const cultureTopics = [
     title: "فلكلور وممارسات شعبية",
     kicker: "المناسبات والذاكرة الحية",
     description: "تسجل المادة المصورة ممارسات شعبية وفروسية وملابس احتفالية، لتقرب الزائر من حكاية المجتمع دون فصلها عن احترام خصوصية المناسبة.",
-    image: assets.centerFolklore,
+    image: assets.cultureFolklore,
     alt: "ممارسات شعبية وفروسية من صور المركز",
   },
   {
     title: "صناعة وفخار ومنسوجات",
     kicker: "الصناعات التقليدية",
     description: "الفخار والمنسوجات والزخارف اليدوية تمنح الزائر مدخلًا ملموسًا إلى مهارات تتوارثها المجتمعات والأسواق المحلية.",
-    image: assets.centerCrafts,
+    image: assets.cultureCrafts,
     alt: "صناعات تقليدية ليبية من صور المركز",
   },
   {
     title: "الزي والأفراح",
     kicker: "تفاصيل الفرح المحلي",
     description: "يحضر الزي التقليدي في الأفراح والمناسبات بوصفه ذاكرة بصرية واجتماعية؛ استمتع بالمشاهدة واطلب الإذن قبل التصوير أو المشاركة.",
-    image: assets.centerDress,
+    image: assets.cultureDress,
     alt: "زي تقليدي ليبي من صور المركز",
   },
+];
+
+export const cultureVisualArchive = [
+  { image: assets.cultureFolklore, alt: "فروسية شعبية من صور المركز", label: "فروسية وممارسة شعبية" },
+  { image: assets.cultureDress, alt: "زي تقليدي من صور المركز", label: "زي وحضور اجتماعي" },
+  { image: assets.cultureCrafts, alt: "تفاصيل زي ومنسوجات من صور المركز", label: "نسيج وحِرف" },
+];
+
+export type SeasonalEvent = {
+  id: string;
+  title: string;
+  category: string;
+  region: string;
+  months: string[];
+  monthLabel: string;
+  description: string;
+  planningNote: string;
+  image: string;
+  alt: string;
+};
+
+export const seasonalEvents: SeasonalEvent[] = [
+  { id: "event-winter-desert", title: "رالي ومسارات تحدي الرمال", category: "رياضة ومغامرة", region: "فزان", months: ["يناير", "فبراير", "مارس"], monthLabel: "الشتاء · يناير إلى مارس", description: "ترد الراليات ومسارات تحدي الرمال ضمن برامج الشتاء الصحراوية في فزان ومغوة وتيتي بودان، مع اختلاف البرنامج والمسار من موسم إلى آخر.", planningNote: "يتطلب ترتيبًا مسبقًا مع جهات محلية مختصة وتجهيزًا مناسبًا للصحراء.", image: assets.desertCaravan, alt: "قافلة في الصحراء من صور المنصة" },
+  { id: "event-sukna-spring", title: "تظاهرة ملاقاة الربيع", category: "ثقافة ومجتمع", region: "سوكنة · فزان", months: ["مارس", "أبريل", "مايو"], monthLabel: "الربيع · مارس إلى مايو", description: "فعالية موسمية مرتبطة باستقبال الربيع وحضور المجتمع والملابس والأهازيج في مدينة سوكنة.", planningNote: "تأكد من الموعد والتفاصيل من الجهة المنظمة قبل تثبيت الزيارة.", image: assets.cultureDress, alt: "زي تقليدي من صور المركز" },
+  { id: "event-summer-coast", title: "أنشطة القوارب والرياضات البحرية", category: "بحر وساحل", region: "الساحل الليبي", months: ["يونيو", "يوليو", "أغسطس"], monthLabel: "الصيف · يونيو إلى أغسطس", description: "يستضيف الساحل مسابقات قوارب شراعية وأنشطة بحرية متنوعة ضمن موسم الصيف.", planningNote: "البرنامج والظروف البحرية متغيرة؛ راجع الجهة المنظمة والطقس قبل الذهاب.", image: assets.coast, alt: "ساحل ليبي من صور المنصة" },
+  { id: "event-abrini", title: "مهرجان أبرني للرياضات الجوية والسياحة", category: "رياضة جوية", region: "جادو · الجبل الغربي", months: ["يونيو", "يوليو", "أغسطس"], monthLabel: "الصيف · نافذة موسمية", description: "فعالية تجمع الرياضات الجوية والسياحة في جادو بحسب برنامج الجهة المنظمة.", planningNote: "تحقق من إتاحة النشاط ومتطلبات السلامة قبل الحضور.", image: assets.cultureFolklore, alt: "ممارسة شعبية من صور المركز" },
+  { id: "event-autumn-festivals", title: "مهرجانات الخريف", category: "ثقافة ومجتمع", region: "هون وغات", months: ["أكتوبر", "نوفمبر"], monthLabel: "الخريف · أكتوبر إلى نوفمبر", description: "مهرجانات موسمية في هون وغات تستحضر الفنون والمناسبات والهوية الصحراوية في فصل الخريف.", planningNote: "المواعيد والأنشطة تعلن محليًا؛ تعامل معها كنافذة تخطيط أولية فقط.", image: assets.cultureFolklore, alt: "فروسية وممارسة شعبية من صور المركز" },
+  { id: "event-awjila-cultural", title: "مهرجان أوجلة الثقافي السياحي", category: "تراث وواحة", region: "أوجلة · الواحات الشرقية", months: ["بحسب الإعلان"], monthLabel: "الموعد يعلن محليًا", description: "فعالية ثقافية سياحية تضع الواحة وعمارتها وممارساتها المحلية في قلب التجربة.", planningNote: "أضفها كفكرة للمسار ثم راجع إعلان الجهة المنظمة لتأكيد الموعد.", image: assets.awjila01, alt: "أوجلة من صور المركز" },
 ];
 
 export const practicalGuides = [

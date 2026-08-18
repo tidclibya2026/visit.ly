@@ -76,7 +76,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -92,21 +92,32 @@ const FORGE_BASE_URL =
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
+let mapScriptPromise: Promise<void> | undefined;
+
 function loadMapScript() {
-  return new Promise(resolve => {
+  if (window.google?.maps) return Promise.resolve();
+  if (mapScriptPromise) return mapScriptPromise;
+
+  mapScriptPromise = new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
-      resolve(null);
+      if (!window.google?.maps) {
+        reject(new Error("Google Maps library was unavailable after loading."));
+        return;
+      }
+      resolve();
       script.remove(); // Clean up immediately
     };
     script.onerror = () => {
-      console.error("Failed to load Google Maps script");
+      reject(new Error("Failed to load Google Maps script"));
+      mapScriptPromise = undefined;
     };
     document.head.appendChild(script);
   });
+  return mapScriptPromise;
 }
 
 interface MapViewProps {
@@ -114,6 +125,8 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  fallbackHref?: string;
+  fallbackLabel?: string;
 }
 
 export function MapView({
@@ -121,27 +134,31 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  fallbackHref,
+  fallbackLabel = "افتح الموقع عبر أطلس ليبيا السياحي",
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "failed">("loading");
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
+    try {
+      await loadMapScript();
+      if (!mapContainer.current || !window.google?.maps) throw new Error("Map container or library was unavailable.");
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: initialZoom,
+        center: initialCenter,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: true,
+        mapId: "DEMO_MAP_ID",
+      });
+      onMapReady?.(map.current);
+      setLoadState("ready");
+    } catch (error) {
+      console.error("Failed to load Google Maps script", error);
+      setLoadState("failed");
     }
   });
 
@@ -149,7 +166,10 @@ export function MapView({
     init();
   }, [init]);
 
-  return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
-  );
+  return <div ref={mapContainer} className={cn("w-full h-[500px]", className)}>
+    {loadState === "failed" && <div className="map-fallback" role="status">
+      <p>تعذر تحميل الخريطة التفاعلية الآن. ما زالت إحداثيات المعلم موثقة في هذه الصفحة.</p>
+      {fallbackHref && <a href={fallbackHref} target="_blank" rel="noreferrer">{fallbackLabel}</a>}
+    </div>}
+  </div>;
 }

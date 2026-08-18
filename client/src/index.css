@@ -333,7 +333,7 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .culture-topic:nth-child(even) { grid-template-columns: 1.05fr 0.95fr; background: var(--ink); color: var(--paper); }
 .culture-topic:nth-child(even) .culture-topic-image { order: 2; }
 .culture-topic-image { overflow: hidden; }
-.culture-topic-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 520ms var(--ease-flow); }
+.culture-topic-image img { width: 100%; height: 100%; object-fit: contain; background: var(--ink); transition: transform 520ms var(--ease-flow); }
 .culture-topic:hover .culture-topic-image img { transform: scale(1.035); }
 .culture-topic-copy { position: relative; padding: 66px 12% 54px; display: flex; flex-direction: column; align-items: flex-start; }
 .culture-topic-copy h2 { max-width: 370px; margin-bottom: 15px; color: var(--ink-deep); font-family: var(--serif); font-size: clamp(34px, 3.5vw, 47px); line-height: 1.15; }
@@ -996,7 +996,7 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .experience-card { display: grid; grid-template-columns: minmax(190px, 0.86fr) minmax(0, 1.14fr); min-height: 330px; overflow: hidden; background: #f3eadb; border: 1px solid rgba(11, 58, 103, 0.12); transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out); }
 .experience-card:hover { transform: translateY(-3px); box-shadow: 0 15px 27px rgba(4, 29, 54, 0.13); }
 .experience-card-photo { position: relative; display: block; overflow: hidden; background: var(--ink); }
-.experience-card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 420ms var(--ease-flow); }
+.experience-card-photo img { width: 100%; height: 100%; object-fit: contain; background: var(--ink); transition: transform 420ms var(--ease-flow); }
 .experience-card:hover .experience-card-photo img { transform: scale(1.045); }
 .experience-card-photo::after { position: absolute; left: 8px; bottom: 8px; padding: 3px 6px; content: "صورة ميدانية"; color: var(--ink); background: rgba(251, 247, 238, 0.93); border-inline-start: 2px solid var(--sand); font-size: 8px; font-weight: 800; }
 .experience-card-index { position: absolute; z-index: 1; top: 10px; right: 10px; width: 31px; height: 31px; display: grid; place-items: center; color: var(--ink); background: rgba(251, 247, 238, 0.93); border-inline-start: 3px solid var(--sand); font-family: var(--serif); font-size: 15px; }
@@ -1177,6 +1177,10 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .destination-atlas-grid > div > p:not(.eyebrow) { color: rgba(251, 247, 238, 0.78); line-height: 1.8; }
 .destination-atlas-grid .button { margin-top: 16px; }
 .destination-map { height: 355px !important; border: 5px solid rgba(251, 247, 238, 0.92); }
+.map-fallback { width: 100%; height: 100%; display: grid; align-content: center; justify-items: start; gap: 18px; padding: clamp(22px, 4vw, 38px); background: linear-gradient(135deg, rgba(9, 45, 77, 0.98), rgba(19, 79, 100, 0.96)); color: var(--paper); text-align: right; }
+.map-fallback p { max-width: 34ch; margin: 0; color: rgba(251, 247, 238, 0.86); line-height: 1.8; }
+.map-fallback a { display: inline-flex; align-items: center; min-height: 42px; padding: 0 16px; background: var(--gold); color: var(--ink); font-size: 0.78rem; font-weight: 800; text-decoration: none; }
+.map-fallback a:hover { background: var(--paper); }
 .detail-route-end { padding-top: 62px; padding-bottom: 70px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
 .detail-route-end > svg { color: var(--sand-dark); }
 .detail-route-end h2 { margin: 3px 0 0; color: var(--ink); font-size: 1.65rem; }

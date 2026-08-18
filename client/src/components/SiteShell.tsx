@@ -15,6 +15,7 @@ const navigation = [
   { href: "/experiences", label: "تجارب" },
   { href: "/culture", label: "ثقافة" },
   { href: "/heritage", label: "تراث" },
+  { href: "/events", label: "فعاليات" },
   { href: "/services", label: "دليل السفر" },
   { href: "/atlas", label: "الأطلس" },
 ];
@@ -87,6 +88,7 @@ function Footer() {
           <Link href="/experiences">ما الذي يمكن فعله</Link>
           <Link href="/culture">الثقافة والمذاقات</Link>
           <Link href="/heritage">التراث</Link>
+          <Link href="/events">رزنامة الفعاليات</Link>
         </div>
         <div className="footer-links">
           <p className="footer-label">رتّب الرحلة</p>

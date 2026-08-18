@@ -6,13 +6,13 @@ import { ArrowDown, ArrowLeft, ArrowUp, ArrowUpLeft, Check, Copy, GripVertical, 
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { assets, destinations, experiences } from "@/lib/content";
+import { assets, destinations, experiences, seasonalEvents } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { buildSharedRouteUrl } from "@/contexts/tripSharing";
 
 type RouteItem = {
   id: string;
-  type: "destination" | "experience";
+  type: "destination" | "experience" | "event";
   title: string;
   label: string;
   description: string;
@@ -35,6 +35,8 @@ export default function TripPlanner() {
     if (destination) return [{ id: destination.id, type: "destination" as const, title: destination.title, label: destination.region, description: destination.description, image: destination.image, alt: destination.alt, detail: destination.time, href: `/destinations/${destination.id}` }];
     const experience = experiences.find((item) => item.id === stopId);
     if (experience) return [{ id: experience.id, type: "experience" as const, title: experience.title, label: "تجربة محفوظة", description: experience.text, image: experience.image, alt: experience.alt, detail: `${experience.targetPlace} · ${experience.season}`, href: experience.targetRoute }];
+    const event = seasonalEvents.find((item) => item.id === stopId);
+    if (event) return [{ id: event.id, type: "event" as const, title: event.title, label: "فعالية موسمية", description: event.description, image: event.image, alt: event.alt, detail: `${event.region} · ${event.monthLabel}`, href: `/events#${event.id}` }];
     return [];
   }), [stops]);
   const savedCount = routeItems.length;

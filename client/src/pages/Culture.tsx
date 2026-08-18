@@ -5,7 +5,7 @@
 import { ArrowLeft, Coffee, Gem, Music2, ShoppingBag } from "lucide-react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { assets, culturalGuides, cultureTopics } from "@/lib/content";
+import { assets, culturalGuides, cultureTopics, cultureVisualArchive } from "@/lib/content";
 
 export default function Culture() {
   return (
@@ -15,6 +15,7 @@ export default function Culture() {
       <section className="culture-feature-grid page-frame">
         {cultureTopics.map((topic, index) => <article className={`culture-topic topic-${index + 1}`} data-field-note={index === 0 ? "حاشية 32°53′N" : index === 1 ? "مسار المجتمع" : "حرفة على الطريق"} key={topic.title}><div className="culture-topic-image" data-field-note={`دفتر الثقافة · 0${index + 1}`}><img src={topic.image} alt={topic.alt} /></div><div className="culture-topic-copy"><p className="eyebrow">{topic.kicker}</p><h2>{topic.title}</h2><p>{topic.description}</p><span className="story-index">{String(index + 1).padStart(2, "0")} / {String(cultureTopics.length).padStart(2, "0")}</span></div></article>)}
       </section>
+      <section className="culture-visual-archive page-frame" aria-label="صور من أرشيف الثقافة"><div className="archive-heading"><p className="eyebrow">ألبوم الثقافة</p><h2>صور أقرب<br />إلى التفاصيل الحية.</h2><p>لقطات من مواد المركز تضيء الفروسية والزي والنسيج خارج إطار النص المختصر.</p></div><div className="culture-visual-grid">{cultureVisualArchive.map((item) => <figure key={item.label}><img src={item.image} alt={item.alt} /><figcaption>{item.label}</figcaption></figure>)}</div></section>
       <section className="page-frame cultural-reference" aria-label="دليل الثقافة والمذاقات">
         <div className="reference-heading"><p className="eyebrow">دليل من المواد المرفقة</p><h2>مذاقات وفلكلور وحِرف،<br />كلها طرق لقراءة المكان.</h2></div>
         <div className="cultural-reference-grid">{culturalGuides.map((guide, index) => <article key={guide.title}><span>0{index + 1}</span><p className="eyebrow">{guide.section}</p><h3>{guide.title}</h3><p>{guide.text}</p><ul>{guide.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div>
