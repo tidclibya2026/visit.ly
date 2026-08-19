@@ -15,7 +15,11 @@ describe("image presentation", () => {
 
   it("يحدد بطاقات الوجهات لعرض مواضع صورها الميدانية", () => {
     const home = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
+    const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8");
     expect(home).toContain('data-destination={destination.id}');
+    expect(styles).toContain("aspect-ratio: 16 / 9");
+    expect(styles).toContain(".destination-card-2, .destination-card-3 { min-height: 0; height: auto; aspect-ratio: 16 / 9; margin-top: 0; }");
+    expect(styles).toContain('data-destination="tripoli"] img { object-position: 51% 32%');
   });
 
   it("يعرض هيرو الثقافة لقطة شعبية ميدانية من أرشيف المركز", () => {
