@@ -18,4 +18,9 @@ describe("OAuth state recovery", () => {
     expect(dashboard).toContain("انتهت محاولة الدخول السابقة");
     expect(dashboard).toContain("startLogin();");
   });
+
+  it("returns a successfully authenticated user to the protected admin screen", () => {
+    const oauth = readFileSync(resolve(root, "server/_core/oauth.ts"), "utf8");
+    expect(oauth).toContain('res.redirect(302, "/admin");');
+  });
 });
