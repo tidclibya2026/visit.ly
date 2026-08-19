@@ -1,0 +1,2 @@
+ALTER TABLE `visa_intakes` ADD `intendedRegion` varchar(160);--> statement-breakpoint
+ALTER TABLE `visa_intakes` ADD `ageGroup` enum('not_disclosed','under_18','18_24','25_34','35_44','45_54','55_plus') DEFAULT 'not_disclosed' NOT NULL;

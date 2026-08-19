@@ -223,14 +223,16 @@ export async function createMediaAsset(input: { storageKey: string; url: string;
   await db.insert(mediaAssets).values({ ...input, uploadedByOpenId: actor });
 }
 
-export async function createVisaIntake(input: { referenceCode: string; fullName: string; email: string; nationality: string; residenceCountry: string; travelPurpose: string; intendedArrival?: string | null; notes?: string | null }) {
+type VisaAgeGroup = "not_disclosed" | "under_18" | "18_24" | "25_34" | "35_44" | "45_54" | "55_plus";
+type VisaStatus = "received" | "under_review" | "awaiting_information" | "ready_for_official_referral" | "closed";
+export async function createVisaIntake(input: { referenceCode: string; fullName: string; email: string; nationality: string; residenceCountry: string; intendedRegion?: string | null; ageGroup?: VisaAgeGroup; travelPurpose: string; intendedArrival?: string | null; notes?: string | null }) {
   const db = await getDb(); if (!db) return;
-  const result = await db.insert(visaIntakes).values({ ...input, consentAcceptedAt: new Date() });
+  const result = await db.insert(visaIntakes).values({ ...input, ageGroup: input.ageGroup ?? "not_disclosed", consentAcceptedAt: new Date() });
   await db.insert(visaIntakeHistory).values({ intakeId: Number(result[0].insertId), status: "received", note: "تم استلام الطلب الأولي من الزائر." });
 }
 export async function listVisaIntakes() { const db = await getDb(); return db ? db.select().from(visaIntakes).orderBy(desc(visaIntakes.createdAt)) : []; }
 export async function listVisaIntakeHistory(intakeId?: number) { const db = await getDb(); if (!db) return []; return intakeId ? db.select().from(visaIntakeHistory).where(eq(visaIntakeHistory.intakeId, intakeId)).orderBy(desc(visaIntakeHistory.createdAt)) : db.select().from(visaIntakeHistory).orderBy(desc(visaIntakeHistory.createdAt)); }
-export async function updateVisaIntakeStatus(id: number, status: "received" | "under_review" | "awaiting_information" | "ready_for_official_referral" | "closed", actor: string, note?: string | null) {
+export async function updateVisaIntakeStatus(id: number, status: VisaStatus, actor: string, note?: string | null) {
   const db = await getDb(); if (!db) return;
   await db.update(visaIntakes).set({ status, reviewedByOpenId: actor, reviewedAt: new Date() }).where(eq(visaIntakes.id, id));
   await db.insert(visaIntakeHistory).values({ intakeId: id, status, note: note || null, actorOpenId: actor });
@@ -239,6 +241,35 @@ export async function updateVisaIntakeStatus(id: number, status: "received" | "u
 }
 export async function listAdminNotifications() { const db = await getDb(); return db ? db.select().from(adminNotifications).orderBy(desc(adminNotifications.createdAt)).limit(60) : []; }
 export async function markAdminNotificationRead(id: number) { const db = await getDb(); if (!db) return; await db.update(adminNotifications).set({ isRead: true }).where(eq(adminNotifications.id, id)); }
+
+const dayKey = (date: Date) => date.toISOString().slice(0, 10);
+const rankedCounts = (items: string[]) => Array.from(items.reduce((counts, item) => counts.set(item || "غير محدد", (counts.get(item || "غير محدد") ?? 0) + 1), new Map<string, number>()).entries()).map(([label, total]) => ({ label, total })).sort((a, b) => b.total - a.total || a.label.localeCompare(b.label, "ar"));
+export async function getAdminOperationsReport(days: number) {
+  const db = await getDb();
+  const safeDays = Math.min(Math.max(days, 30), 365);
+  const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000);
+  if (!db) return { since, days: safeDays, timeline: [], visaStatuses: [], countries: [], regions: [], ageGroups: [], contentTypes: [] };
+  const [visaRows, destinationRows, experienceRows, sectionRows] = await Promise.all([
+    db.select({ createdAt: visaIntakes.createdAt, status: visaIntakes.status, residenceCountry: visaIntakes.residenceCountry, intendedRegion: visaIntakes.intendedRegion, ageGroup: visaIntakes.ageGroup }).from(visaIntakes).where(gte(visaIntakes.createdAt, since)),
+    db.select({ createdAt: managedDestinations.createdAt }).from(managedDestinations).where(gte(managedDestinations.createdAt, since)),
+    db.select({ createdAt: managedExperiences.createdAt }).from(managedExperiences).where(gte(managedExperiences.createdAt, since)),
+    db.select({ createdAt: managedSections.createdAt }).from(managedSections).where(gte(managedSections.createdAt, since)),
+  ]);
+  const timeline = new Map<string, { visas: number; content: number }>();
+  const add = (timestamp: Date, key: "visas" | "content") => { const date = dayKey(timestamp); const row = timeline.get(date) ?? { visas: 0, content: 0 }; row[key] += 1; timeline.set(date, row); };
+  visaRows.forEach((item) => add(item.createdAt, "visas"));
+  destinationRows.forEach((item) => add(item.createdAt, "content")); experienceRows.forEach((item) => add(item.createdAt, "content")); sectionRows.forEach((item) => add(item.createdAt, "content"));
+  return {
+    since,
+    days: safeDays,
+    timeline: Array.from(timeline.entries()).map(([date, values]) => ({ date, ...values })).sort((a, b) => a.date.localeCompare(b.date)),
+    visaStatuses: rankedCounts(visaRows.map((item) => item.status)),
+    countries: rankedCounts(visaRows.map((item) => item.residenceCountry)),
+    regions: rankedCounts(visaRows.map((item) => item.intendedRegion ?? "غير محدد")),
+    ageGroups: rankedCounts(visaRows.map((item) => item.ageGroup)),
+    contentTypes: [{ label: "وجهات", total: destinationRows.length }, { label: "تجارب", total: experienceRows.length }, { label: "أقسام", total: sectionRows.length }],
+  };
+}
 
 type PermissionResource = "destinations" | "experiences" | "sections" | "media" | "visa" | "users";
 type PermissionAction = "create" | "edit" | "publish" | "review";

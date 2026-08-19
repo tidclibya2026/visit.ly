@@ -9,7 +9,7 @@ import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
-import { assignContentRole, createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getContentAccess, getPublishedContentItem, getTranslationDashboardMetrics, listAdminNotifications, listContentAccess, listManagedContent, listPublishedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakeHistory, listVisaIntakes, markAdminNotificationRead, permissionAllows, recordInteraction, reviewTranslation, setContentPermission, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
+import { assignContentRole, createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getAdminOperationsReport, getContentAccess, getPublishedContentItem, getTranslationDashboardMetrics, listAdminNotifications, listContentAccess, listManagedContent, listPublishedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakeHistory, listVisaIntakes, markAdminNotificationRead, permissionAllows, recordInteraction, reviewTranslation, setContentPermission, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -153,12 +153,13 @@ export const appRouter = router({
   }),
 
   visa: router({
-    submitIntake: publicProcedure.input(z.object({ fullName: z.string().min(2).max(255), email: z.string().email().max(320), nationality: z.string().min(2).max(120), residenceCountry: z.string().min(2).max(120), travelPurpose: z.string().min(2).max(255), intendedArrival: z.string().max(32).nullable().optional(), notes: z.string().max(3000).nullable().optional(), consent: z.literal(true) })).mutation(async ({ input }) => {
+    submitIntake: publicProcedure.input(z.object({ fullName: z.string().min(2).max(255), email: z.string().email().max(320), nationality: z.string().min(2).max(120), residenceCountry: z.string().min(2).max(120), intendedRegion: z.string().max(160).nullable().optional(), ageGroup: z.enum(["not_disclosed", "under_18", "18_24", "25_34", "35_44", "45_54", "55_plus"]).optional(), travelPurpose: z.string().min(2).max(255), intendedArrival: z.string().max(32).nullable().optional(), notes: z.string().max(3000).nullable().optional(), consent: z.literal(true) })).mutation(async ({ input }) => {
       const referenceCode = `VL-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
       await createVisaIntake({ ...input, referenceCode });
       return { referenceCode, status: "received" as const, officialReferral: "pending_official_channel" as const };
     }),
     listIntakes: protectedProcedure.query(async ({ ctx }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakes(); }),
+    operationsReport: protectedProcedure.input(z.object({ days: z.number().int().min(30).max(365).default(90) })).query(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); return getAdminOperationsReport(input.days); }),
     history: protectedProcedure.input(z.object({ intakeId: z.number().int().positive().optional() })).query(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakeHistory(input.intakeId); }),
     updateIntakeStatus: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]), note: z.string().max(3000).nullable().optional() })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); await updateVisaIntakeStatus(input.id, input.status, ctx.user.openId, input.note); return { ok: true }; }),
   }),

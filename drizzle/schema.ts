@@ -133,6 +133,8 @@ export const visaIntakes = mysqlTable("visa_intakes", {
   email: varchar("email", { length: 320 }).notNull(),
   nationality: varchar("nationality", { length: 120 }).notNull(),
   residenceCountry: varchar("residenceCountry", { length: 120 }).notNull(),
+  intendedRegion: varchar("intendedRegion", { length: 160 }),
+  ageGroup: mysqlEnum("ageGroup", ["not_disclosed", "under_18", "18_24", "25_34", "35_44", "45_54", "55_plus"]).default("not_disclosed").notNull(),
   travelPurpose: varchar("travelPurpose", { length: 255 }).notNull(),
   intendedArrival: varchar("intendedArrival", { length: 32 }),
   notes: text("notes"),
