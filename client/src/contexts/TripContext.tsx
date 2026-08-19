@@ -14,6 +14,8 @@ type TripContextValue = {
   favorites: string[];
   toggleFavorite: (destinationId: string) => void;
   clearFavorites: () => void;
+  galleryFavorites: string[];
+  toggleGalleryFavorite: (galleryItemId: string) => void;
 };
 
 const TripContext = createContext<TripContextValue | undefined>(undefined);
@@ -21,6 +23,7 @@ const TripContext = createContext<TripContextValue | undefined>(undefined);
 export function TripProvider({ children }: { children: ReactNode }) {
   const [stops, setStops] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [galleryFavorites, setGalleryFavorites] = useState<string[]>([]);
 
   useEffect(() => {
     const sharedStops = parseSharedStops(new URLSearchParams(window.location.search).get("route"));
@@ -50,12 +53,27 @@ export function TripProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const saved = window.localStorage.getItem("visit-libya-gallery-favorites");
+    if (!saved) return;
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) setGalleryFavorites(parsed.filter((value): value is string => typeof value === "string"));
+    } catch {
+      window.localStorage.removeItem("visit-libya-gallery-favorites");
+    }
+  }, []);
+
+  useEffect(() => {
     window.localStorage.setItem("turath-libya-trip-stops", JSON.stringify(stops));
   }, [stops]);
 
   useEffect(() => {
     window.localStorage.setItem("visit-libya-favorites", JSON.stringify(favorites));
   }, [favorites]);
+
+  useEffect(() => {
+    window.localStorage.setItem("visit-libya-gallery-favorites", JSON.stringify(galleryFavorites));
+  }, [galleryFavorites]);
 
   const value = useMemo(
     () => ({
@@ -66,8 +84,10 @@ export function TripProvider({ children }: { children: ReactNode }) {
       favorites,
       toggleFavorite: (destinationId: string) => setFavorites((current) => current.includes(destinationId) ? current.filter((id) => id !== destinationId) : [...current, destinationId]),
       clearFavorites: () => setFavorites([]),
+      galleryFavorites,
+      toggleGalleryFavorite: (galleryItemId: string) => setGalleryFavorites((current) => current.includes(galleryItemId) ? current.filter((id) => id !== galleryItemId) : [...current, galleryItemId]),
     }),
-    [stops, favorites],
+    [stops, favorites, galleryFavorites],
   );
 
   return <TripContext.Provider value={value}>{children}</TripContext.Provider>;
