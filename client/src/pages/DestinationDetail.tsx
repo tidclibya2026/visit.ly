@@ -13,6 +13,8 @@ import { trpc } from "@/lib/trpc";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 import { atlasImageHref, atlasImageLabel } from "@/lib/atlasLabels";
 import { TranslationSuggestionForm } from "@/components/TranslationSuggestionForm";
+import { useInteractionTracking } from "@/hooks/useInteractionTracking";
+import { useEffect } from "react";
 
 const activityMap: Record<string, string[]> = {
   tripoli: ["جولة مشي هادئة في الأزقة والأسواق", "التوقف عند قوس ماركوس أوريليوس", "قراءة الواجهة البحرية والسرايا الحمراء"],
@@ -42,7 +44,9 @@ export default function DestinationDetail() {
   const destination = destinations.find((item) => item.id === (publicParams?.id ?? localizedParams?.id));
   const { stops, toggleStop, favorites, toggleFavorite } = useTrip();
   const { language } = useLanguage();
+  const trackInteraction = useInteractionTracking();
   const destinationTranslation = trpc.destination.translate.useQuery({ id: destination?.id ?? "missing", language: language === "ar" ? "en" : language }, { enabled: Boolean(destination) && language !== "ar", staleTime: Infinity, retry: 1 });
+  useEffect(() => { if (destination) trackInteraction("destination_open", destination.id); }, [destination?.id, language, trackInteraction]);
 
   if (!destination) return <SiteShell><section className="page-frame destination-missing"><p className="eyebrow">الملف غير متاح</p><h1>لم نعثر على صفحة هذه الوجهة.</h1><Link href="/destinations" className="button button-ink">العودة إلى الوجهات <ArrowLeft size={16} /></Link></section></SiteShell>;
 

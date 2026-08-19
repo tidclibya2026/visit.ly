@@ -59,11 +59,21 @@ export const translationSuggestions = mysqlTable("translation_suggestions", {
   reviewedAt: timestamp("reviewedAt"),
 });
 
+export const interactionEvents = mysqlTable("interaction_events", {
+  id: int("id").autoincrement().primaryKey(),
+  eventType: mysqlEnum("eventType", ["destination_open", "atlas_marker_select", "language_switch"]).notNull(),
+  destinationId: varchar("destinationId", { length: 64 }),
+  language: mysqlEnum("language", ["ar", "en", "fr", "it", "de", "es", "zh"]).notNull(),
+  sessionKey: varchar("sessionKey", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type TranslationReview = typeof translationReviews.$inferSelect;
 export type InsertTranslationReview = typeof translationReviews.$inferInsert;
 export type TranslationAuditLog = typeof translationAuditLogs.$inferSelect;
 export type TranslationSuggestion = typeof translationSuggestions.$inferSelect;
+export type InteractionEvent = typeof interactionEvents.$inferSelect;
 
 // TODO: Add your tables here

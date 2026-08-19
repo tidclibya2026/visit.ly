@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { desc } from "drizzle-orm";
-import { InsertUser, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users } from "../drizzle/schema";
+import { desc, gte, isNotNull, sql } from "drizzle-orm";
+import { InsertUser, interactionEvents, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -139,6 +139,24 @@ export async function updateTranslationSuggestion(id: number, status: "reviewed"
   const db = await getDb();
   if (!db) return;
   await db.update(translationSuggestions).set({ status, reviewedByOpenId: reviewerOpenId, reviewedAt: new Date() }).where(eq(translationSuggestions.id, id));
+}
+
+export async function recordInteraction(input: { eventType: "destination_open" | "atlas_marker_select" | "language_switch"; destinationId?: string; language: "ar" | "en" | "fr" | "it" | "de" | "es" | "zh"; sessionKey: string }) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(interactionEvents).values(input);
+}
+
+export async function getTranslationDashboardMetrics() {
+  const db = await getDb();
+  if (!db) return { since: new Date(), languages: [], destinations: [], pendingSuggestions: 0 };
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const [languages, destinations, pending] = await Promise.all([
+    db.select({ language: interactionEvents.language, total: sql<number>`count(*)` }).from(interactionEvents).where(gte(interactionEvents.createdAt, since)).groupBy(interactionEvents.language).orderBy(desc(sql`count(*)`)),
+    db.select({ destinationId: interactionEvents.destinationId, total: sql<number>`count(*)` }).from(interactionEvents).where(isNotNull(interactionEvents.destinationId)).groupBy(interactionEvents.destinationId).orderBy(desc(sql`count(*)`)).limit(8),
+    db.select({ total: sql<number>`count(*)` }).from(translationSuggestions).where(eq(translationSuggestions.status, "pending")),
+  ]);
+  return { since, languages, destinations, pendingSuggestions: Number(pending[0]?.total ?? 0) };
 }
 
 // TODO: add feature queries here as your schema grows.

@@ -9,6 +9,7 @@ import { assets } from "@/lib/content";
 import { ImageInspector } from "@/components/ImageInspector";
 import { KnowledgeAssistant } from "@/components/KnowledgeAssistant";
 import { languageOptions, useLanguage } from "@/contexts/LanguageContext";
+import { useInteractionTracking } from "@/hooks/useInteractionTracking";
 
 const navigation = [
   { href: "/", labelKey: "nav.home" }, { href: "/destinations", labelKey: "nav.destinations" }, { href: "/experiences", labelKey: "nav.experiences" }, { href: "/culture", labelKey: "nav.culture" }, { href: "/heritage", labelKey: "nav.heritage" }, { href: "/events", labelKey: "nav.events" }, { href: "/services", labelKey: "nav.services" }, { href: "/atlas", labelKey: "nav.atlas" },
@@ -20,7 +21,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { language, setLanguage, t, isRtl } = useLanguage();
+  const trackInteraction = useInteractionTracking();
   const changeLanguage = (nextLanguage: typeof language) => {
+    trackInteraction("language_switch");
     setLanguage(nextLanguage);
     const routeWithoutLocale = location.replace(/^\/(ar|en|fr|it|de|es|zh)(?=\/|$)/, "") || "/";
     navigate(nextLanguage === "ar" ? routeWithoutLocale : `/${nextLanguage}${routeWithoutLocale}`);

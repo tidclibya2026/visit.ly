@@ -29,4 +29,15 @@ describe("translation governance and atlas photo layer", () => {
     expect(atlas).toContain("atlas-photo-map");
     expect(existsSync("/home/ubuntu/skills/multilingual-tourism-localization/SKILL.md")).toBe(true);
   });
+
+  it("keeps atlas category filters and real interaction reporting", () => {
+    const atlas = readFileSync(resolve(root, "client/src/components/AtlasImageLayer.tsx"), "utf8");
+    expect(atlas).toContain('"تراث", "طبيعة", "ساحل"');
+    expect(atlas).toContain("atlas_marker_select");
+    const router = readFileSync(resolve(root, "server/routers.ts"), "utf8");
+    expect(router).toContain("analytics: adminProcedure");
+    expect(router).toContain("interaction: router");
+    const insights = readFileSync(resolve(root, "client/src/components/AdminTranslationInsights.tsx"), "utf8");
+    expect(insights).toContain("اقتراحات جديدة");
+  });
 });

@@ -9,7 +9,7 @@ import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
-import { createTranslationReview, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, reviewTranslation, submitTranslationSuggestion, updateTranslationSuggestion } from "./db";
+import { createTranslationReview, getTranslationDashboardMetrics, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, recordInteraction, reviewTranslation, submitTranslationSuggestion, updateTranslationSuggestion } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -87,6 +87,7 @@ export const appRouter = router({
     list: adminProcedure.query(async () => listTranslationReviews()),
     audit: adminProcedure.input(z.object({ reviewId: z.number().int().positive().optional() })).query(async ({ input }) => listTranslationAuditLogs(input.reviewId)),
     suggestions: adminProcedure.query(async () => listTranslationSuggestions()),
+    analytics: adminProcedure.query(async () => getTranslationDashboardMetrics()),
     update: adminProcedure.input(z.object({ id: z.number().int().positive(), editedJson: z.string().min(2).max(20000), status: z.enum(["approved", "needs_revision"]) })).mutation(async ({ ctx, input }) => {
       await reviewTranslation(input.id, input.editedJson, input.status, ctx.user.openId);
       return { ok: true };
@@ -100,6 +101,13 @@ export const appRouter = router({
   translationSuggestion: router({
     submit: publicProcedure.input(z.object({ destinationId: z.string().min(2).max(64), language: z.enum(["ar", "en", "fr", "it", "de", "es", "zh"]), originalText: z.string().min(2).max(8000), suggestedText: z.string().min(2).max(8000), contextUrl: z.string().min(1).max(512) })).mutation(async ({ input }) => {
       await submitTranslationSuggestion(input);
+      return { ok: true };
+    }),
+  }),
+
+  interaction: router({
+    track: publicProcedure.input(z.object({ eventType: z.enum(["destination_open", "atlas_marker_select", "language_switch"]), destinationId: z.string().min(2).max(64).optional(), language: z.enum(["ar", "en", "fr", "it", "de", "es", "zh"]), sessionKey: z.string().min(8).max(64) })).mutation(async ({ input }) => {
+      await recordInteraction(input);
       return { ok: true };
     }),
   }),
