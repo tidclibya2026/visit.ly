@@ -19,6 +19,8 @@ import { PageNavigationLoader } from "./components/PageNavigationLoader";
 import TranslationReview from "./pages/TranslationReview";
 import ContentManagement from "./pages/ContentManagement";
 import VisaIntake from "./pages/VisaIntake";
+import PublishedDetail from "./pages/PublishedDetail";
+import PublishedExplorer from "./pages/PublishedExplorer";
 import { useLanguage } from "./contexts/LanguageContext";
 import { useEffect } from "react";
 
@@ -48,6 +50,8 @@ function AppRouter() {
       <Route path={"/admin/translations"} component={TranslationReview} />
       <Route path={"/admin/content"} component={ContentManagement} />
       <Route path={"/visa-intake"} component={VisaIntake} />
+      <Route path={"/discover"} component={PublishedExplorer} />
+      <Route path={"/published/:kind/:slug"} component={PublishedDetail} />
       <Route path={"/:locale"} component={() => <LocalizedPage Page={Home} />} />
       <Route path={"/:locale/destinations"} component={() => <LocalizedPage Page={Destinations} />} />
       <Route path={"/:locale/destinations/:id"} component={() => <LocalizedPage Page={DestinationDetail} />} />
@@ -59,6 +63,8 @@ function AppRouter() {
       <Route path={"/:locale/events"} component={() => <LocalizedPage Page={Events} />} />
       <Route path={`/:locale/trip`} component={() => <LocalizedPage Page={TripPlanner} />} />
       <Route path={`/:locale/visa-intake`} component={() => <LocalizedPage Page={VisaIntake} />} />
+      <Route path={`/:locale/discover`} component={() => <LocalizedPage Page={PublishedExplorer} />} />
+      <Route path={`/:locale/published/:kind/:slug`} component={() => <LocalizedPage Page={PublishedDetail} />} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

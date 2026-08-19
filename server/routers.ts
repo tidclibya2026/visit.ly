@@ -9,7 +9,7 @@ import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
-import { assignContentRole, createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getContentAccess, getTranslationDashboardMetrics, listContentAccess, listManagedContent, listPublishedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakeHistory, listVisaIntakes, permissionAllows, recordInteraction, reviewTranslation, setContentPermission, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
+import { assignContentRole, createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getContentAccess, getPublishedContentItem, getTranslationDashboardMetrics, listAdminNotifications, listContentAccess, listManagedContent, listPublishedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakeHistory, listVisaIntakes, markAdminNotificationRead, permissionAllows, recordInteraction, reviewTranslation, setContentPermission, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -122,6 +122,11 @@ export const appRouter = router({
 
   publishedContent: router({
     list: publicProcedure.query(async () => listPublishedContent()),
+    detail: publicProcedure.input(z.object({ kind: z.enum(["destinations", "experiences", "sections"]), slug: z.string().regex(/^[a-z0-9-]+$/).max(96) })).query(async ({ input }) => {
+      const item = await getPublishedContentItem(input.kind, input.slug);
+      if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "المحتوى المنشور غير متاح." });
+      return item;
+    }),
   }),
 
   contentAdmin: router({
@@ -156,6 +161,11 @@ export const appRouter = router({
     listIntakes: protectedProcedure.query(async ({ ctx }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakes(); }),
     history: protectedProcedure.input(z.object({ intakeId: z.number().int().positive().optional() })).query(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakeHistory(input.intakeId); }),
     updateIntakeStatus: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]), note: z.string().max(3000).nullable().optional() })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); await updateVisaIntakeStatus(input.id, input.status, ctx.user.openId, input.note); return { ok: true }; }),
+  }),
+
+  adminNotifications: router({
+    list: protectedProcedure.query(async ({ ctx }) => { await requireContentAction(ctx, "visa", "review"); return listAdminNotifications(); }),
+    markRead: protectedProcedure.input(z.object({ id: z.number().int().positive() })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); await markAdminNotificationRead(input.id); return { ok: true }; }),
   }),
 
   assistant: router({

@@ -174,6 +174,16 @@ export const visaIntakeHistory = mysqlTable("visa_intake_history", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+export const adminNotifications = mysqlTable("admin_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  kind: mysqlEnum("kind", ["visa_status", "visa_note"]).notNull(),
+  visaIntakeId: int("visaIntakeId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  isRead: boolean("isRead").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type TranslationReview = typeof translationReviews.$inferSelect;
@@ -189,5 +199,6 @@ export type VisaIntake = typeof visaIntakes.$inferSelect;
 export type ContentPermission = typeof contentPermissions.$inferSelect;
 export type ContentUserRole = typeof contentUserRoles.$inferSelect;
 export type VisaIntakeHistory = typeof visaIntakeHistory.$inferSelect;
+export type AdminNotification = typeof adminNotifications.$inferSelect;
 
 // TODO: Add your tables here

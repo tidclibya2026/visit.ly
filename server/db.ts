@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { and, desc, gte, isNotNull, sql } from "drizzle-orm";
-import { InsertUser, contentPermissions, contentUserRoles, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakeHistory, visaIntakes } from "../drizzle/schema";
+import { InsertUser, adminNotifications, contentPermissions, contentUserRoles, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakeHistory, visaIntakes } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -186,6 +186,13 @@ export async function listPublishedContent() {
   ]);
   return { destinations, experiences, sections };
 }
+export async function getPublishedContentItem(kind: "destinations" | "experiences" | "sections", slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  if (kind === "destinations") return (await db.select().from(managedDestinations).where(and(eq(managedDestinations.slug, slug), eq(managedDestinations.status, "published"))).limit(1))[0] ?? null;
+  if (kind === "experiences") return (await db.select().from(managedExperiences).where(and(eq(managedExperiences.slug, slug), eq(managedExperiences.status, "published"))).limit(1))[0] ?? null;
+  return (await db.select().from(managedSections).where(and(eq(managedSections.slug, slug), eq(managedSections.status, "published"))).limit(1))[0] ?? null;
+}
 
 export async function createManagedDestination(input: DestinationInput, actor: string) {
   const db = await getDb(); if (!db) return;
@@ -227,7 +234,11 @@ export async function updateVisaIntakeStatus(id: number, status: "received" | "u
   const db = await getDb(); if (!db) return;
   await db.update(visaIntakes).set({ status, reviewedByOpenId: actor, reviewedAt: new Date() }).where(eq(visaIntakes.id, id));
   await db.insert(visaIntakeHistory).values({ intakeId: id, status, note: note || null, actorOpenId: actor });
+  const intake = await db.select({ referenceCode: visaIntakes.referenceCode }).from(visaIntakes).where(eq(visaIntakes.id, id)).limit(1);
+  await db.insert(adminNotifications).values({ kind: note ? "visa_note" : "visa_status", visaIntakeId: id, title: `تحديث طلب ${intake[0]?.referenceCode ?? id}`, message: note || `تم تغيير حالة الطلب إلى ${status}.` });
 }
+export async function listAdminNotifications() { const db = await getDb(); return db ? db.select().from(adminNotifications).orderBy(desc(adminNotifications.createdAt)).limit(60) : []; }
+export async function markAdminNotificationRead(id: number) { const db = await getDb(); if (!db) return; await db.update(adminNotifications).set({ isRead: true }).where(eq(adminNotifications.id, id)); }
 
 type PermissionResource = "destinations" | "experiences" | "sections" | "media" | "visa" | "users";
 type PermissionAction = "create" | "edit" | "publish" | "review";
