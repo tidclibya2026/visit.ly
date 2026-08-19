@@ -15,7 +15,7 @@ describe("destination heritage content", () => {
     const detail = readFileSync(resolve(projectRoot, "client/src/pages/DestinationDetail.tsx"), "utf8");
     expect(detail).toContain("destination-heritage");
     expect(detail).toContain("سجل الشواهد");
-    expect(detail).toContain("destination.heritage.source");
+    expect(detail).toContain("heritage.source");
   });
 
   it("يقدم تكبيرًا صريحًا وصور تجارب أفقية وحركة مرور للوجهات", () => {

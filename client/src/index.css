@@ -1811,3 +1811,39 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .culture-hero-image { object-position: 52% 44%; }
   .culture-hero-wash { background: linear-gradient(0deg, rgba(6, 41, 74, 0.76), rgba(6, 41, 74, 0.03) 72%); }
 }
+
+/* شواهد المدن: خط زمني قابل للاختيار وخريطة مستقلة لنقاط المعالم الموثقة. */
+.destination-timeline { margin-bottom: 76px; padding: 34px; display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: 34px; background: var(--ink); color: var(--paper); border-top: 3px solid var(--sand); }
+.timeline-heading .eyebrow { color: var(--sand); }
+.timeline-heading h2 { margin: 7px 0 12px; color: var(--paper); font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.2rem); line-height: 1.08; }
+.timeline-heading p:last-child { margin: 0; color: rgba(251, 247, 238, 0.78); line-height: 1.9; }
+.timeline-steps { display: grid; align-content: center; gap: 7px; }
+.timeline-steps button { width: 100%; min-height: 67px; padding: 10px 13px; display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 10px; color: var(--paper); background: rgba(251, 247, 238, 0.07); border-inline-start: 3px solid rgba(228, 200, 112, 0.4); text-align: start; transition: background 180ms var(--ease-out), transform 180ms var(--ease-out), border-color 180ms var(--ease-out); }
+.timeline-steps button:hover, .timeline-steps button:focus-visible, .timeline-steps button.is-active { color: var(--ink); background: var(--sand); border-color: var(--paper); transform: translateX(-3px); outline: none; }
+.timeline-steps span { font-size: 11px; font-weight: 800; }
+.timeline-steps strong { font-size: 13px; }
+.destination-landmark-map-section { padding: 76px 0; background: linear-gradient(114deg, #103f71 0%, #082d51 61%, #061e37 100%); }
+.landmark-map-grid { display: grid; grid-template-columns: minmax(0, 0.76fr) minmax(0, 1.24fr); gap: 34px; align-items: start; }
+.landmark-map-copy { color: var(--paper); }
+.landmark-map-copy .eyebrow { color: var(--sand); }
+.landmark-map-copy h2 { margin: 7px 0 11px; color: var(--paper); font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.15rem); line-height: 1.08; }
+.landmark-map-copy > p:not(.eyebrow) { margin: 0 0 8px; color: rgba(251, 247, 238, 0.78); line-height: 1.85; }
+.landmark-map-copy > small { display: block; margin-bottom: 17px; color: var(--sand); font-size: 10px; font-weight: 800; }
+.landmark-point-list { margin-top: 23px; display: grid; gap: 7px; }
+.landmark-point-list button { width: 100%; min-height: 54px; padding: 8px 10px; display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: center; color: var(--paper); background: rgba(251, 247, 238, 0.06); border-inline-start: 3px solid rgba(228, 200, 112, 0.42); text-align: start; transition: background 180ms var(--ease-out), border-color 180ms var(--ease-out); }
+.landmark-point-list button:hover, .landmark-point-list button:focus-visible, .landmark-point-list button.is-active { color: var(--ink); background: var(--sand); border-color: var(--paper); outline: none; }
+.landmark-point-list > button > span { color: inherit; font-size: 10px; font-weight: 900; }
+.landmark-point-list strong, .landmark-point-list small { display: block; }
+.landmark-point-list strong { font-size: 11px; }
+.landmark-point-list small { margin-top: 3px; color: inherit; font-size: 9px; opacity: 0.78; }
+.destination-landmark-map-section .destination-map { min-height: 420px; border: 2px solid rgba(228, 200, 112, 0.65); }
+.landmark-map-hint { margin: 9px 0 0; color: rgba(251, 247, 238, 0.72); font-size: 10px; line-height: 1.6; }
+@media (max-width: 760px) {
+  .destination-timeline { margin-bottom: 52px; padding: 23px 17px; grid-template-columns: 1fr; gap: 20px; }
+  .timeline-steps button { min-height: 61px; grid-template-columns: 75px 1fr auto; padding: 9px; }
+  .timeline-steps span { font-size: 9px; }
+  .timeline-steps strong { font-size: 11px; }
+  .destination-landmark-map-section { padding: 52px 0; }
+  .landmark-map-grid { grid-template-columns: 1fr; gap: 22px; }
+  .destination-landmark-map-section .destination-map { min-height: 320px; }
+}

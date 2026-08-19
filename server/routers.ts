@@ -64,19 +64,21 @@ export const appRouter = router({
       const cached = destinationTranslationCache.get(cacheKey);
       if (cached) return cached;
       const activities = destinationActivityMap[destination.id] ?? destination.highlights;
+      const heritage = destination.heritage ?? { title: "", narrative: "", evidence: [], culturalContext: "", source: "", landmarks: [], timeline: [] };
       const source = {
         title: destination.title, city: destination.city, landmarkType: destination.landmarkType, region: destination.region, time: destination.time,
         description: destination.description, fieldNote: destination.fieldNote, highlights: destination.highlights, activities,
         gallery: destination.gallery.map((item) => ({ caption: item.caption, location: item.location })),
+        heritage,
       };
       try {
         const result = await withTimeout(invokeLLM({
           model: "gpt-5-mini",
           messages: [
-            { role: "system", content: `You translate official Libyan tourism content from Arabic to ${languageLabels[input.language]}. Preserve official place names where useful, locations, coordinates, travel guidance, and factual meaning. Do not invent facts or add booking claims. Translate all fields faithfully and concisely. Return JSON matching the supplied schema only.` },
+            { role: "system", content: `You translate official Libyan tourism content from Arabic to ${languageLabels[input.language]}. Preserve official place names where useful, locations, historical periods, travel guidance, and factual meaning. Do not invent facts or add booking claims. Translate all fields faithfully and concisely, including the heritage record, its landmark notes, and its chronological timeline. Return JSON matching the supplied schema only.` },
             { role: "user", content: JSON.stringify(source) },
           ],
-          response_format: { type: "json_schema", json_schema: { name: "destination_translation", strict: true, schema: { type: "object", properties: { title: { type: "string" }, city: { type: "string" }, landmarkType: { type: "string" }, region: { type: "string" }, time: { type: "string" }, description: { type: "string" }, fieldNote: { type: "string" }, highlights: { type: "array", items: { type: "string" } }, activities: { type: "array", items: { type: "string" } }, gallery: { type: "array", items: { type: "object", properties: { caption: { type: "string" }, location: { type: "string" } }, required: ["caption", "location"], additionalProperties: false } } }, required: ["title", "city", "landmarkType", "region", "time", "description", "fieldNote", "highlights", "activities", "gallery"], additionalProperties: false } } },
+          response_format: { type: "json_schema", json_schema: { name: "destination_translation", strict: true, schema: { type: "object", properties: { title: { type: "string" }, city: { type: "string" }, landmarkType: { type: "string" }, region: { type: "string" }, time: { type: "string" }, description: { type: "string" }, fieldNote: { type: "string" }, highlights: { type: "array", items: { type: "string" } }, activities: { type: "array", items: { type: "string" } }, gallery: { type: "array", items: { type: "object", properties: { caption: { type: "string" }, location: { type: "string" } }, required: ["caption", "location"], additionalProperties: false } }, heritage: { type: "object", properties: { title: { type: "string" }, narrative: { type: "string" }, evidence: { type: "array", items: { type: "string" } }, culturalContext: { type: "string" }, source: { type: "string" }, landmarks: { type: "array", items: { type: "object", properties: { title: { type: "string" }, note: { type: "string" } }, required: ["title", "note"], additionalProperties: false } }, timeline: { type: "array", items: { type: "object", properties: { period: { type: "string" }, title: { type: "string" }, detail: { type: "string" } }, required: ["period", "title", "detail"], additionalProperties: false } } }, required: ["title", "narrative", "evidence", "culturalContext", "source", "landmarks", "timeline"], additionalProperties: false } }, required: ["title", "city", "landmarkType", "region", "time", "description", "fieldNote", "highlights", "activities", "gallery", "heritage"], additionalProperties: false } } },
         }), 35_000);
         const content = result.choices[0]?.message?.content;
         if (typeof content !== "string") throw new Error("empty_destination_translation");
