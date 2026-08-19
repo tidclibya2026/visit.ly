@@ -171,16 +171,16 @@ function DashboardLayoutContent({
                 <PanelLeft className="h-4 w-4 text-muted-foreground" />
               </button>
               {!isCollapsed ? (
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    لوحة التحكم
-                  </span>
+                <div className="admin-sidebar-brand min-w-0">
+                  <img src="/manus-storage/visitlibya-logo-cropped_4628ce39.png" alt="Visit Libya | زور ليبيا" />
+                  <span><b>Visit Libya | زور ليبيا</b><small>دليل التشغيل</small></span>
                 </div>
               ) : null}
             </div>
           </SidebarHeader>
 
           <SidebarContent className="gap-0">
+            {!isCollapsed ? <p className="admin-sidebar-index">فهرس الإدارة · 01</p> : null}
             <SidebarMenu className="px-2 py-1">
               {menuItems.map(item => {
                 const isActive = location === item.path;
@@ -228,7 +228,7 @@ function DashboardLayoutContent({
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>تسجيل الخروج</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

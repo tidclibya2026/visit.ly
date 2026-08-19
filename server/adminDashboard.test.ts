@@ -19,5 +19,10 @@ describe("admin dashboard", () => {
     expect(dashboard).toContain("المحتوى المنشور");
     expect(dashboard).toContain("طلبات تأشيرة مفتوحة");
     expect(dashboard).toContain("إشعارات غير مقروءة");
+    expect(dashboard).toContain("أولويات التشغيل الآن");
+    expect(dashboard).toContain("refreshOperations");
+    expect(dashboard).toContain("البيانات التشغيلية متزامنة");
+    expect(dashboard).toContain("Visit Libya | زور ليبيا");
+    expect(dashboard).toContain("أولويات التشغيل الآن");
   });
 });
