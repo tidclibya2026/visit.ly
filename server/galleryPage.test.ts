@@ -18,4 +18,13 @@ describe("gallery page", () => {
     expect(gallery).toContain("atlasImageHref");
     expect(gallery).toContain("gallery-masonry");
   });
+
+  it("يوفر مواسم وألبومات موثقة ورابط مشاركة مباشر للّقطة", () => {
+    const gallery = readFileSync(resolve(projectRoot, "client/src/pages/Gallery.tsx"), "utf8");
+    expect(gallery).toContain("seasonalContext");
+    expect(gallery).toContain("foodCraftVisualArchive");
+    expect(gallery).toContain("cultureVisualArchive");
+    expect(gallery).toContain("activeAlbumItems");
+    expect(gallery).toContain("navigator.clipboard.writeText");
+  });
 });
