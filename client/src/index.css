@@ -1333,6 +1333,39 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .admin-notification-center article strong { color: var(--ink); }
 .admin-notification-center article span, .admin-notification-center article small { color: var(--ink-muted); }
 .admin-notification-center article button { flex: 0 0 auto; padding: 6px 8px; color: var(--paper); background: var(--ink); border: 0; cursor: pointer; }
+.admin-dashboard { max-width: 1440px; margin: 0 auto; padding: 18px; color: var(--ink); }
+.admin-dashboard-hero { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 38px; color: var(--paper); background: linear-gradient(120deg, var(--ink-deep), var(--ink)); }
+.admin-dashboard-hero h1 { margin: 7px 0; font-size: clamp(2.3rem, 4vw, 4.2rem); }
+.admin-dashboard-hero p:not(.eyebrow) { max-width: 620px; margin: 0; color: rgba(247,241,231,.78); }
+.admin-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin: 17px 0; }
+.admin-stat-grid article { display: grid; gap: 8px; padding: 18px; background: var(--paper-deep); border-top: 3px solid var(--sand); }
+.admin-stat-grid article.has-alert { background: #f6ead2; border-top-color: var(--ink); }
+.admin-stat-grid span { color: var(--ink-muted); font-size: 13px; }
+.admin-stat-grid strong { font-size: 34px; line-height: 1; }
+.admin-stat-grid a, .admin-panel header a { color: var(--ink); font-weight: 800; font-size: 13px; }
+.admin-dashboard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.admin-panel { padding: 21px; background: white; border: 1px solid #e5dac2; }
+.admin-panel-wide { grid-column: span 2; }
+.admin-panel header { display: flex; justify-content: space-between; gap: 12px; align-items: start; padding-bottom: 13px; border-bottom: 1px solid #eadfc9; }
+.admin-panel h2 { margin: 6px 0 0; font-size: 25px; }
+.admin-activity-list { display: grid; }
+.admin-activity-list > div { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid #eee4d2; }
+.admin-activity-list > div.is-new { color: var(--ink); }
+.admin-activity-list span { display: grid; gap: 3px; }
+.admin-activity-list small, .admin-activity-list time { color: var(--ink-muted); font-size: 12px; }
+.admin-activity-list time { white-space: nowrap; }
+.admin-mini-stat { display: grid; gap: 2px; margin-top: 15px; padding: 13px; background: var(--paper-deep); }
+.admin-mini-stat strong { font-size: 29px; }
+.admin-mini-stat span { color: var(--ink-muted); }
+.admin-rank-list { display: grid; gap: 9px; padding: 0; list-style: none; }
+.admin-rank-list li { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #eadfc9; }
+.admin-empty { color: var(--ink-muted); line-height: 1.7; }
+.admin-quick-actions { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 16px; padding: 25px; background: #f0e8d7; }
+.admin-quick-actions h2 { margin: 5px 0 0; }
+.admin-quick-actions > div:last-child { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-quick-actions a { display: inline-flex; gap: 7px; align-items: center; padding: 10px 12px; color: var(--paper); background: var(--ink); font-weight: 800; font-size: 13px; }
+.admin-dashboard-loading, .admin-dashboard-denied { display: grid; place-items: center; min-height: 65vh; text-align: center; }
+.admin-dashboard-denied p { color: var(--ink-muted); }
 .public-detail-hero { position: relative; min-height: 480px; display: flex; align-items: end; overflow: hidden; color: var(--paper); background: var(--ink); }
 .public-detail-hero > img, .public-detail-ink { position: absolute; inset: 0; width: 100%; height: 100%; }
 .public-detail-hero > img { object-fit: cover; }
@@ -1553,6 +1586,11 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .published-content-grid { grid-template-columns: 1fr; }
   .access-governance, .access-governance-forms { grid-template-columns: 1fr; }
   .admin-notification-center { grid-template-columns: 1fr; }
+  .admin-dashboard-hero, .admin-quick-actions { align-items: start; flex-direction: column; }
+  .admin-stat-grid, .admin-dashboard-grid { grid-template-columns: 1fr 1fr; }
+  .admin-panel-wide { grid-column: span 2; }
+  .admin-activity-list > div { grid-template-columns: 18px minmax(0, 1fr); }
+  .admin-activity-list time { grid-column: 2; }
   .public-detail-body { grid-template-columns: 1fr; }
   .atlas-photo-map { min-height: 390px; }
 }

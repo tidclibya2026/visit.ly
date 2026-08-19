@@ -21,15 +21,17 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { FileText, LayoutDashboard, Languages, LogOut, PanelLeft, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "نظرة عامة", path: "/admin" },
+  { icon: FileText, label: "إدارة المحتوى", path: "/admin/content" },
+  { icon: Languages, label: "مراجعة الترجمات", path: "/admin/translations" },
+  { icon: Users, label: "المنصة العامة", path: "/discover" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -61,11 +63,11 @@ export default function DashboardLayout({
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
           <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
-            </h1>
+                <h1 className="text-2xl font-semibold tracking-tight text-center">
+                  سجّل الدخول لفتح لوحة التحكم
+                </h1>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+                  تتطلب هذه اللوحة مصادقة المستخدم قبل عرض بيانات الإدارة وإجراءاتها.
             </p>
           </div>
           <Button
@@ -73,7 +75,7 @@ export default function DashboardLayout({
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"
           >
-            Sign in
+                  تسجيل الدخول
           </Button>
         </div>
       </div>
@@ -169,7 +171,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    لوحة التحكم
                   </span>
                 </div>
               ) : null}

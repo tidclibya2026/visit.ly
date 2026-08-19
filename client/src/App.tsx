@@ -21,6 +21,7 @@ import ContentManagement from "./pages/ContentManagement";
 import VisaIntake from "./pages/VisaIntake";
 import PublishedDetail from "./pages/PublishedDetail";
 import PublishedExplorer from "./pages/PublishedExplorer";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useLanguage } from "./contexts/LanguageContext";
 import { useEffect } from "react";
 
@@ -48,6 +49,7 @@ function AppRouter() {
       <Route path={"/events"} component={Events} />
       <Route path={"/trip"} component={TripPlanner} />
       <Route path={"/admin/translations"} component={TranslationReview} />
+      <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/admin/content"} component={ContentManagement} />
       <Route path={"/visa-intake"} component={VisaIntake} />
       <Route path={"/discover"} component={PublishedExplorer} />
