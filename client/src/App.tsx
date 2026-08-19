@@ -17,6 +17,8 @@ import Events from "./pages/Events";
 import { TripProvider } from "./contexts/TripContext";
 import { PageNavigationLoader } from "./components/PageNavigationLoader";
 import TranslationReview from "./pages/TranslationReview";
+import ContentManagement from "./pages/ContentManagement";
+import VisaIntake from "./pages/VisaIntake";
 import { useLanguage } from "./contexts/LanguageContext";
 import { useEffect } from "react";
 
@@ -44,6 +46,8 @@ function AppRouter() {
       <Route path={"/events"} component={Events} />
       <Route path={"/trip"} component={TripPlanner} />
       <Route path={"/admin/translations"} component={TranslationReview} />
+      <Route path={"/admin/content"} component={ContentManagement} />
+      <Route path={"/visa-intake"} component={VisaIntake} />
       <Route path={"/:locale"} component={() => <LocalizedPage Page={Home} />} />
       <Route path={"/:locale/destinations"} component={() => <LocalizedPage Page={Destinations} />} />
       <Route path={"/:locale/destinations/:id"} component={() => <LocalizedPage Page={DestinationDetail} />} />
@@ -53,7 +57,8 @@ function AppRouter() {
       <Route path={"/:locale/services"} component={() => <LocalizedPage Page={Services} />} />
       <Route path={"/:locale/atlas"} component={() => <LocalizedPage Page={AtlasGateway} />} />
       <Route path={"/:locale/events"} component={() => <LocalizedPage Page={Events} />} />
-      <Route path={"/:locale/trip"} component={() => <LocalizedPage Page={TripPlanner} />} />
+      <Route path={`/:locale/trip`} component={() => <LocalizedPage Page={TripPlanner} />} />
+      <Route path={`/:locale/visa-intake`} component={() => <LocalizedPage Page={VisaIntake} />} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

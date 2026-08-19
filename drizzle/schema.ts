@@ -68,6 +68,81 @@ export const interactionEvents = mysqlTable("interaction_events", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+export const managedDestinations = mysqlTable("managed_destinations", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 96 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  city: varchar("city", { length: 160 }).notNull(),
+  region: varchar("region", { length: 160 }).notNull(),
+  category: mysqlEnum("category", ["city", "heritage", "nature", "coast"]).notNull(),
+  description: text("description").notNull(),
+  imageUrl: varchar("imageUrl", { length: 768 }),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  createdByOpenId: varchar("createdByOpenId", { length: 64 }).notNull(),
+  updatedByOpenId: varchar("updatedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const managedExperiences = mysqlTable("managed_experiences", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 96 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  destinationSlug: varchar("destinationSlug", { length: 96 }),
+  region: varchar("region", { length: 160 }).notNull(),
+  season: varchar("season", { length: 120 }),
+  description: text("description").notNull(),
+  imageUrl: varchar("imageUrl", { length: 768 }),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  createdByOpenId: varchar("createdByOpenId", { length: 64 }).notNull(),
+  updatedByOpenId: varchar("updatedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const managedSections = mysqlTable("managed_sections", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 96 }).notNull().unique(),
+  sectionType: mysqlEnum("sectionType", ["festival", "culture", "heritage", "travel", "custom"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  summary: text("summary").notNull(),
+  imageUrl: varchar("imageUrl", { length: 768 }),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  createdByOpenId: varchar("createdByOpenId", { length: 64 }).notNull(),
+  updatedByOpenId: varchar("updatedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const mediaAssets = mysqlTable("media_assets", {
+  id: int("id").autoincrement().primaryKey(),
+  storageKey: varchar("storageKey", { length: 512 }).notNull(),
+  url: varchar("url", { length: 768 }).notNull(),
+  altText: varchar("altText", { length: 500 }).notNull(),
+  sourceLabel: varchar("sourceLabel", { length: 255 }).notNull(),
+  caption: text("caption"),
+  mimeType: varchar("mimeType", { length: 120 }).notNull(),
+  uploadedByOpenId: varchar("uploadedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const visaIntakes = mysqlTable("visa_intakes", {
+  id: int("id").autoincrement().primaryKey(),
+  referenceCode: varchar("referenceCode", { length: 32 }).notNull().unique(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  nationality: varchar("nationality", { length: 120 }).notNull(),
+  residenceCountry: varchar("residenceCountry", { length: 120 }).notNull(),
+  travelPurpose: varchar("travelPurpose", { length: 255 }).notNull(),
+  intendedArrival: varchar("intendedArrival", { length: 32 }),
+  notes: text("notes"),
+  consentAcceptedAt: timestamp("consentAcceptedAt").notNull(),
+  status: mysqlEnum("status", ["received", "ready_for_official_referral", "closed"]).default("received").notNull(),
+  reviewedByOpenId: varchar("reviewedByOpenId", { length: 64 }),
+  reviewedAt: timestamp("reviewedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type TranslationReview = typeof translationReviews.$inferSelect;
@@ -75,5 +150,10 @@ export type InsertTranslationReview = typeof translationReviews.$inferInsert;
 export type TranslationAuditLog = typeof translationAuditLogs.$inferSelect;
 export type TranslationSuggestion = typeof translationSuggestions.$inferSelect;
 export type InteractionEvent = typeof interactionEvents.$inferSelect;
+export type ManagedDestination = typeof managedDestinations.$inferSelect;
+export type ManagedExperience = typeof managedExperiences.$inferSelect;
+export type ManagedSection = typeof managedSections.$inferSelect;
+export type MediaAsset = typeof mediaAssets.$inferSelect;
+export type VisaIntake = typeof visaIntakes.$inferSelect;
 
 // TODO: Add your tables here

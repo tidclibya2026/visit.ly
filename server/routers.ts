@@ -9,7 +9,7 @@ import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
-import { createTranslationReview, getTranslationDashboardMetrics, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, recordInteraction, reviewTranslation, submitTranslationSuggestion, updateTranslationSuggestion } from "./db";
+import { createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getTranslationDashboardMetrics, listManagedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakes, recordInteraction, reviewTranslation, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -110,6 +110,35 @@ export const appRouter = router({
       await recordInteraction(input);
       return { ok: true };
     }),
+  }),
+
+  contentAdmin: router({
+    list: adminProcedure.query(async () => listManagedContent()),
+    createDestination: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedDestination(input, ctx.user.openId); return { ok: true }; }),
+    updateDestination: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedDestination(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    createExperience: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedExperience(input, ctx.user.openId); return { ok: true }; }),
+    updateExperience: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedExperience(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    createSection: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedSection(input, ctx.user.openId); return { ok: true }; }),
+    updateSection: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedSection(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    uploadImage: adminProcedure.input(z.object({ fileName: z.string().min(1).max(160), mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]), dataBase64: z.string().min(16).max(7_000_000), altText: z.string().min(3).max(500), sourceLabel: z.string().min(3).max(255), caption: z.string().max(5000).nullable().optional() })).mutation(async ({ ctx, input }) => {
+      const encoded = input.dataBase64.includes(",") ? input.dataBase64.split(",").pop()! : input.dataBase64;
+      const bytes = Buffer.from(encoded, "base64");
+      if (!bytes.length || bytes.length > 5_000_000) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب أن تكون الصورة صالحة وأقل من 5 ميغابايت." });
+      const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
+      const stored = await storagePut(`admin-media/${ctx.user.openId}/${Date.now()}-${safeName}`, bytes, input.mimeType);
+      await createMediaAsset({ storageKey: stored.key, url: stored.url, altText: input.altText, sourceLabel: input.sourceLabel, caption: input.caption, mimeType: input.mimeType }, ctx.user.openId);
+      return { url: stored.url };
+    }),
+  }),
+
+  visa: router({
+    submitIntake: publicProcedure.input(z.object({ fullName: z.string().min(2).max(255), email: z.string().email().max(320), nationality: z.string().min(2).max(120), residenceCountry: z.string().min(2).max(120), travelPurpose: z.string().min(2).max(255), intendedArrival: z.string().max(32).nullable().optional(), notes: z.string().max(3000).nullable().optional(), consent: z.literal(true) })).mutation(async ({ input }) => {
+      const referenceCode = `VL-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
+      await createVisaIntake({ ...input, referenceCode });
+      return { referenceCode, status: "received" as const, officialReferral: "pending_official_channel" as const };
+    }),
+    listIntakes: adminProcedure.query(async () => listVisaIntakes()),
+    updateIntakeStatus: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["received", "ready_for_official_referral", "closed"]) })).mutation(async ({ ctx, input }) => { await updateVisaIntakeStatus(input.id, input.status, ctx.user.openId); return { ok: true }; }),
   }),
 
   assistant: router({

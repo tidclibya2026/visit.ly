@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { desc, gte, isNotNull, sql } from "drizzle-orm";
-import { InsertUser, interactionEvents, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users } from "../drizzle/schema";
+import { InsertUser, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakes } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -157,6 +157,62 @@ export async function getTranslationDashboardMetrics() {
     db.select({ total: sql<number>`count(*)` }).from(translationSuggestions).where(eq(translationSuggestions.status, "pending")),
   ]);
   return { since, languages, destinations, pendingSuggestions: Number(pending[0]?.total ?? 0) };
+}
+
+type ContentStatus = "draft" | "published" | "archived";
+type DestinationInput = { slug: string; title: string; city: string; region: string; category: "city" | "heritage" | "nature" | "coast"; description: string; imageUrl?: string | null; status: ContentStatus };
+type ExperienceInput = { slug: string; title: string; destinationSlug?: string | null; region: string; season?: string | null; description: string; imageUrl?: string | null; status: ContentStatus };
+type SectionInput = { slug: string; sectionType: "festival" | "culture" | "heritage" | "travel" | "custom"; title: string; summary: string; imageUrl?: string | null; status: ContentStatus };
+
+export async function listManagedContent() {
+  const db = await getDb();
+  if (!db) return { destinations: [], experiences: [], sections: [], media: [] };
+  const [destinations, experiences, sections, media] = await Promise.all([
+    db.select().from(managedDestinations).orderBy(desc(managedDestinations.updatedAt)),
+    db.select().from(managedExperiences).orderBy(desc(managedExperiences.updatedAt)),
+    db.select().from(managedSections).orderBy(desc(managedSections.updatedAt)),
+    db.select().from(mediaAssets).orderBy(desc(mediaAssets.createdAt)),
+  ]);
+  return { destinations, experiences, sections, media };
+}
+
+export async function createManagedDestination(input: DestinationInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(managedDestinations).values({ ...input, createdByOpenId: actor, updatedByOpenId: actor });
+}
+export async function updateManagedDestination(id: number, input: DestinationInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.update(managedDestinations).set({ ...input, updatedByOpenId: actor }).where(eq(managedDestinations.id, id));
+}
+export async function createManagedExperience(input: ExperienceInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(managedExperiences).values({ ...input, createdByOpenId: actor, updatedByOpenId: actor });
+}
+export async function updateManagedExperience(id: number, input: ExperienceInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.update(managedExperiences).set({ ...input, updatedByOpenId: actor }).where(eq(managedExperiences.id, id));
+}
+export async function createManagedSection(input: SectionInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(managedSections).values({ ...input, createdByOpenId: actor, updatedByOpenId: actor });
+}
+export async function updateManagedSection(id: number, input: SectionInput, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.update(managedSections).set({ ...input, updatedByOpenId: actor }).where(eq(managedSections.id, id));
+}
+export async function createMediaAsset(input: { storageKey: string; url: string; altText: string; sourceLabel: string; caption?: string | null; mimeType: string }, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(mediaAssets).values({ ...input, uploadedByOpenId: actor });
+}
+
+export async function createVisaIntake(input: { referenceCode: string; fullName: string; email: string; nationality: string; residenceCountry: string; travelPurpose: string; intendedArrival?: string | null; notes?: string | null }) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(visaIntakes).values({ ...input, consentAcceptedAt: new Date() });
+}
+export async function listVisaIntakes() { const db = await getDb(); return db ? db.select().from(visaIntakes).orderBy(desc(visaIntakes.createdAt)) : []; }
+export async function updateVisaIntakeStatus(id: number, status: "received" | "ready_for_official_referral" | "closed", actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.update(visaIntakes).set({ status, reviewedByOpenId: actor, reviewedAt: new Date() }).where(eq(visaIntakes.id, id));
 }
 
 // TODO: add feature queries here as your schema grows.
