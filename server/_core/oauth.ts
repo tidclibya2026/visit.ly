@@ -26,7 +26,10 @@ export function registerOAuthRoutes(app: Express) {
     const { nonce } = decodeOAuthState(state);
     const expectedNonce = parseCookieHeader(req.headers.cookie ?? "")[OAUTH_STATE_COOKIE];
     if (!nonce || nonce !== expectedNonce) {
-      res.status(403).json({ error: "invalid oauth state" });
+      // Do not redeem a mismatched code. The nonce can expire or be replaced if
+      // a second login tab was opened; return to a safe fixed in-app route so
+      // the user can restart instead of seeing a raw JSON response.
+      res.redirect(302, "/admin?auth=restart");
       return;
     }
     res.clearCookie(OAUTH_STATE_COOKIE, { path: "/", secure: true, sameSite: "none" });

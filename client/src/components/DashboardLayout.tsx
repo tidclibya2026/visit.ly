@@ -49,6 +49,7 @@ export default function DashboardLayout({
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
   });
   const { loading, user } = useAuth();
+  const [loginRestartRequired, setLoginRestartRequired] = useState(() => new URLSearchParams(window.location.search).get("auth") === "restart");
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
@@ -69,9 +70,10 @@ export default function DashboardLayout({
             <p className="text-sm text-muted-foreground text-center max-w-sm">
                   تتطلب هذه اللوحة مصادقة المستخدم قبل عرض بيانات الإدارة وإجراءاتها.
             </p>
+            {loginRestartRequired ? <p className="text-sm text-center max-w-sm text-amber-700">انتهت محاولة الدخول السابقة أو فُتحت أكثر من نافذة. اضغط «تسجيل الدخول» مرة واحدة وأكمل العملية في النافذة نفسها.</p> : null}
           </div>
           <Button
-            onClick={() => startLogin()}
+            onClick={() => { setLoginRestartRequired(false); startLogin(); }}
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"
           >
