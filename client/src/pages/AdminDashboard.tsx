@@ -5,6 +5,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { AdminVisaInsights } from "@/components/AdminVisaInsights";
+import { AdminMonthlyPerformance } from "@/components/AdminMonthlyPerformance";
+import { AdminPriorityQueue } from "@/components/AdminPriorityQueue";
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
@@ -43,6 +45,8 @@ export default function AdminDashboard() {
     await Promise.all([
       utils.contentAdmin.list.invalidate(),
       utils.visa.listIntakes.invalidate(),
+      utils.visa.assignableStaff.invalidate(),
+      utils.visa.monthlyPerformance.invalidate(),
       utils.adminNotifications.list.invalidate(),
       utils.translationReview.list.invalidate(),
       utils.translationReview.suggestions.invalidate(),
@@ -78,6 +82,8 @@ export default function AdminDashboard() {
       {priorities.length ? <div className="admin-priority-list">{priorities.map((item) => <article key={item.title} className={`priority-${item.tone}`}><div className="admin-priority-icon"><item.icon size={19} /></div><div><p><b>{item.value}</b> {item.title}</p><span>{item.description}</span></div><Link href={item.href}>{item.action} <ArrowLeft size={15} /></Link></article>)}</div> : <div className="admin-priority-empty"><CircleCheck size={21} /><div><b>المتابعة الأساسية مكتملة حاليًا.</b><span>ستظهر هنا تلقائيًا أي طلبات أو إشعارات أو مسودات تحتاج تدخلاً.</span></div></div>}
     </section>
 
+    <AdminPriorityQueue />
+    <AdminMonthlyPerformance />
     <AdminVisaInsights />
 
     <section className="admin-dashboard-grid">

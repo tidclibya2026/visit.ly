@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { and, desc, gte, isNotNull, sql } from "drizzle-orm";
-import { InsertUser, adminNotifications, contentPermissions, contentUserRoles, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakeHistory, visaIntakes } from "../drizzle/schema";
+import { InsertUser, adminMonthlyTargets, adminNotifications, contentPermissions, contentUserRoles, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakeHistory, visaIntakes } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -235,9 +235,33 @@ export async function listVisaIntakeHistory(intakeId?: number) { const db = awai
 export async function updateVisaIntakeStatus(id: number, status: VisaStatus, actor: string, note?: string | null) {
   const db = await getDb(); if (!db) return;
   await db.update(visaIntakes).set({ status, reviewedByOpenId: actor, reviewedAt: new Date() }).where(eq(visaIntakes.id, id));
-  await db.insert(visaIntakeHistory).values({ intakeId: id, status, note: note || null, actorOpenId: actor });
+  await db.insert(visaIntakeHistory).values({ intakeId: id, status, action: "status", note: note || null, actorOpenId: actor });
   const intake = await db.select({ referenceCode: visaIntakes.referenceCode }).from(visaIntakes).where(eq(visaIntakes.id, id)).limit(1);
   await db.insert(adminNotifications).values({ kind: note ? "visa_note" : "visa_status", visaIntakeId: id, title: `تحديث طلب ${intake[0]?.referenceCode ?? id}`, message: note || `تم تغيير حالة الطلب إلى ${status}.` });
+}
+export async function listAssignableVisaStaff() {
+  const db = await getDb();
+  if (!db) return [];
+  const [members, roles, permissions] = await Promise.all([
+    db.select({ openId: users.openId, name: users.name, role: users.role, lastSignedIn: users.lastSignedIn }).from(users).orderBy(desc(users.lastSignedIn)),
+    db.select({ userOpenId: contentUserRoles.userOpenId, role: contentUserRoles.role }).from(contentUserRoles),
+    db.select({ userOpenId: contentPermissions.userOpenId, canReview: contentPermissions.canReview }).from(contentPermissions).where(eq(contentPermissions.resource, "visa")),
+  ]);
+  const permitted = new Set([...roles.filter((item) => item.role === "reviewer").map((item) => item.userOpenId), ...permissions.filter((item) => item.canReview).map((item) => item.userOpenId)]);
+  return members.filter((member) => member.role === "admin" || permitted.has(member.openId)).map((member) => ({ openId: member.openId, name: member.name || member.openId, role: member.role }));
+}
+export async function assignVisaIntake(id: number, assigneeOpenId: string | null, actor: string) {
+  const db = await getDb(); if (!db) return;
+  const intake = await db.select({ status: visaIntakes.status, referenceCode: visaIntakes.referenceCode }).from(visaIntakes).where(eq(visaIntakes.id, id)).limit(1);
+  if (!intake[0]) throw new Error("visa_intake_not_found");
+  if (assigneeOpenId) {
+    const allowedStaff = await listAssignableVisaStaff();
+    if (!allowedStaff.some((member) => member.openId === assigneeOpenId)) throw new Error("invalid_visa_assignee");
+  }
+  await db.update(visaIntakes).set({ assignedToOpenId: assigneeOpenId, assignedByOpenId: actor, assignedAt: new Date() }).where(eq(visaIntakes.id, id));
+  const note = assigneeOpenId ? "تم تعيين مسؤول متابعة للطلب." : "تمت إزالة مسؤول المتابعة من الطلب.";
+  await db.insert(visaIntakeHistory).values({ intakeId: id, status: intake[0].status, action: "assignment", note, actorOpenId: actor });
+  await db.insert(adminNotifications).values({ kind: "visa_note", visaIntakeId: id, title: `تحديث مسؤول طلب ${intake[0].referenceCode}`, message: note });
 }
 export async function listAdminNotifications() { const db = await getDb(); return db ? db.select().from(adminNotifications).orderBy(desc(adminNotifications.createdAt)).limit(60) : []; }
 export async function markAdminNotificationRead(id: number) { const db = await getDb(); if (!db) return; await db.update(adminNotifications).set({ isRead: true }).where(eq(adminNotifications.id, id)); }
@@ -269,6 +293,30 @@ export async function getAdminOperationsReport(days: number) {
     ageGroups: rankedCounts(visaRows.map((item) => item.ageGroup)),
     contentTypes: [{ label: "وجهات", total: destinationRows.length }, { label: "تجارب", total: experienceRows.length }, { label: "أقسام", total: sectionRows.length }],
   };
+}
+const monthKey = (date: Date) => date.toISOString().slice(0, 7);
+export async function getMonthlyPerformance() {
+  const db = await getDb();
+  const now = new Date();
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
+  const monthKeys = Array.from({ length: 6 }, (_, index) => monthKey(new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5 + index, 1))));
+  if (!db) return { months: monthKeys.map((key) => ({ monthKey: key, visas: 0, content: 0, visaTarget: 0, contentTarget: 0 })) };
+  const [visaRows, destinationRows, experienceRows, sectionRows, targets] = await Promise.all([
+    db.select({ createdAt: visaIntakes.createdAt }).from(visaIntakes).where(gte(visaIntakes.createdAt, start)),
+    db.select({ createdAt: managedDestinations.createdAt }).from(managedDestinations).where(gte(managedDestinations.createdAt, start)),
+    db.select({ createdAt: managedExperiences.createdAt }).from(managedExperiences).where(gte(managedExperiences.createdAt, start)),
+    db.select({ createdAt: managedSections.createdAt }).from(managedSections).where(gte(managedSections.createdAt, start)),
+    db.select().from(adminMonthlyTargets).where(gte(adminMonthlyTargets.monthKey, monthKeys[0]!)),
+  ]);
+  const byMonth = new Map(monthKeys.map((key) => [key, { visas: 0, content: 0 }]));
+  visaRows.forEach((row) => { const values = byMonth.get(monthKey(row.createdAt)); if (values) values.visas += 1; });
+  [...destinationRows, ...experienceRows, ...sectionRows].forEach((row) => { const values = byMonth.get(monthKey(row.createdAt)); if (values) values.content += 1; });
+  const targetByMonth = new Map(targets.map((target) => [target.monthKey, target]));
+  return { months: monthKeys.map((key) => ({ monthKey: key, ...byMonth.get(key)!, visaTarget: targetByMonth.get(key)?.visaTarget ?? 0, contentTarget: targetByMonth.get(key)?.contentTarget ?? 0 })) };
+}
+export async function setMonthlyTarget(input: { monthKey: string; visaTarget: number; contentTarget: number }, actor: string) {
+  const db = await getDb(); if (!db) return;
+  await db.insert(adminMonthlyTargets).values({ ...input, setByOpenId: actor }).onDuplicateKeyUpdate({ set: { visaTarget: input.visaTarget, contentTarget: input.contentTarget, setByOpenId: actor } });
 }
 
 type PermissionResource = "destinations" | "experiences" | "sections" | "media" | "visa" | "users";

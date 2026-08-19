@@ -24,5 +24,7 @@ describe("admin dashboard", () => {
     expect(dashboard).toContain("البيانات التشغيلية متزامنة");
     expect(dashboard).toContain("Visit Libya | زور ليبيا");
     expect(dashboard).toContain("أولويات التشغيل الآن");
+    expect(dashboard).toContain("AdminPriorityQueue");
+    expect(dashboard).toContain("AdminMonthlyPerformance");
   });
 });

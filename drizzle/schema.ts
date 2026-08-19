@@ -142,6 +142,9 @@ export const visaIntakes = mysqlTable("visa_intakes", {
   status: mysqlEnum("status", ["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]).default("received").notNull(),
   reviewedByOpenId: varchar("reviewedByOpenId", { length: 64 }),
   reviewedAt: timestamp("reviewedAt"),
+  assignedToOpenId: varchar("assignedToOpenId", { length: 64 }),
+  assignedByOpenId: varchar("assignedByOpenId", { length: 64 }),
+  assignedAt: timestamp("assignedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -171,6 +174,7 @@ export const visaIntakeHistory = mysqlTable("visa_intake_history", {
   id: int("id").autoincrement().primaryKey(),
   intakeId: int("intakeId").notNull(),
   status: mysqlEnum("status", ["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]).notNull(),
+  action: varchar("action", { length: 32 }).default("status").notNull(),
   note: text("note"),
   actorOpenId: varchar("actorOpenId", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -184,6 +188,16 @@ export const adminNotifications = mysqlTable("admin_notifications", {
   message: text("message").notNull(),
   isRead: boolean("isRead").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const adminMonthlyTargets = mysqlTable("admin_monthly_targets", {
+  id: int("id").autoincrement().primaryKey(),
+  monthKey: varchar("monthKey", { length: 7 }).notNull().unique(),
+  visaTarget: int("visaTarget").default(0).notNull(),
+  contentTarget: int("contentTarget").default(0).notNull(),
+  setByOpenId: varchar("setByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
@@ -202,5 +216,6 @@ export type ContentPermission = typeof contentPermissions.$inferSelect;
 export type ContentUserRole = typeof contentUserRoles.$inferSelect;
 export type VisaIntakeHistory = typeof visaIntakeHistory.$inferSelect;
 export type AdminNotification = typeof adminNotifications.$inferSelect;
+export type AdminMonthlyTarget = typeof adminMonthlyTargets.$inferSelect;
 
 // TODO: Add your tables here
