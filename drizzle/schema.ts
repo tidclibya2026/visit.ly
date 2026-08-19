@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -137,9 +137,40 @@ export const visaIntakes = mysqlTable("visa_intakes", {
   intendedArrival: varchar("intendedArrival", { length: 32 }),
   notes: text("notes"),
   consentAcceptedAt: timestamp("consentAcceptedAt").notNull(),
-  status: mysqlEnum("status", ["received", "ready_for_official_referral", "closed"]).default("received").notNull(),
+  status: mysqlEnum("status", ["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]).default("received").notNull(),
   reviewedByOpenId: varchar("reviewedByOpenId", { length: 64 }),
   reviewedAt: timestamp("reviewedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const contentPermissions = mysqlTable("content_permissions", {
+  id: int("id").autoincrement().primaryKey(),
+  userOpenId: varchar("userOpenId", { length: 64 }).notNull(),
+  resource: mysqlEnum("resource", ["destinations", "experiences", "sections", "media", "visa", "users"]).notNull(),
+  canCreate: boolean("canCreate").default(false).notNull(),
+  canEdit: boolean("canEdit").default(false).notNull(),
+  canPublish: boolean("canPublish").default(false).notNull(),
+  canReview: boolean("canReview").default(false).notNull(),
+  grantedByOpenId: varchar("grantedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const contentUserRoles = mysqlTable("content_user_roles", {
+  id: int("id").autoincrement().primaryKey(),
+  userOpenId: varchar("userOpenId", { length: 64 }).notNull().unique(),
+  role: mysqlEnum("role", ["editor", "reviewer"]).notNull(),
+  assignedByOpenId: varchar("assignedByOpenId", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const visaIntakeHistory = mysqlTable("visa_intake_history", {
+  id: int("id").autoincrement().primaryKey(),
+  intakeId: int("intakeId").notNull(),
+  status: mysqlEnum("status", ["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]).notNull(),
+  note: text("note"),
+  actorOpenId: varchar("actorOpenId", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -155,5 +186,8 @@ export type ManagedExperience = typeof managedExperiences.$inferSelect;
 export type ManagedSection = typeof managedSections.$inferSelect;
 export type MediaAsset = typeof mediaAssets.$inferSelect;
 export type VisaIntake = typeof visaIntakes.$inferSelect;
+export type ContentPermission = typeof contentPermissions.$inferSelect;
+export type ContentUserRole = typeof contentUserRoles.$inferSelect;
+export type VisaIntakeHistory = typeof visaIntakeHistory.$inferSelect;
 
 // TODO: Add your tables here

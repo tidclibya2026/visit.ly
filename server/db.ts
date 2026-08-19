@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { desc, gte, isNotNull, sql } from "drizzle-orm";
-import { InsertUser, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakes } from "../drizzle/schema";
+import { and, desc, gte, isNotNull, sql } from "drizzle-orm";
+import { InsertUser, contentPermissions, contentUserRoles, interactionEvents, managedDestinations, managedExperiences, managedSections, mediaAssets, translationAuditLogs, translationReviews, translationSuggestions, type InsertTranslationReview, users, visaIntakeHistory, visaIntakes } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -176,6 +176,17 @@ export async function listManagedContent() {
   return { destinations, experiences, sections, media };
 }
 
+export async function listPublishedContent() {
+  const db = await getDb();
+  if (!db) return { destinations: [], experiences: [], sections: [] };
+  const [destinations, experiences, sections] = await Promise.all([
+    db.select().from(managedDestinations).where(eq(managedDestinations.status, "published")).orderBy(desc(managedDestinations.updatedAt)),
+    db.select().from(managedExperiences).where(eq(managedExperiences.status, "published")).orderBy(desc(managedExperiences.updatedAt)),
+    db.select().from(managedSections).where(eq(managedSections.status, "published")).orderBy(desc(managedSections.updatedAt)),
+  ]);
+  return { destinations, experiences, sections };
+}
+
 export async function createManagedDestination(input: DestinationInput, actor: string) {
   const db = await getDb(); if (!db) return;
   await db.insert(managedDestinations).values({ ...input, createdByOpenId: actor, updatedByOpenId: actor });
@@ -207,12 +218,23 @@ export async function createMediaAsset(input: { storageKey: string; url: string;
 
 export async function createVisaIntake(input: { referenceCode: string; fullName: string; email: string; nationality: string; residenceCountry: string; travelPurpose: string; intendedArrival?: string | null; notes?: string | null }) {
   const db = await getDb(); if (!db) return;
-  await db.insert(visaIntakes).values({ ...input, consentAcceptedAt: new Date() });
+  const result = await db.insert(visaIntakes).values({ ...input, consentAcceptedAt: new Date() });
+  await db.insert(visaIntakeHistory).values({ intakeId: Number(result[0].insertId), status: "received", note: "تم استلام الطلب الأولي من الزائر." });
 }
 export async function listVisaIntakes() { const db = await getDb(); return db ? db.select().from(visaIntakes).orderBy(desc(visaIntakes.createdAt)) : []; }
-export async function updateVisaIntakeStatus(id: number, status: "received" | "ready_for_official_referral" | "closed", actor: string) {
+export async function listVisaIntakeHistory(intakeId?: number) { const db = await getDb(); if (!db) return []; return intakeId ? db.select().from(visaIntakeHistory).where(eq(visaIntakeHistory.intakeId, intakeId)).orderBy(desc(visaIntakeHistory.createdAt)) : db.select().from(visaIntakeHistory).orderBy(desc(visaIntakeHistory.createdAt)); }
+export async function updateVisaIntakeStatus(id: number, status: "received" | "under_review" | "awaiting_information" | "ready_for_official_referral" | "closed", actor: string, note?: string | null) {
   const db = await getDb(); if (!db) return;
   await db.update(visaIntakes).set({ status, reviewedByOpenId: actor, reviewedAt: new Date() }).where(eq(visaIntakes.id, id));
+  await db.insert(visaIntakeHistory).values({ intakeId: id, status, note: note || null, actorOpenId: actor });
 }
+
+type PermissionResource = "destinations" | "experiences" | "sections" | "media" | "visa" | "users";
+type PermissionAction = "create" | "edit" | "publish" | "review";
+export async function listContentAccess() { const db = await getDb(); if (!db) return { roles: [], permissions: [] }; const [roles, permissions] = await Promise.all([db.select().from(contentUserRoles).orderBy(desc(contentUserRoles.updatedAt)), db.select().from(contentPermissions).orderBy(desc(contentPermissions.updatedAt))]); return { roles, permissions }; }
+export async function assignContentRole(input: { userOpenId: string; role: "editor" | "reviewer" }, actor: string) { const db = await getDb(); if (!db) return; await db.insert(contentUserRoles).values({ ...input, assignedByOpenId: actor }).onDuplicateKeyUpdate({ set: { role: input.role, assignedByOpenId: actor } }); }
+export async function setContentPermission(input: { userOpenId: string; resource: PermissionResource; canCreate: boolean; canEdit: boolean; canPublish: boolean; canReview: boolean }, actor: string) { const db = await getDb(); if (!db) return; const existing = await db.select().from(contentPermissions).where(and(eq(contentPermissions.userOpenId, input.userOpenId), eq(contentPermissions.resource, input.resource))).limit(1); if (existing[0]) await db.update(contentPermissions).set({ ...input, grantedByOpenId: actor }).where(eq(contentPermissions.id, existing[0].id)); else await db.insert(contentPermissions).values({ ...input, grantedByOpenId: actor }); }
+export async function getContentAccess(openId: string, resource: PermissionResource) { const db = await getDb(); if (!db) return null; const [role, permission] = await Promise.all([db.select().from(contentUserRoles).where(eq(contentUserRoles.userOpenId, openId)).limit(1), db.select().from(contentPermissions).where(and(eq(contentPermissions.userOpenId, openId), eq(contentPermissions.resource, resource))).limit(1)]); return { role: role[0]?.role ?? null, permission: permission[0] ?? null }; }
+export function permissionAllows(access: Awaited<ReturnType<typeof getContentAccess>>, action: PermissionAction) { if (!access) return false; if (access.role === "editor" && (action === "create" || action === "edit")) return true; if (access.role === "reviewer" && (action === "review" || action === "publish")) return true; const key = action === "create" ? "canCreate" : action === "edit" ? "canEdit" : action === "publish" ? "canPublish" : "canReview"; return Boolean(access.permission?.[key]); }
 
 // TODO: add feature queries here as your schema grows.

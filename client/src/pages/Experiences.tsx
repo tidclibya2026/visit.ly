@@ -10,6 +10,7 @@ import { assets, experienceFieldNotes, experiences } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
+import { PublishedContentFeed } from "@/components/PublishedContentFeed";
 
 const iconMap = { Landmark, Mountain, Utensils, Palette, TentTree, CalendarDays };
 const regions = ["الكل", ...Array.from(new Set(experiences.map((experience) => experience.region)))];
@@ -42,6 +43,7 @@ export default function Experiences() {
       </section>
       {!shownExperiences.length && <section className="page-frame experience-empty"><p className="eyebrow">لا توجد نتيجة مطابقة</p><h2>جرّب كلمة بحث أو منطقة أو موسمًا مختلفًا.</h2><button type="button" className="button button-ink" onClick={() => { setRegion("الكل"); setSeason("الكل"); setSearch(""); }}>عرض كل التجارب</button></section>}
       <section className="page-frame experience-notes" aria-label="ملاحظات التخطيط">{experienceFieldNotes.map((note, index) => <article key={note.title}><span>0{index + 1}</span><p className="eyebrow">{note.label}</p><h2>{note.title}</h2><p>{note.text}</p></article>)}</section>
+      <PublishedContentFeed kind="experiences" />
       <section className="season-note"><div className="page-frame"><div><p className="eyebrow light">إيقاع السنة</p><h2>تحقق من الموسم،<br />ثم ثبّت مسارك.</h2></div><p>تتغير الخدمات والفعاليات والظروف الجوية بحسب المنطقة. استخدم شارة كل تجربة كدليل أولي، ثم راجع الجهة المحلية أو مشغل الرحلة قبل اعتماد الموعد.</p><Link href="/services" className="button button-sand">دليل الاستعداد <ArrowLeft size={17} /></Link></div></section>
     </SiteShell>
   );

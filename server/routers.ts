@@ -4,12 +4,12 @@ import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { adminProcedure, publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { transcribeAudio } from "./_core/voiceTranscription";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { audioMimeTypes, fileExtensionForMime, safeAudioBuffer, splitTranslationCards } from "./assistantUtils";
 import { destinations } from "../client/src/lib/content";
-import { createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getTranslationDashboardMetrics, listManagedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakes, recordInteraction, reviewTranslation, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
+import { assignContentRole, createManagedDestination, createManagedExperience, createManagedSection, createMediaAsset, createTranslationReview, createVisaIntake, getContentAccess, getTranslationDashboardMetrics, listContentAccess, listManagedContent, listPublishedContent, listTranslationAuditLogs, listTranslationReviews, listTranslationSuggestions, listVisaIntakeHistory, listVisaIntakes, permissionAllows, recordInteraction, reviewTranslation, setContentPermission, submitTranslationSuggestion, updateManagedDestination, updateManagedExperience, updateManagedSection, updateTranslationSuggestion, updateVisaIntakeStatus } from "./db";
 
 const translatedLanguages = ["en", "fr", "it", "de", "es", "zh"] as const;
 const languageLabels = { en: "English", fr: "French", it: "Italian", de: "German", es: "Spanish", zh: "Simplified Chinese" } as const;
@@ -32,6 +32,14 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
       (error) => { clearTimeout(timer); reject(error); },
     );
   });
+}
+
+type ContentResource = "destinations" | "experiences" | "sections" | "media" | "visa" | "users";
+type ContentAction = "create" | "edit" | "publish" | "review";
+async function requireContentAction(ctx: { user: { openId: string; role: string } }, resource: ContentResource, action: ContentAction) {
+  if (ctx.user.role === "admin") return;
+  const access = await getContentAccess(ctx.user.openId, resource);
+  if (!permissionAllows(access, action)) throw new TRPCError({ code: "FORBIDDEN", message: "لا تملك الصلاحية المطلوبة لهذه العملية." });
 }
 
 export const appRouter = router({
@@ -112,15 +120,23 @@ export const appRouter = router({
     }),
   }),
 
+  publishedContent: router({
+    list: publicProcedure.query(async () => listPublishedContent()),
+  }),
+
   contentAdmin: router({
-    list: adminProcedure.query(async () => listManagedContent()),
-    createDestination: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedDestination(input, ctx.user.openId); return { ok: true }; }),
-    updateDestination: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedDestination(input.id, input.value, ctx.user.openId); return { ok: true }; }),
-    createExperience: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedExperience(input, ctx.user.openId); return { ok: true }; }),
-    updateExperience: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedExperience(input.id, input.value, ctx.user.openId); return { ok: true }; }),
-    createSection: adminProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await createManagedSection(input, ctx.user.openId); return { ok: true }; }),
-    updateSection: adminProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await updateManagedSection(input.id, input.value, ctx.user.openId); return { ok: true }; }),
-    uploadImage: adminProcedure.input(z.object({ fileName: z.string().min(1).max(160), mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]), dataBase64: z.string().min(16).max(7_000_000), altText: z.string().min(3).max(500), sourceLabel: z.string().min(3).max(255), caption: z.string().max(5000).nullable().optional() })).mutation(async ({ ctx, input }) => {
+    list: protectedProcedure.query(async ({ ctx }) => { if (ctx.user.role !== "admin") { const checks = await Promise.all((["destinations", "experiences", "sections", "media", "visa"] as ContentResource[]).map((resource) => getContentAccess(ctx.user.openId, resource))); if (!checks.some((access) => access?.role || access?.permission)) throw new TRPCError({ code: "FORBIDDEN", message: "لا تملك صلاحية الوصول إلى إدارة المحتوى." }); } return listManagedContent(); }),
+    access: adminProcedure.query(async () => listContentAccess()),
+    assignRole: adminProcedure.input(z.object({ userOpenId: z.string().min(4).max(64), role: z.enum(["editor", "reviewer"]) })).mutation(async ({ ctx, input }) => { await assignContentRole(input, ctx.user.openId); return { ok: true }; }),
+    setPermission: adminProcedure.input(z.object({ userOpenId: z.string().min(4).max(64), resource: z.enum(["destinations", "experiences", "sections", "media", "visa", "users"]), canCreate: z.boolean(), canEdit: z.boolean(), canPublish: z.boolean(), canReview: z.boolean() })).mutation(async ({ ctx, input }) => { await setContentPermission(input, ctx.user.openId); return { ok: true }; }),
+    createDestination: protectedProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "destinations", input.status === "published" ? "publish" : "create"); await createManagedDestination(input, ctx.user.openId); return { ok: true }; }),
+    updateDestination: protectedProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), city: z.string().min(2).max(160), region: z.string().min(2).max(160), category: z.enum(["city", "heritage", "nature", "coast"]), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "destinations", input.value.status === "published" ? "publish" : "edit"); await updateManagedDestination(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    createExperience: protectedProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "experiences", input.status === "published" ? "publish" : "create"); await createManagedExperience(input, ctx.user.openId); return { ok: true }; }),
+    updateExperience: protectedProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), title: z.string().min(2).max(255), destinationSlug: z.string().max(96).nullable().optional(), region: z.string().min(2).max(160), season: z.string().max(120).nullable().optional(), description: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "experiences", input.value.status === "published" ? "publish" : "edit"); await updateManagedExperience(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    createSection: protectedProcedure.input(z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "sections", input.status === "published" ? "publish" : "create"); await createManagedSection(input, ctx.user.openId); return { ok: true }; }),
+    updateSection: protectedProcedure.input(z.object({ id: z.number().int().positive(), value: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/).max(96), sectionType: z.enum(["festival", "culture", "heritage", "travel", "custom"]), title: z.string().min(2).max(255), summary: z.string().min(10).max(10000), imageUrl: z.string().max(768).nullable().optional(), status: z.enum(["draft", "published", "archived"]) }) })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "sections", input.value.status === "published" ? "publish" : "edit"); await updateManagedSection(input.id, input.value, ctx.user.openId); return { ok: true }; }),
+    uploadImage: protectedProcedure.input(z.object({ fileName: z.string().min(1).max(160), mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]), dataBase64: z.string().min(16).max(7_000_000), altText: z.string().min(3).max(500), sourceLabel: z.string().min(3).max(255), caption: z.string().max(5000).nullable().optional() })).mutation(async ({ ctx, input }) => {
+      await requireContentAction(ctx, "media", "create");
       const encoded = input.dataBase64.includes(",") ? input.dataBase64.split(",").pop()! : input.dataBase64;
       const bytes = Buffer.from(encoded, "base64");
       if (!bytes.length || bytes.length > 5_000_000) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب أن تكون الصورة صالحة وأقل من 5 ميغابايت." });
@@ -137,8 +153,9 @@ export const appRouter = router({
       await createVisaIntake({ ...input, referenceCode });
       return { referenceCode, status: "received" as const, officialReferral: "pending_official_channel" as const };
     }),
-    listIntakes: adminProcedure.query(async () => listVisaIntakes()),
-    updateIntakeStatus: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["received", "ready_for_official_referral", "closed"]) })).mutation(async ({ ctx, input }) => { await updateVisaIntakeStatus(input.id, input.status, ctx.user.openId); return { ok: true }; }),
+    listIntakes: protectedProcedure.query(async ({ ctx }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakes(); }),
+    history: protectedProcedure.input(z.object({ intakeId: z.number().int().positive().optional() })).query(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); return listVisaIntakeHistory(input.intakeId); }),
+    updateIntakeStatus: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["received", "under_review", "awaiting_information", "ready_for_official_referral", "closed"]), note: z.string().max(3000).nullable().optional() })).mutation(async ({ ctx, input }) => { await requireContentAction(ctx, "visa", "review"); await updateVisaIntakeStatus(input.id, input.status, ctx.user.openId, input.note); return { ok: true }; }),
   }),
 
   assistant: router({

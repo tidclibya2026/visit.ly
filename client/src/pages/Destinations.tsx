@@ -12,6 +12,7 @@ import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 import { useTrip } from "@/contexts/TripContext";
 import { filterAndSortDestinations, type DestinationSort } from "@/lib/destinationFilters";
 import { destinationViewStorageKey, parseDestinationView, type DestinationView } from "@/lib/destinationView";
+import { PublishedContentFeed } from "@/components/PublishedContentFeed";
 
 const cities = ["الكل", ...Array.from(new Set(destinations.map((destination) => destination.city)))];
 const landmarkTypes = ["الكل", ...Array.from(new Set(destinations.map((destination) => destination.landmarkType)))];
@@ -69,6 +70,7 @@ export default function Destinations() {
           })}
         </div> : <div className="empty-state"><p className="eyebrow">لا توجد نتيجة مطابقة</p><h2>جرّب منطقة أو فئة أو نوع معلم آخر.</h2><button type="button" className="button button-ink" onClick={() => { setQuery(""); setCity("الكل"); setLandmarkType("الكل"); setRegion("الكل"); setCategory("الكل"); setSort("default"); }}>عرض كل الوجهات</button></div>}
       </section>
+      <PublishedContentFeed kind="destinations" />
     </SiteShell>
   );
 }

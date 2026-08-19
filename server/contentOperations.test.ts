@@ -17,8 +17,8 @@ describe("content operations and safe visa intake", () => {
   it("protects management procedures and limits visa intake to an official-referral pending state", () => {
     const router = readFileSync(resolve(root, "server/routers.ts"), "utf8");
     expect(router).toContain("contentAdmin: router");
-    expect(router).toContain("createDestination: adminProcedure");
-    expect(router).toContain("uploadImage: adminProcedure");
+    expect(router).toContain("createDestination: protectedProcedure");
+    expect(router).toContain("uploadImage: protectedProcedure");
     expect(router).toContain("visa: router");
     expect(router).toContain('officialReferral: "pending_official_channel"');
     expect(router).not.toContain("fetch(\"https://evisa.gov.ly");
