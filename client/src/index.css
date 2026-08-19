@@ -1817,6 +1817,16 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .timeline-heading .eyebrow { color: var(--sand); }
 .timeline-heading h2 { margin: 7px 0 12px; color: var(--paper); font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.2rem); line-height: 1.08; }
 .timeline-heading p:last-child { margin: 0; color: rgba(251, 247, 238, 0.78); line-height: 1.9; }
+.timeline-listen-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.timeline-listen-actions button { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 8px 11px; color: var(--ink); background: var(--sand); border: 1px solid var(--sand); font-size: 11px; font-weight: 800; }
+.timeline-listen-actions button:hover, .timeline-listen-actions button:focus-visible { color: var(--paper); background: transparent; outline: 1px solid var(--sand); }
+.timeline-listen-actions small { color: var(--sand); font-size: 10px; font-weight: 800; }
+.timeline-archive-photo { margin: 18px 0 0; border: 1px solid rgba(228, 200, 112, 0.48); background: rgba(251, 247, 238, 0.04); }
+.timeline-archive-photo img { display: block; width: 100%; height: 164px; object-fit: cover; }
+.timeline-archive-photo figcaption { padding: 10px; display: grid; gap: 4px; }
+.timeline-archive-photo span { color: var(--sand); font-size: 9px; font-weight: 900; }
+.timeline-archive-photo strong { color: var(--paper); font-size: 11px; line-height: 1.45; }
+.timeline-archive-photo small { color: rgba(251, 247, 238, 0.68); font-size: 8px; }
 .timeline-steps { display: grid; align-content: center; gap: 7px; }
 .timeline-steps button { width: 100%; min-height: 67px; padding: 10px 13px; display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 10px; color: var(--paper); background: rgba(251, 247, 238, 0.07); border-inline-start: 3px solid rgba(228, 200, 112, 0.4); text-align: start; transition: background 180ms var(--ease-out), transform 180ms var(--ease-out), border-color 180ms var(--ease-out); }
 .timeline-steps button:hover, .timeline-steps button:focus-visible, .timeline-steps button.is-active { color: var(--ink); background: var(--sand); border-color: var(--paper); transform: translateX(-3px); outline: none; }
@@ -1838,6 +1848,16 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .landmark-point-list small { margin-top: 3px; color: inherit; font-size: 9px; opacity: 0.78; }
 .destination-landmark-map-section .destination-map { min-height: 420px; border: 2px solid rgba(228, 200, 112, 0.65); }
 .landmark-map-hint { margin: 9px 0 0; color: rgba(251, 247, 238, 0.72); font-size: 10px; line-height: 1.6; }
+.destination-walk-section { padding: 76px 0; background: #f5efe2; }
+.walk-route-grid { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: 34px; align-items: start; }
+.walk-route-copy .eyebrow { color: var(--ink); }
+.walk-route-copy h2 { margin: 8px 0 11px; color: var(--ink); font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.15rem); line-height: 1.08; }
+.walk-route-copy > p:not(.eyebrow) { margin: 0; color: #435970; line-height: 1.85; }
+.walk-route-copy ol { margin: 22px 0 0; padding: 0; list-style: none; counter-reset: route-stop; display: grid; gap: 8px; }
+.walk-route-copy li { min-height: 46px; padding: 8px 10px; display: grid; grid-template-columns: 32px 1fr; align-items: center; gap: 8px; border-inline-start: 3px solid var(--sand); background: rgba(11, 58, 103, 0.06); }
+.walk-route-copy li span { color: var(--ink); font-size: 10px; font-weight: 900; }
+.walk-route-copy li strong { color: var(--ink); font-size: 12px; }
+.walking-route-map { min-height: 390px; border: 2px solid var(--ink); }
 @media (max-width: 760px) {
   .destination-timeline { margin-bottom: 52px; padding: 23px 17px; grid-template-columns: 1fr; gap: 20px; }
   .timeline-steps button { min-height: 61px; grid-template-columns: 75px 1fr auto; padding: 9px; }
@@ -1846,4 +1866,8 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .destination-landmark-map-section { padding: 52px 0; }
   .landmark-map-grid { grid-template-columns: 1fr; gap: 22px; }
   .destination-landmark-map-section .destination-map { min-height: 320px; }
+  .timeline-archive-photo img { height: 138px; }
+  .destination-walk-section { padding: 52px 0; }
+  .walk-route-grid { grid-template-columns: 1fr; gap: 22px; }
+  .walking-route-map { min-height: 320px; }
 }

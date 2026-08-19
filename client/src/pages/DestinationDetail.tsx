@@ -2,7 +2,7 @@
  * Design reminder — ملف مدينة مستقل يقرأ كصفحة من الدليل: صورة افتتاحية، ملاحظات
  * مكانية، نشاطات، صور موثقة، ثم خريطة/أطلس ومسار شخصي.
  */
-import { ArrowLeft, Check, ChevronLeft, Compass, ExternalLink, Heart, Landmark, MapPin, Printer, Route, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, ChevronLeft, Compass, ExternalLink, Heart, Landmark, MapPin, Pause, Printer, Route, Sparkles, Volume2 } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
 import { MapView } from "@/components/Map";
@@ -43,6 +43,18 @@ function DestinationMap({ landmarks, selectedIndex, atlasHref, onSelect }: { lan
   }} />;
 }
 
+function WalkingRouteMap({ landmarks, atlasHref }: { landmarks: HeritageLandmark[]; atlasHref: string }) {
+  const positions = landmarks.map((landmark) => positionFromCoordinates(landmark.coordinates));
+  const center = positions[Math.floor(positions.length / 2)] ?? { lat: 32.887, lng: 13.18 };
+  return <MapView key={landmarks.map((landmark) => landmark.coordinates).join("|")} className="walking-route-map" initialCenter={center} initialZoom={14} fallbackHref={atlasHref} onMapReady={(map) => {
+    const renderMarkers = () => landmarks.forEach((landmark) => new window.google.maps.marker.AdvancedMarkerElement({ map, position: positionFromCoordinates(landmark.coordinates), title: landmark.title }));
+    if (positions.length < 2) { renderMarkers(); return; }
+    const service = new window.google.maps.DirectionsService();
+    const renderer = new window.google.maps.DirectionsRenderer({ map, suppressMarkers: false, polylineOptions: { strokeColor: "#e4c870", strokeOpacity: 0.9, strokeWeight: 5 } });
+    void service.route({ origin: positions[0], destination: positions[positions.length - 1], waypoints: positions.slice(1, -1).map((location) => ({ location, stopover: true })), travelMode: window.google.maps.TravelMode.WALKING }).then((result) => renderer.setDirections(result)).catch(renderMarkers);
+  }} />;
+}
+
 const heritageLabels = {
   ar: { record: "سجل الشواهد", evidence: "معالم ودلائل", context: "السياق الثقافي", timeline: "خط زمني موثق", map: "خريطة المعالم", mapCopy: "اختر معلمًا من القائمة أو اضغط نقطته على الخريطة.", atlas: "افتح أطلس ليبيا السياحي", source: "المصدر", point: "نقطة تاريخية" },
   en: { record: "Heritage record", evidence: "Landmarks & evidence", context: "Cultural context", timeline: "Documented timeline", map: "Landmark map", mapCopy: "Select a landmark below or choose its point on the map.", atlas: "Open Libya Tourism Atlas", source: "Source", point: "Historical point" },
@@ -51,6 +63,16 @@ const heritageLabels = {
   de: { record: "Kulturerbe-Dossier", evidence: "Denkmäler und Zeugnisse", context: "Kultureller Kontext", timeline: "Dokumentierte Zeitleiste", map: "Karte der Denkmäler", mapCopy: "Wählen Sie unten ein Denkmal oder seinen Punkt auf der Karte.", atlas: "Libyschen Tourismusatlas öffnen", source: "Quelle", point: "Historischer Punkt" },
   es: { record: "Registro patrimonial", evidence: "Monumentos y testimonios", context: "Contexto cultural", timeline: "Cronología documentada", map: "Mapa de monumentos", mapCopy: "Elige un monumento abajo o su punto en el mapa.", atlas: "Abrir el Atlas Turístico de Libia", source: "Fuente", point: "Punto histórico" },
   zh: { record: "遗产档案", evidence: "地标与见证", context: "文化背景", timeline: "已记录时间线", map: "地标地图", mapCopy: "请在下方选择地标，或点击地图上的点位。", atlas: "打开利比亚旅游地图集", source: "来源", point: "历史点位" },
+} as const;
+
+const immersiveLabels = {
+  ar: { listen: "استمع إلى المحطة", stop: "إيقاف السرد", photo: "صورة من أرشيف المركز", walk: "مسار مشي مقترح", walkCopy: "مسار إرشادي يربط محطات المعالم المتاحة. راجع ظروف الموقع وتعليمات الزيارة قبل الانطلاق." },
+  en: { listen: "Listen to this stop", stop: "Stop narration", photo: "Photo from the Center archive", walk: "Suggested walking route", walkCopy: "A guide route linking available landmarks. Check site conditions and visitor guidance before starting." },
+  fr: { listen: "Écouter cette étape", stop: "Arrêter la narration", photo: "Photo des archives du Centre", walk: "Parcours à pied suggéré", walkCopy: "Un parcours indicatif reliant les repères disponibles. Vérifiez les conditions du site avant le départ." },
+  it: { listen: "Ascolta questa tappa", stop: "Ferma la narrazione", photo: "Foto dall’archivio del Centro", walk: "Percorso a piedi suggerito", walkCopy: "Un percorso indicativo tra i monumenti disponibili. Verifica le condizioni del sito prima di partire." },
+  de: { listen: "Diese Station anhören", stop: "Erzählung stoppen", photo: "Foto aus dem Zentrum-Archiv", walk: "Empfohlene Fußroute", walkCopy: "Eine Orientierungsroute zwischen verfügbaren Denkmälern. Prüfen Sie die Bedingungen vor Ort vor dem Start." },
+  es: { listen: "Escuchar esta parada", stop: "Detener narración", photo: "Foto del archivo del Centro", walk: "Ruta a pie sugerida", walkCopy: "Un recorrido orientativo entre monumentos disponibles. Verifica las condiciones del sitio antes de comenzar." },
+  zh: { listen: "收听此站讲解", stop: "停止讲解", photo: "中心档案图片", walk: "建议步行路线", walkCopy: "连接现有地标的指引路线。出发前请确认遗址状况和参观指引。" },
 } as const;
 
 export default function DestinationDetail() {
@@ -62,9 +84,11 @@ export default function DestinationDetail() {
   const trackInteraction = useInteractionTracking();
   const [selectedLandmark, setSelectedLandmark] = useState(0);
   const [selectedTimeline, setSelectedTimeline] = useState(0);
+  const [speakingTimeline, setSpeakingTimeline] = useState<number | null>(null);
   const destinationTranslation = trpc.destination.translate.useQuery({ id: destination?.id ?? "missing", language: language === "ar" ? "en" : language }, { enabled: Boolean(destination) && language !== "ar", staleTime: Infinity, retry: 1 });
   useEffect(() => { if (destination) trackInteraction("destination_open", destination.id); }, [destination?.id, language, trackInteraction]);
   useEffect(() => { setSelectedLandmark(0); setSelectedTimeline(0); }, [destination?.id]);
+  useEffect(() => () => { if (typeof window !== "undefined") window.speechSynthesis?.cancel(); }, []);
 
   if (!destination) return <SiteShell><section className="page-frame destination-missing"><p className="eyebrow">الملف غير متاح</p><h1>لم نعثر على صفحة هذه الوجهة.</h1><Link href="/destinations" className="button button-ink">العودة إلى الوجهات <ArrowLeft size={16} /></Link></section></SiteShell>;
 
@@ -87,7 +111,10 @@ export default function DestinationDetail() {
       }
     : destination.heritage;
   const labels = heritageLabels[language];
+  const immersive = immersiveLabels[language];
   const landmark = heritage?.landmarks[selectedLandmark] ?? heritage?.landmarks[0];
+  const timelineItem = heritage?.timeline[selectedTimeline];
+  const timelinePhoto = gallery[selectedTimeline % gallery.length] ?? primaryPhoto;
   const atlasHref = atlasImageHref(assets.atlasPublicUrl, { destinationId: destination.id, destinationTitle: view.title, photoIndex: 0, location: primaryPhoto.location, coordinates: primaryPhoto.coordinates });
   const exportBrochure = () => {
     const popup = window.open("", "_blank");
@@ -96,6 +123,17 @@ export default function DestinationDetail() {
     const activityList = activities.map((item: string) => `<li>${item}</li>`).join("");
     popup.document.write(`<!doctype html><html lang="${language}" dir="${language === "ar" ? "rtl" : "ltr"}"><head><meta charset="utf-8"/><title>${view.title} | Visit Libya</title><style>body{font-family:Tahoma,Arial,sans-serif;color:#06294a;margin:36px;line-height:1.8}header{border-bottom:3px solid #c89b3c;padding-bottom:14px;margin-bottom:20px}h1{margin:0;font-size:30px}h2{margin:24px 0 8px;color:#174f64}img{width:100%;max-height:260px;object-fit:cover;margin:15px 0;border:1px solid #d9d2c6}ul{padding-inline-start:22px}footer{margin-top:26px;border-top:1px solid #d9d2c6;padding-top:10px;color:#50647a;font-size:12px}</style></head><body><header><h1>${view.title}</h1><p>${view.city} · ${view.region} · Visit Libya</p></header><img src="${destination.image}" alt="${destination.alt}"/><p>${view.description}</p><h2>${language === "ar" ? "أبرز المعالم" : "Highlights"}</h2><ul>${highlights}</ul><h2>${language === "ar" ? "مقترحات للزيارة" : "Visit suggestions"}</h2><ul>${activityList}</ul><p><strong>${language === "ar" ? "الوقت المقترح" : "Suggested time"}:</strong> ${view.time}</p><footer>Visit Libya · ${language === "ar" ? "راجِع الجهات المحلية لتأكيد المواعيد والخدمات ومسارات الوصول." : "Check local authorities for current arrangements and access."}</footer><script>window.print()</script></body></html>`);
     popup.document.close();
+  };
+  const stopNarration = () => { window.speechSynthesis?.cancel(); setSpeakingTimeline(null); };
+  const playNarration = () => {
+    if (!timelineItem || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    stopNarration();
+    const utterance = new SpeechSynthesisUtterance([view.title, timelineItem.period, timelineItem.title, timelineItem.detail].join(". "));
+    utterance.lang = ({ ar: "ar-LY", en: "en-GB", fr: "fr-FR", it: "it-IT", de: "de-DE", es: "es-ES", zh: "zh-CN" } as const)[language];
+    utterance.onend = () => setSpeakingTimeline(null);
+    utterance.onerror = () => setSpeakingTimeline(null);
+    setSpeakingTimeline(selectedTimeline);
+    window.speechSynthesis.speak(utterance);
   };
 
   return <SiteShell>
@@ -106,8 +144,8 @@ export default function DestinationDetail() {
     </section>
     <section className="page-frame destination-detail-overview"><div><p className="eyebrow">ملف الوجهة · {view.landmarkType}</p><h2>ما الذي يجعلها<br />محطة لا تُنسى؟</h2></div><div><p>{view.description}</p><ul>{view.highlights.map((item: string) => <li key={item}>{item}</li>)}</ul><span><Compass size={15} /> الوقت المقترح: {view.time}</span></div></section>
     {heritage && <><section className="page-frame destination-heritage" aria-labelledby="destination-heritage-title"><div className="destination-heritage-heading"><p className="eyebrow"><Landmark size={14} /> {labels.record}</p><h2 id="destination-heritage-title">{heritage.title}</h2><p>{heritage.narrative}</p></div><div className="destination-heritage-evidence"><article><p className="eyebrow">{labels.evidence}</p><ul>{heritage.evidence.map((item: string) => <li key={item}>{item}</li>)}</ul></article><article><p className="eyebrow">{labels.context}</p><p>{heritage.culturalContext}</p></article></div><footer>{labels.source}: {heritage.source}</footer></section>
-      <section className="page-frame destination-timeline" aria-labelledby="destination-timeline-title"><div className="timeline-heading"><p className="eyebrow">{labels.timeline}</p><h2 id="destination-timeline-title">{heritage.timeline[selectedTimeline]?.title}</h2><p>{heritage.timeline[selectedTimeline]?.detail}</p></div><div className="timeline-steps" role="tablist" aria-label={labels.timeline}>{heritage.timeline.map((item: { period: string; title: string; detail: string }, index: number) => <button key={`${item.period}-${item.title}`} type="button" className={selectedTimeline === index ? "is-active" : ""} onClick={() => setSelectedTimeline(index)} role="tab" aria-selected={selectedTimeline === index}><span>{item.period}</span><strong>{item.title}</strong><ChevronLeft size={16} /></button>)}</div></section>
-      <section className="destination-landmark-map-section"><div className="page-frame landmark-map-grid"><div className="landmark-map-copy"><p className="eyebrow light">{labels.map}</p><h2>{landmark?.title}</h2><p>{landmark?.note}</p><small>{landmark?.coordinates}</small><a href={atlasImageHref(assets.atlasPublicUrl, { destinationId: destination.id, destinationTitle: view.title, photoIndex: selectedLandmark, location: landmark?.title ?? primaryPhoto.location, coordinates: landmark?.coordinates ?? primaryPhoto.coordinates })} target="_blank" rel="noreferrer" className="button button-sand">{labels.atlas} <ExternalLink size={16} /></a><div className="landmark-point-list">{heritage.landmarks.map((item: HeritageLandmark, index: number) => <button key={`${item.title}-${item.coordinates}`} type="button" className={selectedLandmark === index ? "is-active" : ""} onClick={() => { setSelectedLandmark(index); trackInteraction("atlas_marker_select", destination.id); }} aria-pressed={selectedLandmark === index}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>{item.coordinates}</small></div></button>)}</div></div><div><DestinationMap landmarks={heritage.landmarks} selectedIndex={selectedLandmark} atlasHref={atlasHref} onSelect={(index) => { setSelectedLandmark(index); trackInteraction("atlas_marker_select", destination.id); }} /><p className="landmark-map-hint">{labels.mapCopy}</p></div></div></section></>}
+      <section className="page-frame destination-timeline" aria-labelledby="destination-timeline-title"><div className="timeline-heading"><p className="eyebrow">{labels.timeline}</p><h2 id="destination-timeline-title">{timelineItem?.title}</h2><p>{timelineItem?.detail}</p><div className="timeline-listen-actions">{speakingTimeline === selectedTimeline ? <button type="button" onClick={stopNarration}><Pause size={15} /> {immersive.stop}</button> : <button type="button" onClick={playNarration}><Volume2 size={15} /> {immersive.listen}</button>}<small>{timelineItem?.period}</small></div><figure className="timeline-archive-photo"><img src={timelinePhoto.image} alt={timelinePhoto.alt} /><figcaption><span>{immersive.photo}</span><strong>{timelinePhoto.caption}</strong><small>{heritage.source}</small></figcaption></figure></div><div className="timeline-steps" role="tablist" aria-label={labels.timeline}>{heritage.timeline.map((item: { period: string; title: string; detail: string }, index: number) => <button key={`${item.period}-${item.title}`} type="button" className={selectedTimeline === index ? "is-active" : ""} onClick={() => { stopNarration(); setSelectedTimeline(index); }} role="tab" aria-selected={selectedTimeline === index}><span>{item.period}</span><strong>{item.title}</strong><ChevronLeft size={16} /></button>)}</div></section>
+      <section className="destination-landmark-map-section"><div className="page-frame landmark-map-grid"><div className="landmark-map-copy"><p className="eyebrow light">{labels.map}</p><h2>{landmark?.title}</h2><p>{landmark?.note}</p><small>{landmark?.coordinates}</small><a href={atlasImageHref(assets.atlasPublicUrl, { destinationId: destination.id, destinationTitle: view.title, photoIndex: selectedLandmark, location: landmark?.title ?? primaryPhoto.location, coordinates: landmark?.coordinates ?? primaryPhoto.coordinates })} target="_blank" rel="noreferrer" className="button button-sand">{labels.atlas} <ExternalLink size={16} /></a><div className="landmark-point-list">{heritage.landmarks.map((item: HeritageLandmark, index: number) => <button key={`${item.title}-${item.coordinates}`} type="button" className={selectedLandmark === index ? "is-active" : ""} onClick={() => { setSelectedLandmark(index); trackInteraction("atlas_marker_select", destination.id); }} aria-pressed={selectedLandmark === index}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{item.title}</strong><small>{item.coordinates}</small></div></button>)}</div></div><div><DestinationMap landmarks={heritage.landmarks} selectedIndex={selectedLandmark} atlasHref={atlasHref} onSelect={(index) => { setSelectedLandmark(index); trackInteraction("atlas_marker_select", destination.id); }} /><p className="landmark-map-hint">{labels.mapCopy}</p></div></div></section><section className="destination-walk-section"><div className="page-frame walk-route-grid"><div className="walk-route-copy"><p className="eyebrow light"><Route size={14} /> {immersive.walk}</p><h2>{view.title}</h2><p>{immersive.walkCopy}</p><ol>{heritage.landmarks.map((item: HeritageLandmark, index: number) => <li key={`${item.title}-walk`}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item.title}</strong></li>)}</ol></div><div><WalkingRouteMap landmarks={heritage.landmarks} atlasHref={atlasHref} /><p className="landmark-map-hint">{labels.mapCopy}</p></div></div></section></>}
     <section className="page-frame destination-activity-section"><div className="activity-heading"><p className="eyebrow">اختر التجربة</p><h2>ثلاث طرق<br />لقراءة المكان.</h2></div><div className="activity-list">{activities.map((activity: string, index: number) => <article key={activity}><span>0{index + 1}</span><p>{activity}</p></article>)}</div></section>
     <section className="page-frame destination-detail-gallery"><div className="detail-gallery-heading"><p className="eyebrow">الألبوم الميداني</p><h2>صور من {view.title}</h2><p>انقر على أي صورة لتكبيرها وقراءة نقطة التقاطها وموقعها على الخريطة.</p></div><div className="detail-gallery-grid">{gallery.map((photo, index) => { const reference = { destinationId: destination.id, destinationTitle: view.title, photoIndex: index, location: photo.location, coordinates: photo.coordinates }; return <figure key={photo.image} data-atlas-label={atlasImageLabel(reference)}><img src={photo.image} alt={photo.alt} /><figcaption><span>لقطة {String(index + 1).padStart(2, "0")}</span><h3>{photo.caption}</h3><p><MapPin size={14} /> {photo.location}</p><small>{photo.coordinates}</small><a className="atlas-image-label" href={atlasImageHref(assets.atlasPublicUrl, reference)} target="_blank" rel="noreferrer">{atlasImageLabel(reference)}</a></figcaption></figure>; })}</div></section>
     {!heritage && <section className="destination-atlas-section"><div className="page-frame destination-atlas-grid"><div><p className="eyebrow light">نقطة المعلم</p><h2>{primaryPhoto.location}</h2><p>{primaryPhoto.coordinates} · حرّك الخريطة أو كبّرها لقراءة المحيط، ثم افتح الأطلس لمتابعة الاستكشاف.</p><a href={atlasHref} target="_blank" rel="noreferrer" className="button button-sand">افتح أطلس ليبيا السياحي <ExternalLink size={16} /></a></div><DestinationMap landmarks={[{ title: view.title, note: view.description, coordinates: primaryPhoto.coordinates }]} selectedIndex={0} atlasHref={atlasHref} onSelect={() => undefined} /></div></section>}
