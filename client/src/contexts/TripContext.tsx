@@ -4,7 +4,7 @@
  */
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { reorderStops } from "./tripUtils";
-import { parseSharedStops } from "./tripSharing";
+import { parseSharedGalleryFavorites, parseSharedStops } from "./tripSharing";
 
 type TripContextValue = {
   stops: string[];
@@ -16,6 +16,7 @@ type TripContextValue = {
   clearFavorites: () => void;
   galleryFavorites: string[];
   toggleGalleryFavorite: (galleryItemId: string) => void;
+  clearGalleryFavorites: () => void;
 };
 
 const TripContext = createContext<TripContextValue | undefined>(undefined);
@@ -24,56 +25,58 @@ export function TripProvider({ children }: { children: ReactNode }) {
   const [stops, setStops] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [galleryFavorites, setGalleryFavorites] = useState<string[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
 
   useEffect(() => {
     const sharedStops = parseSharedStops(new URLSearchParams(window.location.search).get("route"));
-    if (sharedStops.length) {
-      setStops(sharedStops);
-      return;
-    }
     const saved = window.localStorage.getItem("turath-libya-trip-stops");
-    if (!saved) return;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) setStops(parsed.filter((value): value is string => typeof value === "string"));
-    } catch {
-      window.localStorage.removeItem("turath-libya-trip-stops");
+    if (sharedStops.length) setStops(sharedStops);
+    else if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setStops(parsed.filter((value): value is string => typeof value === "string"));
+      } catch {
+        window.localStorage.removeItem("turath-libya-trip-stops");
+      }
     }
+    const savedDestinationFavorites = window.localStorage.getItem("visit-libya-favorites");
+    if (savedDestinationFavorites) {
+      try {
+        const parsed = JSON.parse(savedDestinationFavorites);
+        if (Array.isArray(parsed)) setFavorites(parsed.filter((value): value is string => typeof value === "string"));
+      } catch {
+        window.localStorage.removeItem("visit-libya-favorites");
+      }
+    }
+    const savedGallery = window.localStorage.getItem("visit-libya-gallery-favorites");
+    const sharedGallery = parseSharedGalleryFavorites(new URLSearchParams(window.location.hash.replace(/^#/, "")).get("favorites"));
+    let localGallery: string[] = [];
+    if (savedGallery) {
+      try {
+        const parsed = JSON.parse(savedGallery);
+        if (Array.isArray(parsed)) localGallery = parsed.filter((value): value is string => typeof value === "string");
+      } catch {
+        window.localStorage.removeItem("visit-libya-gallery-favorites");
+      }
+    }
+    setGalleryFavorites(Array.from(new Set([...localGallery, ...sharedGallery])));
+    setStorageReady(true);
   }, []);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("visit-libya-favorites");
-    if (!saved) return;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) setFavorites(parsed.filter((value): value is string => typeof value === "string"));
-    } catch {
-      window.localStorage.removeItem("visit-libya-favorites");
-    }
-  }, []);
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem("visit-libya-gallery-favorites");
-    if (!saved) return;
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) setGalleryFavorites(parsed.filter((value): value is string => typeof value === "string"));
-    } catch {
-      window.localStorage.removeItem("visit-libya-gallery-favorites");
-    }
-  }, []);
-
-  useEffect(() => {
+    if (!storageReady) return;
     window.localStorage.setItem("turath-libya-trip-stops", JSON.stringify(stops));
-  }, [stops]);
+  }, [stops, storageReady]);
 
   useEffect(() => {
+    if (!storageReady) return;
     window.localStorage.setItem("visit-libya-favorites", JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, storageReady]);
 
   useEffect(() => {
+    if (!storageReady) return;
     window.localStorage.setItem("visit-libya-gallery-favorites", JSON.stringify(galleryFavorites));
-  }, [galleryFavorites]);
+  }, [galleryFavorites, storageReady]);
 
   const value = useMemo(
     () => ({
@@ -86,6 +89,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
       clearFavorites: () => setFavorites([]),
       galleryFavorites,
       toggleGalleryFavorite: (galleryItemId: string) => setGalleryFavorites((current) => current.includes(galleryItemId) ? current.filter((id) => id !== galleryItemId) : [...current, galleryItemId]),
+      clearGalleryFavorites: () => setGalleryFavorites([]),
     }),
     [stops, favorites, galleryFavorites],
   );

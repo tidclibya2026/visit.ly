@@ -6,7 +6,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, ArrowUpLeft, Check, Copy, GripVertical, 
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
-import { assets, destinations, experiences, seasonalEvents } from "@/lib/content";
+import { assets, cultureVisualArchive, destinations, experiences, foodCraftVisualArchive, seasonalEvents } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
@@ -24,13 +24,25 @@ type RouteItem = {
   href: string;
 };
 
+type GalleryFavoriteSuggestion = {
+  favoriteId: string;
+  title: string;
+  label: string;
+  description: string;
+  image: string;
+  alt: string;
+  href: string;
+  destinationId?: string;
+  experienceId?: string;
+};
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character] ?? character));
 }
 
 export default function TripPlanner() {
   const { t } = useLanguage();
-  const { stops, toggleStop, moveStop, clearStops, favorites, toggleFavorite, clearFavorites } = useTrip();
+  const { stops, toggleStop, moveStop, clearStops, favorites, toggleFavorite, clearFavorites, galleryFavorites, toggleGalleryFavorite, clearGalleryFavorites } = useTrip();
   const [draggedStopId, setDraggedStopId] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
   const routeItems = useMemo<RouteItem[]>(() => stops.flatMap<RouteItem>((stopId): RouteItem[] => {
@@ -45,6 +57,31 @@ export default function TripPlanner() {
   const savedCount = routeItems.length;
   const suggestions = destinations.filter((destination) => !stops.includes(destination.id));
   const savedFavorites = destinations.filter((destination) => favorites.includes(destination.id));
+  const galleryFavoriteSuggestions = useMemo<GalleryFavoriteSuggestion[]>(() => galleryFavorites.flatMap((favoriteId) => {
+    if (favoriteId.startsWith("photo:")) {
+      const match = /^photo:([^-]+)-(\d+)$/.exec(favoriteId);
+      const destination = match ? destinations.find((item) => item.id === match[1]) : undefined;
+      const photo = destination && match ? destination.gallery[Number(match[2])] : undefined;
+      return destination && photo ? [{ favoriteId, title: photo.caption, label: `${destination.title} · صورة محفوظة`, description: `صورة من ${photo.location} تقترح إدراج ${destination.title} ضمن المسار.`, image: photo.image, alt: photo.alt, href: `/destinations/${destination.id}`, destinationId: destination.id }] : [];
+    }
+    if (favoriteId.startsWith("craft:")) {
+      const index = Number(favoriteId.split(":")[1]);
+      const item = foodCraftVisualArchive.slice(2)[index];
+      return item ? [{ favoriteId, title: item.label, label: "ألبوم الحِرف · صورة محفوظة", description: "صورة محفوظة من ملف الحِرف تقترح غدامس وتجربة الصنعة التقليدية ضمن دفتر الرحلة.", image: item.image, alt: item.alt, href: "/albums/crafts", destinationId: "ghadames", experienceId: "crafts-ghadames" }] : [];
+    }
+    if (favoriteId.startsWith("folklore:")) {
+      const index = Number(favoriteId.split(":")[1]);
+      const item = cultureVisualArchive[index];
+      return item ? [{ favoriteId, title: item.label, label: "ملف الفلكلور · صورة محفوظة", description: "لقطة محفوظة من الذاكرة الحية تقترح بنغازي وتجربة المواسم والفعاليات ضمن دفتر الرحلة.", image: item.image, alt: item.alt, href: "/albums/folklore", destinationId: "benghazi", experienceId: "season-benghazi" }] : [];
+    }
+    const albums: Record<string, Omit<GalleryFavoriteSuggestion, "favoriteId">> = {
+      "album:food": { title: "المذاقات والحلويات", label: "ألبوم محفوظ", description: "ألبوم المذاقات يقترح زيارة طرابلس القديمة وتجربة الضيافة المحلية.", image: foodCraftVisualArchive[0].image, alt: foodCraftVisualArchive[0].alt, href: "/gallery", destinationId: "tripoli", experienceId: "flavours-tripoli" },
+      "album:craft": { title: "الحِرف والصناعات", label: "ألبوم محفوظ", description: "ألبوم الحِرف يقترح زيارة غدامس وتجربة الفخار والمنسوجات والأسواق المحلية.", image: foodCraftVisualArchive[2].image, alt: foodCraftVisualArchive[2].alt, href: "/albums/crafts", destinationId: "ghadames", experienceId: "crafts-ghadames" },
+      "album:folklore": { title: "الفلكلور والمناسبات", label: "ألبوم محفوظ", description: "ألبوم الفلكلور يقترح بنغازي وفعاليات الموسم مع مراعاة خصوصية المناسبة.", image: cultureVisualArchive[0].image, alt: cultureVisualArchive[0].alt, href: "/albums/folklore", destinationId: "benghazi", experienceId: "season-benghazi" },
+    };
+    const album = albums[favoriteId];
+    return album ? [{ favoriteId, ...album }] : [];
+  }), [galleryFavorites]);
   const shareRoute = async () => {
     const link = buildSharedRouteUrl(window.location.href, stops);
     try {
@@ -77,6 +114,7 @@ export default function TripPlanner() {
         {savedCount ? <><p className="trip-sort-hint"><GripVertical size={15} /> اسحب المحطة من المقبض لترتيبها، أو استخدم أزرار التحريك.</p><div className="trip-sortable-list">{routeItems.map((item, index) => <article className={`trip-sortable-item ${draggedStopId === item.id ? "is-dragging" : ""}`} draggable onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; setDraggedStopId(item.id); }} onDragEnd={() => setDraggedStopId(null)} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); if (draggedStopId) moveStop(draggedStopId, item.id); setDraggedStopId(null); }} key={item.id}><span className="trip-drag-handle" aria-hidden="true"><GripVertical size={18} /></span><img src={item.image} alt={item.alt} /><div className="trip-sortable-copy"><p className="eyebrow">{String(index + 1).padStart(2, "0")} · {item.label}</p><h3>{item.title}</h3><p>{item.description}</p><span><MapPin size={13} /> {item.detail}</span></div><div className="trip-sortable-actions"><Link href={item.href}>افتح <ArrowLeft size={13} /></Link><button type="button" onClick={() => moveStop(item.id, routeItems[index - 1]?.id ?? item.id)} disabled={index === 0} aria-label={`رفع ${item.title}`}><ArrowUp size={13} /> رفع</button><button type="button" onClick={() => moveStop(item.id, routeItems[index + 1]?.id ?? item.id)} disabled={index === routeItems.length - 1} aria-label={`خفض ${item.title}`}><ArrowDown size={13} /> خفض</button><button type="button" className="remove-stop" onClick={() => toggleStop(item.id)} aria-label={`إزالة ${item.title} من المسار`}><Trash2 size={13} /> إزالة</button></div></article>)}</div></> : <div className="empty-state trip-empty"><Route size={32} /><h2>ابدأ من مدينة، أو من طبيعة ترغب في رؤيتها.</h2><p>كل وجهة أو تجربة تضيفها ستظهر هنا كي ترتب المسار وتناقش تفاصيله مع مشغل الرحلات.</p><Link href="/experiences" className="button button-ink">استكشف التجارب <ArrowLeft size={17} /></Link></div>}
       </section>
       {savedFavorites.length > 0 && <section className="page-frame favorites-section"><div className="trip-head"><div><p className="eyebrow"><Heart size={13} /> وجهات مفضلة</p><h2>{savedFavorites.length} وجهات محفوظة للعودة إليها.</h2></div><button className="clear-trip" type="button" onClick={clearFavorites}><Trash2 size={16} /> إفراغ المفضلة</button></div><p className="favorites-intro">تبقى هذه القائمة محفوظة في المتصفح على هذا الجهاز؛ أضف ما يناسب توقيت رحلتك إلى المسار عندما تكون جاهزًا.</p><div className="favorites-grid">{savedFavorites.map((destination) => <article key={destination.id}><img src={destination.image} alt={destination.alt} /><div><p className="eyebrow">{destination.city}</p><h3>{destination.title}</h3><div><button type="button" onClick={() => toggleStop(destination.id)}>{stops.includes(destination.id) ? <Check size={15} /> : <Plus size={15} />}{stops.includes(destination.id) ? "في المسار" : "أضف للمسار"}</button><button type="button" className="remove-favorite" onClick={() => toggleFavorite(destination.id)} aria-label={`إزالة ${destination.title} من المفضلة`}><Trash2 size={15} /></button></div></div></article>)}</div></section>}
+      {galleryFavoriteSuggestions.length > 0 && <section className="page-frame favorites-section gallery-route-section"><div className="trip-head"><div><p className="eyebrow"><Heart size={13} /> مفضلات الجاليري</p><h2>صور وألبومات تقود إلى مسارٍ مقترح.</h2></div><button className="clear-trip" type="button" onClick={clearGalleryFavorites}><Trash2 size={16} /> إفراغ مفضلات الجاليري</button></div><p className="favorites-intro">كل صورة أو ألبوم محفوظ يربطك بوجهة أو تجربة مناسبة؛ أضف ما يلائم برنامجك ثم رتّب المحطات في أعلى الصفحة.</p><div className="gallery-route-favorites">{galleryFavoriteSuggestions.map((suggestion) => <article key={suggestion.favoriteId}><img src={suggestion.image} alt={suggestion.alt} /><div><p className="eyebrow">{suggestion.label}</p><h3>{suggestion.title}</h3><p>{suggestion.description}</p><div>{suggestion.destinationId && <button type="button" onClick={() => toggleStop(suggestion.destinationId!)}>{stops.includes(suggestion.destinationId) ? <Check size={14} /> : <Plus size={14} />}{stops.includes(suggestion.destinationId) ? "الوجهة في المسار" : "أضف الوجهة"}</button>}{suggestion.experienceId && <button type="button" className="gallery-route-secondary" onClick={() => toggleStop(suggestion.experienceId!)}>{stops.includes(suggestion.experienceId) ? <Check size={14} /> : <Plus size={14} />}{stops.includes(suggestion.experienceId) ? "التجربة في المسار" : "أضف التجربة"}</button>}<Link href={suggestion.href}>افتح <ArrowLeft size={13} /></Link><button type="button" className="remove-favorite" onClick={() => toggleGalleryFavorite(suggestion.favoriteId)} aria-label={`إزالة ${suggestion.title} من مفضلات الجاليري`}><Trash2 size={14} /></button></div></div></article>)}</div></section>}
       {suggestions.length > 0 && <section className="page-frame trip-suggestions"><div className="section-head split-head"><div><p className="eyebrow">أضف محطة</p><h2>ربما تود التوقف هنا أيضًا.</h2></div><Link href="/destinations" className="underlined-link">كل الوجهات <ArrowLeft size={16} /></Link></div><div className="suggestion-grid">{suggestions.slice(0, 3).map((destination) => <article key={destination.id}><img src={destination.image} alt={destination.alt} /><div><p>{destination.region}</p><h3>{destination.title}</h3><button type="button" onClick={() => toggleStop(destination.id)}><Plus size={16} /> أضف</button></div></article>)}</div></section>}
       <section className="route-reminder"><div className="page-frame"><Check size={22} /><p>عند تثبيت خط سيرك، تحقّق من إجراءات الدخول والموسم والطقس ووسيلة التنقل المناسبة لكل محطة.</p><Link href="/services">دليل السفر <ArrowLeft size={16} /></Link></div></section>
       <section className="trip-atlas-link"><div className="page-frame"><div><p className="eyebrow">أطلس ليبيا السياحي</p><h2>حوّل القائمة إلى مسار ذكي.</h2><p>افتح الأطلس الوطني للبحث في الطبقات الموثقة واستخدام تخطيط المسار وفق المدة والاهتمامات.</p></div><a className="button button-ink" href={assets.atlasPublicUrl} target="_blank" rel="noreferrer">فتح الأطلس <ArrowUpLeft size={17} /></a></div></section>

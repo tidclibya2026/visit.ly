@@ -14,6 +14,7 @@ import TripPlanner from "./pages/TripPlanner";
 import AtlasGateway from "./pages/AtlasGateway";
 import Gallery from "./pages/Gallery";
 import FolkloreAlbum from "./pages/FolkloreAlbum";
+import CraftsAlbum from "./pages/CraftsAlbum";
 import DestinationDetail from "./pages/DestinationDetail";
 import Events from "./pages/Events";
 import { TripProvider } from "./contexts/TripContext";
@@ -50,6 +51,7 @@ function AppRouter() {
       <Route path={"/atlas"} component={AtlasGateway} />
       <Route path={"/gallery"} component={Gallery} />
       <Route path={"/albums/folklore"} component={FolkloreAlbum} />
+      <Route path={"/albums/crafts"} component={CraftsAlbum} />
       <Route path={"/events"} component={Events} />
       <Route path={"/trip"} component={TripPlanner} />
       <Route path={"/admin/translations"} component={TranslationReview} />
@@ -68,6 +70,7 @@ function AppRouter() {
       <Route path={"/:locale/atlas"} component={() => <LocalizedPage Page={AtlasGateway} />} />
       <Route path={"/:locale/gallery"} component={() => <LocalizedPage Page={Gallery} />} />
       <Route path={"/:locale/albums/folklore"} component={() => <LocalizedPage Page={FolkloreAlbum} />} />
+      <Route path={"/:locale/albums/crafts"} component={() => <LocalizedPage Page={CraftsAlbum} />} />
       <Route path={"/:locale/events"} component={() => <LocalizedPage Page={Events} />} />
       <Route path={`/:locale/trip`} component={() => <LocalizedPage Page={TripPlanner} />} />
       <Route path={`/:locale/visa-intake`} component={() => <LocalizedPage Page={VisaIntake} />} />

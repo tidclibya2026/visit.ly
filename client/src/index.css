@@ -1958,6 +1958,7 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .folklore-hero { min-height: 570px; position: relative; display: grid; align-items: end; overflow: hidden; color: var(--paper); }
 .folklore-hero > img, .folklore-hero-ink { position: absolute; inset: 0; width: 100%; height: 100%; }
 .folklore-hero > img { object-fit: cover; }
+.crafts-hero > img { object-position: center 42%; }
 .folklore-hero-ink { background: linear-gradient(90deg, rgba(5, 35, 64, 0.9), rgba(5, 35, 64, 0.28) 68%, rgba(5, 35, 64, 0.58)); }
 .folklore-hero .page-frame { position: relative; z-index: 1; padding-bottom: 64px; }
 .folklore-hero .eyebrow { color: var(--sand); }
@@ -1985,6 +1986,24 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .folklore-plates-grid small { display: block; color: #7f8790; font-size: 8px; line-height: 1.45; }
 .folklore-end { min-height: 165px; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding-block: 26px; color: var(--paper); background: var(--ink); }
 .folklore-end h2 { margin: 3px 0 0; color: var(--paper); font-family: var(--serif); font-size: clamp(1.55rem, 2.3vw, 2.7rem); line-height: 0.95; }
+.crafts-reading { padding-bottom: 74px; display: grid; grid-template-columns: minmax(180px, 0.55fr) minmax(0, 1.45fr); gap: 30px; }
+.crafts-reading h2 { margin: 7px 0 0; color: var(--ink); font-family: var(--serif); font-size: clamp(2.3rem, 4vw, 4.7rem); line-height: 0.92; }
+.crafts-reading-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.crafts-reading-grid article { min-height: 148px; padding: 18px; background: var(--paper-deep); border-top: 3px solid var(--sand); }
+.crafts-reading-grid span { color: var(--ink); font-family: var(--serif); font-size: 1.55rem; }
+.crafts-reading-grid p { margin: 9px 0 0; color: #536477; font-size: 11px; line-height: 1.8; }
+.gallery-favorites-status { width: fit-content; margin: 13px 0 -1px; padding: 5px 8px; display: flex; align-items: center; gap: 6px; color: var(--ink); background: rgba(242, 233, 216, 0.72); border-inline-start: 3px solid var(--sand); font-size: 10px; font-weight: 700; }
+.gallery-route-section { padding-top: 0; }
+.gallery-route-favorites { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; }
+.gallery-route-favorites article { display: grid; grid-template-columns: 132px minmax(0, 1fr); overflow: hidden; background: var(--paper-deep); border-top: 3px solid var(--sand); }
+.gallery-route-favorites img { width: 132px; height: 166px; object-fit: cover; }
+.gallery-route-favorites article > div { padding: 14px; }
+.gallery-route-favorites h3 { margin: 4px 0 7px; color: var(--ink); font-size: 19px; }
+.gallery-route-favorites article > div > p:not(.eyebrow) { margin: 0; color: var(--ink-muted); font-size: 10px; line-height: 1.6; }
+.gallery-route-favorites article > div > div { margin-top: 11px; display: flex; flex-wrap: wrap; gap: 6px; }
+.gallery-route-favorites button, .gallery-route-favorites a { min-height: 28px; padding: 6px 8px; display: inline-flex; align-items: center; gap: 4px; color: var(--paper); background: var(--ink); font-size: 9px; font-weight: 800; }
+.gallery-route-favorites .gallery-route-secondary, .gallery-route-favorites a { color: var(--ink); background: transparent; border: 1px solid rgba(11, 58, 103, 0.2); }
+.gallery-route-favorites .remove-favorite { color: var(--ink); background: transparent; border: 1px solid var(--line); }
 @media (max-width: 760px) {
   .gallery-control-heading { align-items: flex-start; flex-direction: column; }
   .gallery-hero { min-height: 390px; padding: 112px 0 42px; }
@@ -2000,11 +2019,17 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .active-theme-album-grid { grid-template-columns: 1fr; }
   .folklore-hero { min-height: 465px; }
   .folklore-hero .page-frame { padding-bottom: 40px; }
-  .folklore-intro, .folklore-plates { grid-template-columns: 1fr; gap: 25px; padding-top: 52px; padding-bottom: 52px; }
+  .folklore-intro, .folklore-plates, .crafts-reading { grid-template-columns: 1fr; gap: 25px; padding-top: 52px; padding-bottom: 52px; }
   .folklore-plates-grid { grid-template-columns: 1fr; }
   .folklore-plates-grid img { height: 222px; }
   .folklore-end { grid-template-columns: auto 1fr; }
   .folklore-end .button { grid-column: 1 / -1; justify-self: start; }
   .gallery-masonry { columns: 1 220px; padding-top: 33px; padding-bottom: 52px; }
   .gallery-photo-card { margin-bottom: 14px; }
+  .crafts-reading-grid, .gallery-route-favorites { grid-template-columns: 1fr; }
+  .gallery-route-favorites article { grid-template-columns: 106px minmax(0, 1fr); }
+  .gallery-route-favorites img { width: 106px; height: 151px; }
+  .gallery-route-favorites article > div { padding: 12px; }
+  .gallery-route-favorites h3 { font-size: 17px; }
+  .gallery-favorites-status { font-size: 9px; }
 }
