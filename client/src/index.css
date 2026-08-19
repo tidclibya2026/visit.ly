@@ -1871,3 +1871,61 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
   .walk-route-grid { grid-template-columns: 1fr; gap: 22px; }
   .walking-route-map { min-height: 320px; }
 }
+
+/* معرض الصور: أعمدة ميدانية مرنة تحافظ على نسب صور المركز كاملة قدر الإمكان. */
+.gallery-hero { min-height: 390px; padding: 124px 0 54px; background: linear-gradient(115deg, rgba(5, 35, 64, 0.94), rgba(11, 58, 103, 0.7)), url("/manus-storage/hero-leptis-arch_c1826808.jpeg") center/cover; color: var(--paper); }
+.gallery-hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.5fr); gap: 42px; align-items: end; }
+.gallery-hero .eyebrow { color: var(--sand); }
+.gallery-hero h1 { max-width: 730px; margin: 8px 0 16px; color: var(--paper); font-family: var(--serif); font-size: clamp(3rem, 6vw, 6.5rem); line-height: 0.92; letter-spacing: -0.05em; }
+.gallery-hero p:not(.eyebrow) { max-width: 610px; margin: 0; color: rgba(251, 247, 238, 0.82); line-height: 1.9; }
+.gallery-hero-index { padding: 18px; border-inline-start: 2px solid var(--sand); background: rgba(5, 35, 64, 0.38); backdrop-filter: blur(6px); }
+.gallery-hero-index span { color: var(--sand); font-size: 11px; font-weight: 900; }
+.gallery-hero-index p { margin: 8px 0 20px !important; font-size: 12px; }
+.gallery-hero-index strong { display: block; color: var(--paper); font-family: var(--serif); font-size: 4rem; line-height: 0.8; }
+.gallery-hero-index small { color: var(--sand); font-size: 10px; font-weight: 800; }
+.gallery-controls { margin-top: -22px; position: relative; z-index: 2; padding: 23px; background: var(--paper); box-shadow: 0 15px 42px rgba(5, 35, 64, 0.12); }
+.gallery-control-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.gallery-control-heading .eyebrow { display: inline-flex; align-items: center; gap: 7px; margin: 0; }
+.gallery-control-heading strong { color: var(--ink); font-size: 11px; }
+.gallery-filter-row { display: grid; grid-template-columns: minmax(240px, 1.5fr) minmax(150px, 0.7fr) minmax(150px, 0.7fr) auto; gap: 10px; align-items: end; }
+.gallery-filter-row label:not(.gallery-search) { display: grid; gap: 5px; color: var(--ink); font-size: 10px; font-weight: 800; }
+.gallery-filter-row select, .gallery-search input { width: 100%; min-height: 42px; border: 1px solid #d6d0c4; border-radius: 0; background: #fbf8f0; color: var(--ink); font: inherit; }
+.gallery-filter-row select { padding: 0 9px; }
+.gallery-search { min-height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 11px; border: 1px solid #d6d0c4; background: #fbf8f0; color: var(--ink); }
+.gallery-search input { min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; }
+.gallery-reset { min-height: 42px; padding: 0 12px; display: inline-flex; align-items: center; gap: 7px; background: var(--ink); color: var(--paper); font-size: 11px; font-weight: 800; }
+.gallery-type-tabs { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 7px; }
+.gallery-type-tabs button { min-height: 30px; padding: 5px 10px; border: 1px solid #d6d0c4; background: transparent; color: #556476; font-size: 10px; font-weight: 800; }
+.gallery-type-tabs button.is-active, .gallery-type-tabs button:hover { border-color: var(--sand); background: var(--sand); color: var(--ink); }
+.gallery-masonry { padding-top: 52px; padding-bottom: 76px; columns: 3 280px; column-gap: 18px; }
+.gallery-photo-card { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 18px; background: var(--paper); border: 1px solid #e0d8c9; box-shadow: 0 8px 24px rgba(5, 35, 64, 0.08); transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out); }
+.gallery-photo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 32px rgba(5, 35, 64, 0.15); }
+.gallery-photo-frame { position: relative; overflow: hidden; background: #d9d1c3; }
+.gallery-photo-frame button { display: block; width: 100%; padding: 0; background: transparent; }
+.gallery-photo-frame img { width: 100%; height: auto; display: block; transition: transform 350ms var(--ease-out), filter 350ms var(--ease-out); }
+.gallery-photo-card:hover .gallery-photo-frame img { transform: scale(1.035); filter: saturate(1.06) contrast(1.03); }
+.gallery-card-index, .gallery-card-place { position: absolute; bottom: 10px; padding: 5px 7px; color: var(--paper); background: rgba(5, 35, 64, 0.82); font-size: 9px; font-weight: 800; }
+.gallery-card-index { inset-inline-start: 10px; color: var(--sand); }
+.gallery-card-place { inset-inline-end: 10px; display: inline-flex; align-items: center; gap: 4px; }
+.gallery-photo-meta { padding: 13px; }
+.gallery-photo-meta > p { margin: 0 0 4px; color: #7c6a43; font-size: 9px; font-weight: 900; }
+.gallery-photo-meta h2 { margin: 0 0 7px; color: var(--ink); font-family: var(--serif); font-size: 1.35rem; line-height: 1.05; }
+.gallery-photo-meta > span { display: flex; align-items: center; gap: 5px; color: #536477; font-size: 10px; line-height: 1.55; }
+.gallery-photo-meta > small { display: block; margin-top: 4px; color: #8b98a4; font-size: 9px; }
+.gallery-photo-meta > div { margin-top: 13px; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid #e5ded1; }
+.gallery-photo-meta a { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); font-size: 10px; font-weight: 900; }
+.gallery-photo-meta a:hover { color: #9d7525; }
+.gallery-photo-meta em { display: block; margin-top: 11px; color: #7f8790; font-size: 8px; font-style: normal; }
+.gallery-empty { min-height: 220px; display: grid; place-content: center; gap: 12px; break-inside: avoid; color: var(--ink); text-align: center; }
+.gallery-empty p { margin: 0; }
+.gallery-empty button { justify-self: center; padding: 9px 12px; background: var(--ink); color: var(--paper); font-size: 11px; }
+@media (max-width: 760px) {
+  .gallery-hero { min-height: 390px; padding: 112px 0 42px; }
+  .gallery-hero-grid { grid-template-columns: 1fr; gap: 25px; }
+  .gallery-hero h1 { font-size: clamp(3.1rem, 15vw, 4.8rem); }
+  .gallery-hero-index { width: min(100%, 310px); }
+  .gallery-controls { margin-top: -15px; padding: 16px; }
+  .gallery-filter-row { grid-template-columns: 1fr; }
+  .gallery-masonry { columns: 1 220px; padding-top: 33px; padding-bottom: 52px; }
+  .gallery-photo-card { margin-bottom: 14px; }
+}

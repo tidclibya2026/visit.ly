@@ -12,7 +12,7 @@ import { languageOptions, useLanguage } from "@/contexts/LanguageContext";
 import { useInteractionTracking } from "@/hooks/useInteractionTracking";
 
 const navigation = [
-  { href: "/", labelKey: "nav.home" }, { href: "/destinations", labelKey: "nav.destinations" }, { href: "/experiences", labelKey: "nav.experiences" }, { href: "/culture", labelKey: "nav.culture" }, { href: "/heritage", labelKey: "nav.heritage" }, { href: "/events", labelKey: "nav.events" }, { href: "/services", labelKey: "nav.services" }, { href: "/atlas", labelKey: "nav.atlas" },
+  { href: "/", labelKey: "nav.home" }, { href: "/destinations", labelKey: "nav.destinations" }, { href: "/gallery", labelKey: "nav.gallery" }, { href: "/experiences", labelKey: "nav.experiences" }, { href: "/culture", labelKey: "nav.culture" }, { href: "/heritage", labelKey: "nav.heritage" }, { href: "/events", labelKey: "nav.events" }, { href: "/services", labelKey: "nav.services" }, { href: "/atlas", labelKey: "nav.atlas" },
 ];
 
 export function SiteShell({ children }: { children: ReactNode }) {
