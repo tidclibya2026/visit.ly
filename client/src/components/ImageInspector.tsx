@@ -13,6 +13,11 @@ type ImageRecord = { src: string; alt: string; location?: string; coordinates?: 
 type HoverRecord = ImageRecord & { x: number; y: number };
 
 const sourceLabel = "أرشيف الصور المرفق لمنصة Visit Libya";
+const imageZoomEvent = "visit-libya:image-zoom";
+
+export function requestImageZoom(src: string, alt: string) {
+  window.dispatchEvent(new CustomEvent(imageZoomEvent, { detail: { src, alt } }));
+}
 
 function sameImage(src: string, candidate: string) {
   return src.split("?")[0].endsWith(candidate);
@@ -78,12 +83,21 @@ export function ImageInspector() {
     document.addEventListener("pointerout", onOut);
     document.addEventListener("click", onClick, true);
     document.addEventListener("keydown", onKeyDown);
+    const onRequestedZoom = (event: Event) => {
+      const detail = (event as CustomEvent<{ src?: string; alt?: string }>).detail;
+      const src = detail?.src;
+      if (!src) return;
+      const image = Array.from(document.images).find((candidate) => sameImage(candidate.currentSrc || candidate.src, src));
+      setActive(image ? imageRecord(image) : { src, alt: detail.alt ?? "صورة من المنصة" });
+    };
+    window.addEventListener(imageZoomEvent, onRequestedZoom);
     return () => {
       document.removeEventListener("pointerover", onOver);
       document.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerout", onOut);
       document.removeEventListener("click", onClick, true);
       document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener(imageZoomEvent, onRequestedZoom);
     };
   }, []);
 

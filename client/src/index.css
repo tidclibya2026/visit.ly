@@ -1645,6 +1645,41 @@ main img:not([data-no-lightbox]) { cursor: zoom-in; }
 .destination-card[data-destination="benghazi"] img { object-position: 50% 43%; }
 .destination-card[data-destination="ghadames"] img { object-position: 50% 36%; }
 .destination-shade { background: linear-gradient(0deg, rgba(7, 28, 35, 0.8) 0%, rgba(7, 28, 35, 0.22) 56%, rgba(7, 28, 35, 0.02) 100%); }
+
+/* صور البطاقات: امتداد أفقي موحّد مع تكبير صريح لا يتعارض مع رابط الوجهة. */
+.destination-card, .experience-card { isolation: isolate; }
+.quick-image-zoom { position: absolute; z-index: 5; top: 12px; left: 12px; min-height: 33px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; color: var(--paper); background: rgba(4, 29, 54, 0.84); border: 1px solid rgba(251, 247, 238, 0.42); font-size: 10px; font-weight: 800; opacity: 0; transform: translateY(-4px); transition: transform 180ms var(--ease-out), opacity 180ms var(--ease-out), background 180ms var(--ease-out); }
+.quick-image-zoom:hover, .quick-image-zoom:focus-visible { color: var(--ink); background: var(--sand); outline: 2px solid var(--paper); outline-offset: 2px; }
+.destination-card:focus-within .quick-image-zoom, .experience-card:focus-within .quick-image-zoom { opacity: 1; transform: translateY(0); }
+.experience-card { position: relative; display: flex; flex-direction: column; min-height: 0; }
+.experience-card-photo { width: 100%; aspect-ratio: 16 / 9; flex: 0 0 auto; }
+.experience-card-photo img { width: 100%; height: 100%; display: block; object-fit: cover; background: var(--ink); }
+.experience-card-copy { min-height: 0; }
+.experience-zoom { top: 12px; left: 12px; }
+.destination-heritage { margin-top: 76px; margin-bottom: 76px; padding: 34px; display: grid; grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr); gap: 34px; background: rgba(242, 233, 216, 0.68); border-top: 3px solid var(--sand); }
+.destination-heritage-heading h2 { margin: 7px 0 13px; color: var(--ink); font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.3rem); line-height: 1.08; }
+.destination-heritage-heading > p:last-child { margin: 0; color: var(--ink-muted); line-height: 1.95; }
+.destination-heritage-evidence { display: grid; gap: 13px; }
+.destination-heritage-evidence article { padding: 19px 20px; background: rgba(251, 247, 238, 0.86); border-inline-start: 3px solid var(--ink); }
+.destination-heritage-evidence .eyebrow { margin-bottom: 10px; }
+.destination-heritage-evidence ul { margin: 0; padding-inline-start: 21px; color: var(--ink); }
+.destination-heritage-evidence li { margin-bottom: 8px; line-height: 1.7; }
+.destination-heritage-evidence li:last-child { margin-bottom: 0; }
+.destination-heritage-evidence article > p:last-child { margin: 0; color: var(--ink-muted); line-height: 1.85; }
+.destination-heritage footer { grid-column: 1 / -1; padding-top: 12px; color: var(--clay-dark); border-top: 1px solid rgba(11, 58, 103, 0.17); font-size: 10px; font-weight: 700; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .destination-card { transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out); }
+  .destination-card:hover { transform: translateY(-7px); box-shadow: 0 18px 30px rgba(4, 29, 54, 0.2); }
+  .destination-card:hover .destination-card-content { transform: translateY(-5px); }
+  .destination-card:hover .quick-image-zoom, .experience-card:hover .quick-image-zoom { opacity: 1; transform: translateY(0); }
+  .destination-card-content { transition: transform 220ms var(--ease-out); }
+}
+@media (max-width: 760px) {
+  .quick-image-zoom { top: 9px; left: 9px; opacity: 1; transform: none; min-height: 30px; padding: 0 7px; font-size: 9px; }
+  .experience-card-photo { aspect-ratio: 16 / 10; }
+  .destination-heritage { margin-top: 52px; margin-bottom: 52px; padding: 23px 17px; grid-template-columns: 1fr; gap: 22px; }
+  .destination-heritage footer { grid-column: auto; }
+}
 .experiences-hero { isolation: isolate; background: var(--ink-deep); }
 .experience-hero-image { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 57%; filter: brightness(1.08) contrast(1.04) saturate(1.04); }
 .experience-hero-ink { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(3, 30, 53, 0.08) 0%, rgba(3, 30, 53, 0.17) 40%, rgba(3, 30, 53, 0.75) 84%), linear-gradient(0deg, rgba(3, 30, 53, 0.24), transparent 58%); }

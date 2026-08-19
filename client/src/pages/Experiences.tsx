@@ -2,7 +2,7 @@
  * Design reminder — «دفاتر الرحّالة»: صفحة تجارب بإيقاع استكشافي تحوّل الاهتمامات
  * إلى أبواب للرحلة، مع رموز خطية وأرضية ورقية بدل شبكة سياحية عامة ومزدحمة.
  */
-import { ArrowLeft, CalendarDays, Check, Landmark, MapPin, Mountain, Palette, Plus, Search, TentTree, Utensils } from "lucide-react";
+import { ArrowLeft, CalendarDays, Check, Landmark, MapPin, Mountain, Palette, Plus, Search, TentTree, Utensils, ZoomIn } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
@@ -11,6 +11,7 @@ import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
 import { PublishedContentFeed } from "@/components/PublishedContentFeed";
+import { requestImageZoom } from "@/components/ImageInspector";
 
 const iconMap = { Landmark, Mountain, Utensils, Palette, TentTree, CalendarDays };
 const regions = ["الكل", ...Array.from(new Set(experiences.map((experience) => experience.region)))];
@@ -38,7 +39,7 @@ export default function Experiences() {
         {shownExperiences.map((experience, index) => {
           const Icon = iconMap[experience.icon as keyof typeof iconMap];
           const isInTrip = stops.includes(experience.id);
-          return <article className="experience-card" data-experience={experience.id} key={experience.id}><Link href={experience.targetRoute} className="experience-card-photo" aria-label={`افتح صفحة ${experience.targetPlace}`}><img src={experience.image} alt={experience.alt} /><span className="experience-card-index">0{index + 1}</span><i><Icon size={20} strokeWidth={1.55} /></i></Link><div className="experience-card-copy"><p className="experience-place"><MapPin size={13} /> {experience.targetPlace}</p><h2>{experience.title}</h2><p>{experience.text}</p><div className="experience-season"><CalendarDays size={15} /><div><strong>{experience.season}</strong><span>{experience.seasonNote}</span></div></div><div className="experience-card-actions"><Link href={experience.targetRoute}>افتح صفحة المعلم <ArrowLeft size={16} /></Link><button type="button" className={isInTrip ? "is-added" : ""} onClick={() => toggleStop(experience.id)}>{isInTrip ? <Check size={16} /> : <Plus size={16} />}{isInTrip ? "أضيفت للمسار" : "أضف التجربة"}</button></div></div></article>;
+          return <article className="experience-card" data-experience={experience.id} key={experience.id}><Link href={experience.targetRoute} className="experience-card-photo" aria-label={`افتح صفحة ${experience.targetPlace}`}><img src={experience.image} alt={experience.alt} /><span className="experience-card-index">0{index + 1}</span><i><Icon size={20} strokeWidth={1.55} /></i></Link><button type="button" className="quick-image-zoom experience-zoom" onClick={() => requestImageZoom(experience.image, experience.alt)} aria-label={`تكبير صورة تجربة ${experience.title}`}><ZoomIn size={16} /><span>تكبير الصورة</span></button><div className="experience-card-copy"><p className="experience-place"><MapPin size={13} /> {experience.targetPlace}</p><h2>{experience.title}</h2><p>{experience.text}</p><div className="experience-season"><CalendarDays size={15} /><div><strong>{experience.season}</strong><span>{experience.seasonNote}</span></div></div><div className="experience-card-actions"><Link href={experience.targetRoute}>افتح صفحة المعلم <ArrowLeft size={16} /></Link><button type="button" className={isInTrip ? "is-added" : ""} onClick={() => toggleStop(experience.id)}>{isInTrip ? <Check size={16} /> : <Plus size={16} />}{isInTrip ? "أضيفت للمسار" : "أضف التجربة"}</button></div></div></article>;
         })}
       </section>
       {!shownExperiences.length && <section className="page-frame experience-empty"><p className="eyebrow">لا توجد نتيجة مطابقة</p><h2>جرّب كلمة بحث أو منطقة أو موسمًا مختلفًا.</h2><button type="button" className="button button-ink" onClick={() => { setRegion("الكل"); setSeason("الكل"); setSearch(""); }}>عرض كل التجارب</button></section>}

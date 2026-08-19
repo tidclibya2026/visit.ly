@@ -2,7 +2,7 @@
  * Design reminder — «دفاتر الرحّالة»: بداية بانورامية تفتح الدفتر، ثم مسار تحريري
  * متعرج بمقاطع غير متناظرة؛ لا بطاقات مركزية متطابقة ولا لغة دعائية عامة.
  */
-import { ArrowLeft, ArrowUpLeft, ChevronLeft, ChevronRight, Compass, Landmark, MapPinned, Mountain, Plus, Route, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpLeft, ChevronLeft, ChevronRight, Compass, Landmark, MapPinned, Mountain, Plus, Route, Sparkles, ZoomIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { SiteShell } from "@/components/SiteShell";
@@ -10,6 +10,7 @@ import { assets, destinations, heroSlides } from "@/lib/content";
 import { useTrip } from "@/contexts/TripContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HeroPhotoCredit } from "@/components/HeroPhotoCredit";
+import { requestImageZoom } from "@/components/ImageInspector";
 
 export default function Home() {
   const { stops, toggleStop } = useTrip();
@@ -78,6 +79,7 @@ export default function Home() {
               <article className={`destination-card destination-card-${index + 1}`} data-destination={destination.id} key={destination.id}>
                 <img src={destination.image} alt={destination.alt} />
                 <div className="destination-shade" />
+                <button type="button" className="quick-image-zoom" onClick={() => requestImageZoom(destination.image, destination.alt)} aria-label={`تكبير صورة ${destination.title}`}><ZoomIn size={16} /><span>تكبير</span></button>
                 <div className="destination-card-content">
                   <div className="card-meta"><span>{destination.region}</span><span>{destination.time}</span></div>
                   <h3>{destination.title}</h3>
